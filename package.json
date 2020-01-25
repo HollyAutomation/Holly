@@ -1,0 +1,19 @@
+{
+  "name": "shakespeare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "mocha": "^7.0.0",
+    "playwright": "^0.9.21"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  }
+}
