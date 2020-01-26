@@ -1,8 +1,8 @@
 describe("Integration", () => {
   it("works", () => {
-    sp.visit("http://www.google.com");
-    sp.get("INPUT").type("hello");
-    sp.get("INPUT")
+    sp.newPage("http://www.google.com");
+    sp.$("input[type=text]").type("hello");
+    sp.$("input[type=text]")
       .value()
       .shouldEqual("hello");
   });
