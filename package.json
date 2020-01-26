@@ -9,9 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/traverse": "^7.8.3",
     "debug": "^4.1.1",
+    "jest-snapshot": "25.1.0",
     "mocha": "^7.0.0",
-    "playwright": "^0.9.21"
+    "playwright": "^0.9.21",
+    "stack-utils": "^2.0.1"
   },
   "devDependencies": {
     "prettier": "^1.19.1"

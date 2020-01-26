@@ -4,6 +4,6 @@ describe("Integration", () => {
     sp.$("input[type=text]").type("hello");
     sp.$("input[type=text]")
       .value()
-      .shouldEqual("hello");
+      .shouldMatchInlineSnapshot(`'hello'`);
   });
 });
