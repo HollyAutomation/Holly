@@ -13,7 +13,7 @@ TODO:
 [x] - playwright integration POC
 [x] - Retry assertions POC
 [x] - toMatchInlineSnapshot POC
-[ ] - name change - Holly?
+[x] - name change - Holly?
 [ ] - Allow use with promises if you want
 [ ] - Assertions - build simple set of our own
 [ ] - parallel tests POC. page or context? (link to caching...)
