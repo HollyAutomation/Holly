@@ -1,4 +1,4 @@
-Shakespeare
+Holly
 
 A testing framework built around playwright and mocha.
 
@@ -7,7 +7,6 @@ Features
 Retry tests - individual tests can retry as in mocha
 Retry assertions - tests will wait for assertions to be true
 Inline snapshots - Jest style toMatchInlineSnapshot
-UI with ability to select test file, test to run, pause, step through, update snapshots
 
 TODO:
 
@@ -23,7 +22,7 @@ TODO:
 [ ] - TypeScript?
 [ ] - Integration tests using UI
 [ ] - Retry tests POC
-[ ] - command first argument - object with various things in? { shakespeare, stack, playwright }?
+[ ] - command first argument - object with various things in? { holly, stack, playwright }?
 [ ] - more complete API mirroring playwright
 [ ] - support multiple pages
 [ ] - support multi browsers
