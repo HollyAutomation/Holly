@@ -14,12 +14,13 @@ TODO:
 [x] - playwright integration POC
 [x] - Retry assertions POC
 [x] - toMatchInlineSnapshot POC
-[ ] - UI POC
-[ ] - Assertions - are we going to essentially build our own assertions or use chai?
+[ ] - name change - Holly?
+[ ] - Allow use with promises if you want
+[ ] - Assertions - build simple set of our own
 [ ] - parallel tests POC. page or context? (link to caching...)
 [ ] - Unit Tests
 [ ] - Eslint
-[ ] - TypeScript
+[ ] - TypeScript?
 [ ] - Integration tests using UI
 [ ] - Retry tests POC
 [ ] - command first argument - object with various things in? { shakespeare, stack, playwright }?
