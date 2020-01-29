@@ -1,47 +1,77 @@
-const debug = require("debug")("holly:holly");
-const { chainedCommands, rootCommands } = require("./commands");
+import Debug from "debug";
+import { chainedCommands, rootCommands } from "./commands";
+import {
+  Holly,
+  CommandInstance,
+  HollyChainAwaitable,
+  HollyChain,
+  CommandDefinition
+} from "./types";
+
+const debug = Debug("holly:holly");
 
 const retryDelay = () => new Promise(resolve => setTimeout(resolve, 50));
 
-function last(ar) {
+function last<T>(ar: ReadonlyArray<T>): T {
   return ar[ar.length - 1];
 }
 
-module.exports = function createHolly() {
-  const holly = {
+export default function createHolly(): Holly {
+  // @ts-ignore
+  const holly: Holly = {
     __page: null
   };
 
-  const chainedCommandsBase = {};
+  const chainedCommandsBase = {
+    then(resolve: (chain: HollyChain) => void, reject: (error: Error) => void) {
+      const previousCommandInstance: CommandInstance =
+        // @ts-ignore
+        this.__currentCommandInstance;
+      holly.__executeSoFar().then(() => {
+        // return a new chainable but remove the then
+        // function otherwise we get stuck in a loop
+        // constantly resolving ourself.
+        const { then, ...newChainInstance } = createNewChainInstance({
+          ...previousCommandInstance,
+          retry: null
+        });
+        resolve(newChainInstance);
+      }, reject);
+    }
+  };
 
-  function createNewChainInstance(commandInstance) {
+  function createNewChainInstance(
+    commandInstance: CommandInstance
+  ): HollyChainAwaitable {
+    // @ts-ignore
     return {
       ...chainedCommandsBase,
       __currentCommandInstance: commandInstance
     };
   }
 
-  function getRootFromBase(base) {
-    while (base.parent) {
-      base = base.parent;
+  function getRootCommand(commandInstance: CommandInstance) {
+    while (commandInstance.parent) {
+      commandInstance = commandInstance.parent;
     }
-    return base;
+    return commandInstance;
   }
 
-  function createChainedCommand(command) {
-    return function(...args) {
-      const parent = this.__currentCommandInstance;
+  function createChainedCommand(command: CommandDefinition) {
+    return function(...args: ReadonlyArray<any>) {
+      // @ts-ignore
+      const parent: CommandInstance = this.__currentCommandInstance;
       debug(
         `adding chained command '${command.name}' from '${parent.command.name}'`
       );
-      if (getRootFromBase(parent) !== last(holly.__rootCommands)) {
+      if (getRootCommand(parent) !== last(holly.__rootCommands)) {
         throw new Error("do not use holly out of context");
       }
       if (command.captureStack) {
         const error = new Error();
         args = [error.stack, ...args];
       }
-      const commandInstance = {
+      const commandInstance: CommandInstance = {
         parent,
         command,
         args,
@@ -54,25 +84,12 @@ module.exports = function createHolly() {
   }
 
   chainedCommands.forEach(command => {
+    // @ts-ignore
     chainedCommandsBase[command.name] = createChainedCommand(command);
   });
 
-  chainedCommandsBase.then = function(resolve, reject) {
-    const previousCommandInstance = this.__currentCommandInstance;
-    holly.__executeSoFar().then(() => {
-      // return a new chainable but remove the then
-      // function otherwise we get stuck in a loop
-      // constantly resolving ourself.
-      const { then, ...newChainInstance } = createNewChainInstance({
-        ...previousCommandInstance,
-        retry: null
-      });
-      resolve(newChainInstance);
-    }, reject);
-  };
-
-  function createInitialCommand(command) {
-    return (...args) => {
+  function createInitialCommand(command: CommandDefinition) {
+    return (...args: ReadonlyArray<any>) => {
       debug(`adding root command '${command.name}'`);
       if (command.captureStack) {
         const error = new Error();
@@ -90,10 +107,11 @@ module.exports = function createHolly() {
   }
 
   rootCommands.forEach(command => {
+    // @ts-ignore
     holly[command.name] = createInitialCommand(command);
   });
 
-  async function runCommand(commandInstance) {
+  async function runCommand(commandInstance: CommandInstance): Promise<any> {
     debug(`Running command '${commandInstance.command.name}'`);
     let args = commandInstance.args;
     if (commandInstance.parent) {
@@ -148,4 +166,4 @@ module.exports = function createHolly() {
   };
 
   return holly;
-};
+}

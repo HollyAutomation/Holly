@@ -1,12 +1,16 @@
-const debug = require("debug")("holly:index");
-const Mocha = require("mocha");
-const { chromium } = require("playwright");
-const createHolly = require("./holly");
+import Debug from "debug";
+import Mocha = require("mocha");
+import { chromium } from "playwright-core";
+import createHolly from "./holly";
+import { Holly } from "./types";
 
-function getHollyFromSuite(suite) {
-  while (!suite.root) {
+const debug = Debug("holly:index");
+
+function getHollyFromSuite(suite: Mocha.Suite): Holly {
+  while (suite.parent) {
     suite = suite.parent;
   }
+  // @ts-ignore
   return suite.holly;
 }
 
@@ -15,33 +19,47 @@ function getHollyFromSuite(suite) {
 // so it returns a promise.
 const oldAddTest = Mocha.Suite.prototype.addTest;
 // This intercepts when the test is added, after a runnable is created
-Mocha.Suite.prototype.addTest = function(...args) {
+Mocha.Suite.prototype.addTest = function(test: Mocha.ITest) {
   const holly = getHollyFromSuite(this);
-  const test = args[0];
   const oldFn = test.fn;
-  test.fn = async function() {
-    await oldFn.call(this, holly);
-    return holly.__executeSoFar();
-  };
-  // tests returning promises are classed as sync
-  // and mocha may detect this as async because of the passed
-  // argument
-  test.async = false;
-  test.sync = true;
-  return oldAddTest.apply(this, args);
+  if (oldFn) {
+    test.fn = async function() {
+      await oldFn.call(this, holly);
+      return holly.__executeSoFar();
+    };
+    // tests returning promises are classed as sync
+    // and mocha may detect this as async because of the passed
+    // argument
+    test.async = false;
+    test.sync = true;
+  }
+  return oldAddTest.call(this, test);
 };
 
 const oldBeforeEach = Mocha.Suite.prototype.beforeEach;
 // this function adds a fn as a beforeEach hook.
 // the code intercepts it before a runnable is created
-Mocha.Suite.prototype.beforeEach = function(title, fn) {
-  if (typeof title === "function") {
-    fn = title;
+Mocha.Suite.prototype.beforeEach = function(
+  titleOrFunc?: Mocha.Func | string,
+  maybeFunc?: Mocha.Func
+) {
+  let fn: Mocha.Func | void;
+  let title: string;
+  if (typeof titleOrFunc === "function") {
+    fn = titleOrFunc;
     title = fn.name;
+  } else {
+    fn = maybeFunc;
+    title = titleOrFunc || "";
+  }
+  if (!fn) {
+    // @ts-ignore
+    return oldBeforeEach.call(this, titleOrFunc, maybeFunc);
   }
   const holly = getHollyFromSuite(this);
   return oldBeforeEach.call(this, title, async function() {
     debug("calling beforeEach fn");
+    // @ts-ignore
     await fn.call(this, holly);
     return holly.__executeSoFar();
   });
@@ -50,14 +68,28 @@ Mocha.Suite.prototype.beforeEach = function(title, fn) {
 const oldAfterEach = Mocha.Suite.prototype.afterEach;
 // this function adds a fn as a afterEach hook.
 // the code intercepts it before a runnable is created
-Mocha.Suite.prototype.afterEach = function(title, fn) {
-  if (typeof title === "function") {
-    fn = title;
+Mocha.Suite.prototype.afterEach = function(
+  titleOrFunc?: Mocha.Func | string,
+  maybeFunc?: Mocha.Func
+) {
+  let fn: Mocha.Func | void;
+  let title: string;
+  if (typeof titleOrFunc === "function") {
+    fn = titleOrFunc;
     title = fn.name;
+  } else {
+    fn = maybeFunc;
+    title = titleOrFunc || "";
   }
+  if (!fn) {
+    // @ts-ignore
+    return oldAfterEach.call(this, titleOrFunc, maybeFunc);
+  }
+
   const holly = getHollyFromSuite(this);
   return oldAfterEach.call(this, title, async function() {
     debug("calling afterEach fn");
+    // @ts-ignore
     await fn.call(this, holly);
     return holly.__executeSoFar();
   });
@@ -68,10 +100,11 @@ Mocha.Suite.prototype.afterEach = function(title, fn) {
   // or await newContext()
   const context = browser.defaultContext();
 
-  const runSuite = suiteFile => {
+  const runSuite = (suiteFile: string) => {
     return new Promise((resolve, reject) => {
       const holly = createHolly();
 
+      // @ts-ignore - https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41941
       const mocha = new Mocha({
         delay: true, // allow us to control when execution really starts
         timeout: "20s"
@@ -88,11 +121,13 @@ Mocha.Suite.prototype.afterEach = function(title, fn) {
         resolve();
       });
 
-      runner.on(Mocha.Runner.constants.EVENT_TEST_BEGIN, function(test) {
+      // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41942
+      runner.on(Mocha.Runner.constants.EVENT_TEST_BEGIN, function() {
         debug("test start");
         holly.__start(context);
       });
 
+      // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41942
       mocha.suite.emit(Mocha.Suite.constants.EVENT_ROOT_SUITE_RUN);
     });
   };

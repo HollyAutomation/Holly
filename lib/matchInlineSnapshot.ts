@@ -1,12 +1,15 @@
-const debug = require("debug")("holly:matchInlineSnapshot");
-const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(lib|node_modules)(\/|\\)/;
-const StackUtils = require("stack-utils");
-const { saveInlineSnapshots } = require("jest-snapshot/build/inline_snapshots");
-const babelTraverse = require("@babel/traverse").default;
-const prettier = require("prettier");
+import Debug from "debug";
+import StackUtils = require("stack-utils");
+import { saveInlineSnapshots } from "jest-snapshot/build/inline_snapshots";
+import babelTraverse from "@babel/traverse";
+import prettier = require("prettier");
+import { Holly } from "./types";
 
-const removeInternalLines = stackLines => {
-  return stackLines.filter(stackLine => {
+const debug = Debug("holly:matchInlineSnapshot");
+const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(lib|node_modules)(\/|\\)/;
+
+const removeInternalLines = (stackLines: ReadonlyArray<string>) => {
+  return stackLines.filter((stackLine: string) => {
     if (holly_INTERNALS_IGNORE.test(stackLine)) {
       return false;
     }
@@ -17,7 +20,7 @@ const removeInternalLines = stackLines => {
 // stack utils tries to create pretty stack by making paths relative.
 const stackUtils = new StackUtils({ cwd: "something which does not exist" });
 
-const getTopFrame = lines => {
+const getTopFrame = (lines: ReadonlyArray<string>) => {
   for (const line of lines) {
     const parsedFrame = stackUtils.parseLine(line.trim());
 
@@ -27,9 +30,9 @@ const getTopFrame = lines => {
   }
 };
 
-module.exports = {
+export default {
   name: "shouldMatchInlineSnapshot",
-  run(holly, value, stack, snapshot) {
+  run(holly: Holly, value: any, stack: string, snapshot: string) {
     const serializedValue =
       typeof value === "string" ? "'" + value + "'" : value;
 
@@ -37,13 +40,14 @@ module.exports = {
       if (!snapshot) {
         const stackLines = removeInternalLines(stack.split("\n"));
         const topFrame = getTopFrame(stackLines);
-        if (!topFrame) {
+        if (!topFrame || !topFrame.file) {
           throw new Error("unable to find location for toMatchSnapshot");
         }
         debug(`getting stack line ${JSON.stringify(topFrame)}`);
 
         // TODO this must be done all at the end
         saveInlineSnapshots(
+          // @ts-ignore
           [{ frame: topFrame, snapshot: serializedValue }],
           prettier,
           babelTraverse
