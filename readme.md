@@ -24,8 +24,8 @@ Extensible - Plugins allow extending commands.
 - [x] name change - Holly?
 - [x] Allow use with promises if you want
 - [x] parallel tests POC.
-- [ ] Eslint
-- [ ] TypeScript?
+- [x] Eslint
+- [x] TypeScript?
 - [ ] Assertions - build simple set of our own
 - [ ] Integration tests using UI
 - [ ] Retry tests POC

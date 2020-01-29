@@ -101,7 +101,7 @@ Mocha.Suite.prototype.afterEach = function(
   const context = browser.defaultContext();
 
   const runSuite = (suiteFile: string) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const holly = createHolly();
 
       // @ts-ignore - https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41941
