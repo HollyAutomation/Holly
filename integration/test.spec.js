@@ -1,18 +1,18 @@
 describe("Integration", () => {
-  it("works async", async () => {
-    await holly.newPage("http://www.google.com");
-    await holly.$("input[type=text]").type("hello");
-    await holly
-      .$("input[type=text]")
+  beforeEach(async ({ newPage }) => {
+    await newPage("http://www.google.com");
+  });
+
+  it("works async", async ({ $ }) => {
+    await $("input[type=text]").type("hello");
+    await $("input[type=text]")
       .value()
       .shouldMatchInlineSnapshot(`'hello'`);
   });
 
-  it("works sync", async () => {
-    holly.newPage("http://www.google.com");
-    holly.$("input[type=text]").type("hello");
-    holly
-      .$("input[type=text]")
+  it("works sync", async ({ $ }) => {
+    $("input[type=text]").type("hello");
+    $("input[type=text]")
       .value()
       .shouldMatchInlineSnapshot(`'hello'`);
   });
