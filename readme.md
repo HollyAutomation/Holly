@@ -1,8 +1,8 @@
-Holly
+## Holly
 
-A reliable and simple automated testing framework built around playwright and mocha.
+A reliable and simple automated testing framework built around playwright and mocha with Jest snapshots thrown in, running in parallel.
 
-Features
+## Features
 
 Retry tests - individual tests can retry
 Retry assertions - tests will wait for assertions to pass
@@ -12,24 +12,25 @@ Easy, simple API - the api provides helpers to enable writing short tests
 Escape Hatches - able to access the more advanced playwright API if needed
 Extensible - Plugins allow extending commands.
 
-TODO:
+## TODO for first initial version:
 
 [x] - playwright integration POC
 [x] - Retry assertions POC
 [x] - toMatchInlineSnapshot POC
 [x] - name change - Holly?
 [x] - Allow use with promises if you want
-[ ] - parallel tests POC. page or context? (link to caching...)
-[ ] - Unit Tests
+[x] - parallel tests POC.
 [ ] - Eslint
 [ ] - TypeScript?
 [ ] - Assertions - build simple set of our own
 [ ] - Integration tests using UI
 [ ] - Retry tests POC
+[ ] - Unit Tests
 [ ] - command first argument - object with various things in? { holly, stack, playwright }?
 [ ] - more complete API mirroring playwright
 [ ] - support multiple pages
 [ ] - support multi browsers
+[ ] - Configuration for parallel - different contexts? (link to caching...)
 [ ] - Fix inline snapshot
 [ ] - snapshot serializers
 [ ] - pick up config for use as an external package
