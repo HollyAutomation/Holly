@@ -26,8 +26,9 @@ Extensible - Plugins allow extending commands.
 - [x] parallel tests POC.
 - [x] Eslint
 - [x] TypeScript?
+- [ ] Integration tests POC
+- [ ] add pipe and do - check promises resolve in pw
 - [ ] Assertions - build simple set of our own
-- [ ] Integration tests using UI
 - [ ] Retry tests POC
 - [ ] move these checkboxes into issues
 - [ ] Unit Tests
@@ -52,10 +53,13 @@ Extensible - Plugins allow extending commands.
 
 ```
 describe("Integration", () => {
-  it("works", () => {
-    await holly.newPage("http://www.google.com");
-    await holly.$("input[type=text]").type("hello");
-    await holly.$("input[type=text]")
+  beforeEach(async ({ newPage }) => {
+    await newPage("http://www.google.com");
+  })
+
+  it("works", async ({ $ }) => {
+    await $("input[type=text]").type("hello");
+    await $("input[type=text]")
       .value()
       .shouldMatchInlineSnapshot(`'hello'`);
   });
@@ -66,10 +70,33 @@ describe("Integration", () => {
 
 Holly can be used in a synchronous way (no `async` or `await`'s needed) if that is what you prefer.
 
+Example:
+
+```
+describe("Integration", () => {
+  beforeEach(({ newPage }) => {
+    newPage("http://www.google.com");
+  })
+
+  it("works synchronously", ({ $ }) => {
+    $("input[type=text]").type("hello");
+    $("input[type=text]")
+      .value()
+      .shouldMatchInlineSnapshot(`'hello'`);
+  });
+});
+```
+
 However it has two downsides:
 
-- Debugging a test is more difficult as you cannot step through the commands
-- If you need to access the playwright API, you will need to use `async` and `await` so you may find yourself having inconsisent tests.
+- Debugging a test is more difficult as you cannot step through the commands in your own source code (because commands are recorded and then played back, seperate from your source)
+- If you need to access the playwright API (which we recommend anyplace where holly hasn't made it easier or provided an alternative), you will need to use `async` and `await` as its a promise based API so you may find yourself having inconsisent tests.
+
+## Design Decisions
+
+- Holly is passed into every hook and test to allow us to create a consistent test but also allow the tests to be run in parallel. Because the driver cannot be shared between processes, all parallel tests run in the same process - thats OK because most of the work is on the browser which will be using multiple processes.
+
+- the "Magic" nature of the api regarding how a sync call can be executed async - this is because of the retry mechanism - its important that assertions can retry, but if the assertion moves inside the promise (so for instance using Playwrights waitFor) then it makes it difficult to use more advanced expectations or things like inline snapshots.
 
 ## Reason for the name
 
