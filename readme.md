@@ -2,6 +2,10 @@
 
 A reliable and simple automated testing framework built around playwright and mocha with Jest snapshots thrown in, running in parallel.
 
+## Current Status - POC
+
+This project is in POC state. Anything could change or it could be abandoned.
+
 ## Features
 
 Retry tests - individual tests can retry
@@ -14,34 +18,35 @@ Extensible - Plugins allow extending commands.
 
 ## TODO for first initial version:
 
-[x] - playwright integration POC
-[x] - Retry assertions POC
-[x] - toMatchInlineSnapshot POC
-[x] - name change - Holly?
-[x] - Allow use with promises if you want
-[x] - parallel tests POC.
-[ ] - Eslint
-[ ] - TypeScript?
-[ ] - Assertions - build simple set of our own
-[ ] - Integration tests using UI
-[ ] - Retry tests POC
-[ ] - Unit Tests
-[ ] - command first argument - object with various things in? { holly, stack, playwright }?
-[ ] - more complete API mirroring playwright
-[ ] - support multiple pages
-[ ] - support multi browsers
-[ ] - Configuration for parallel - different contexts? (link to caching...)
-[ ] - Fix inline snapshot
-[ ] - snapshot serializers
-[ ] - pick up config for use as an external package
-[ ] - ability to extend commands
-[ ] - Documentation
-[ ] - Code coverage collection
-[ ] - Different assertion styles
-[ ] - Mocking time?
-[ ] - wait for finished?
-[ ] - lifecycle/cache clearing?
-[ ] - response mocking (easy plugin to playwright)
+- [x] playwright integration POC
+- [x] Retry assertions POC
+- [x] toMatchInlineSnapshot POC
+- [x] name change - Holly?
+- [x] Allow use with promises if you want
+- [x] parallel tests POC.
+- [ ] Eslint
+- [ ] TypeScript?
+- [ ] Assertions - build simple set of our own
+- [ ] Integration tests using UI
+- [ ] Retry tests POC
+- [ ] move these checkboxes into issues
+- [ ] Unit Tests
+- [ ] command first argument - object with various things in? { holly, stack, playwright }?
+- [ ] more complete API mirroring playwright
+- [ ] support multiple pages
+- [ ] support multi browsers
+- [ ] Configuration for parallel - different contexts? (link to caching...)
+- [ ] Fix inline snapshot
+- [ ] snapshot serializers
+- [ ] pick up config for use as an external package
+- [ ] ability to extend commands
+- [ ] Documentation
+- [ ] Code coverage collection
+- [ ] Different assertion styles
+- [ ] Mocking time?
+- [ ] wait for finished?
+- [ ] lifecycle/cache clearing?
+- [ ] response mocking (easy plugin to playwright)
 
 ## Example
 
@@ -65,3 +70,7 @@ However it has two downsides:
 
 - Debugging a test is more difficult as you cannot step through the commands
 - If you need to access the playwright API, you will need to use `async` and `await` so you may find yourself having inconsisent tests.
+
+## Reason for the name
+
+Holly is typically portrayed as green and red and the aim of this test runner is to provide automation tests that are green or red but never flakey or unknown yellow.
