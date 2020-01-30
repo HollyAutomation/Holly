@@ -29,7 +29,7 @@ Extensible - Plugins allow extending commands.
 - [x] Assertions - use Jest POC
 - [x] Integration tests POC
 - [x] Make tests work as typescript
-- [ ] Fix inline snapshot to work with transformed files
+- [x] Fix inline snapshot to work with transformed files
 - [ ] add pipe and do - check promises resolve in pw
 - [ ] Retry tests POC
 - [ ] Integration tests that test failures

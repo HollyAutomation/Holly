@@ -20,7 +20,7 @@ describe("Inline Snapshot", () => {
     await $("input[type=text]").type("hello");
     await $("input[type=text]")
       .value()
-      .shouldMatchInlineSnapshot();
+      .shouldMatchInlineSnapshot(`'hello'`);
   });
 
   it("works sync", ({ $ }) => {

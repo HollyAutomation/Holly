@@ -6,7 +6,7 @@ import prettier = require("prettier");
 import { Holly } from "./types";
 
 const debug = Debug("holly:matchInlineSnapshot");
-const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(lib|node_modules)(\/|\\)/;
+const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(build|node_modules)(\/|\\)/;
 
 const removeInternalLines = (stackLines: ReadonlyArray<string>) => {
   return stackLines.filter((stackLine: string) => {
