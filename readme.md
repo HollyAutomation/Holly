@@ -28,7 +28,8 @@ Extensible - Plugins allow extending commands.
 - [x] TypeScript
 - [x] Assertions - use Jest POC
 - [x] Integration tests POC
-- [ ] Make tests work as typescript
+- [x] Make tests work as typescript
+- [ ] Fix inline snapshot to work with transformed files
 - [ ] add pipe and do - check promises resolve in pw
 - [ ] Retry tests POC
 - [ ] Integration tests that test failures
@@ -39,7 +40,8 @@ Extensible - Plugins allow extending commands.
 - [ ] UI POC - command viewer
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
-- [ ] Unit Tests
+- [ ] Sample build and publishing typings which work? What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
+- [ ] Unit Tests?
 - [ ] command first argument - object with various things in? { holly, stack, playwright, element?, receivedValue?, matcherState }?
 - [ ] more complete API mirroring playwright
 - [ ] support multiple pages
