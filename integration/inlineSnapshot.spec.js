@@ -12,9 +12,7 @@ describe("Inline Snapshot", () => {
 
   beforeEach(async ({ newPage }) => {
     const url = testServer.addResponse(
-      bodyToHtml(`
-Input Test Page <br/> <input type="text" value="" />
-    `)
+      bodyToHtml(`Input Test Page <br/> <input type="text" value="" />`)
     );
     await newPage(url);
   });
@@ -26,7 +24,7 @@ Input Test Page <br/> <input type="text" value="" />
       .shouldMatchInlineSnapshot(`'hello'`);
   });
 
-  it("works sync", async ({ $ }) => {
+  it("works sync", ({ $ }) => {
     $("input[type=text]").type("hello");
     $("input[type=text]")
       .value()
