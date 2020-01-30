@@ -1,13 +1,12 @@
-const { TestServer, bodyToHtml } = require("./testServer");
+import { createTestServer, bodyToHtml, TestServer } from "./testServer";
 
 describe("Inline Snapshot", () => {
-  let testServer;
+  let testServer: TestServer;
   before(() => {
-    testServer = TestServer();
+    testServer = createTestServer();
   });
   after(() => {
     testServer.close();
-    testServer = null;
   });
 
   beforeEach(async ({ newPage }) => {

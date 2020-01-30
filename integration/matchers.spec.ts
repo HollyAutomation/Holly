@@ -1,13 +1,13 @@
-const { TestServer, bodyToHtml } = require("./testServer");
+import { createTestServer, bodyToHtml, TestServer } from "./testServer";
+import "../global.d";
 
 describe("Matchers", () => {
-  let testServer;
+  let testServer: TestServer;
   before(() => {
-    testServer = TestServer();
+    testServer = createTestServer();
   });
   after(() => {
     testServer.close();
-    testServer = null;
   });
 
   beforeEach(async ({ newPage }) => {

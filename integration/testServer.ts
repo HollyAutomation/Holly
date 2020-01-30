@@ -1,12 +1,17 @@
-const Koa = require("koa");
+import * as Koa from "koa";
 
 let port = 3000;
 
-exports.TestServer = () => {
+export type TestServer = {
+  addResponse: (response: string) => string;
+  close: () => void;
+};
+
+export const createTestServer = () => {
   const app = new Koa();
   const thisPort = port++;
 
-  let responses = {};
+  let responses: { [key: string]: string } = {};
   let responseIndex = 0;
 
   app.use(async function(ctx) {
@@ -19,7 +24,7 @@ exports.TestServer = () => {
   const server = app.listen(thisPort);
 
   return {
-    addResponse(response) {
+    addResponse(response: string) {
       const thisResponse = responseIndex++;
       responses[thisResponse] = response;
       return `http://localhost:${thisPort}/${thisResponse}`;
@@ -30,4 +35,5 @@ exports.TestServer = () => {
   };
 };
 
-exports.bodyToHtml = body => `<html><head></head><body>${body}</body></html>`;
+export const bodyToHtml = (body: string) =>
+  `<html><head></head><body>${body}</body></html>`;

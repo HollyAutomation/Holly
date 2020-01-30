@@ -21,16 +21,18 @@ Extensible - Plugins allow extending commands.
 - [x] playwright integration POC
 - [x] Retry assertions POC
 - [x] toMatchInlineSnapshot POC
-- [x] name change - Holly?
+- [x] name change - Holly
 - [x] Allow use with promises if you want
 - [x] parallel tests POC.
 - [x] Eslint
-- [x] TypeScript?
+- [x] TypeScript
 - [x] Assertions - use Jest POC
 - [x] Integration tests POC
 - [ ] Make tests work as typescript
 - [ ] add pipe and do - check promises resolve in pw
 - [ ] Retry tests POC
+- [ ] Integration tests that test failures
+- [ ] Integration tests that test inline snapshot updates
 - [ ] move these checkboxes into issues
 - [ ] add build
 - [ ] add dependabot

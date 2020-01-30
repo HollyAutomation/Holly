@@ -4,6 +4,9 @@ import { chromium } from "playwright";
 import createHolly from "./holly";
 import { Holly } from "./types";
 
+// TODO this needs to move into the caller | be configured
+import "ts-node/register";
+
 const debug = Debug("holly:index");
 
 function getHollyFromSuite(suite: Mocha.Suite): Holly {
@@ -131,8 +134,8 @@ Mocha.Suite.prototype.afterEach = function(
   };
 
   await Promise.all([
-    runSuite("integration/inlineSnapshot.spec.js"),
-    runSuite("integration/matchers.spec.js")
+    runSuite("lib/integration/inlineSnapshot.spec.ts"),
+    runSuite("lib/integration/matchers.spec.ts")
   ]);
 
   await browser.close();
