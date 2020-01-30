@@ -5,7 +5,11 @@ import createHolly from "./holly";
 import { Holly } from "./types";
 
 // TODO this needs to move into the caller | be configured
-import "ts-node/register";
+import * as tsNode from "ts-node";
+tsNode.register({
+  project: "integration/tsconfig.json",
+  transpileOnly: true
+});
 
 const debug = Debug("holly:index");
 
@@ -134,8 +138,8 @@ Mocha.Suite.prototype.afterEach = function(
   };
 
   await Promise.all([
-    runSuite("lib/integration/inlineSnapshot.spec.ts"),
-    runSuite("lib/integration/matchers.spec.ts")
+    runSuite("integration/inlineSnapshot.spec.ts"),
+    runSuite("integration/matchers.spec.ts")
   ]);
 
   await browser.close();

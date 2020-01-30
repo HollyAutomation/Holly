@@ -1,5 +1,4 @@
 import { createTestServer, bodyToHtml, TestServer } from "./testServer";
-import "../global.d";
 
 describe("Matchers", () => {
   let testServer: TestServer;

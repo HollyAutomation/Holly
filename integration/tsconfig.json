@@ -65,12 +65,7 @@
 
     /* Advanced Options */
     "resolveJsonModule": true /* Include modules imported with '.json' extension */,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["/*"]
-    },
-    "typeRoots": ["./typings"],
+    "typeRoots": ["./"],
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
-  },
-  "exclude": ["node_modules/*/index.d.ts"]
+  }
 }
