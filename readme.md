@@ -31,6 +31,8 @@ Extensible - Plugins allow extending commands.
 - [ ] add pipe and do - check promises resolve in pw
 - [ ] Retry tests POC
 - [ ] move these checkboxes into issues
+- [ ] add build
+- [ ] add dependabot
 - [ ] UI POC - command viewer
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
