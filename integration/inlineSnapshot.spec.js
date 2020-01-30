@@ -1,6 +1,22 @@
-describe("Integration", () => {
+const { TestServer, bodyToHtml } = require("./testServer");
+
+describe("Inline Snapshot", () => {
+  let testServer;
+  before(() => {
+    testServer = TestServer();
+  });
+  after(() => {
+    testServer.close();
+    testServer = null;
+  });
+
   beforeEach(async ({ newPage }) => {
-    await newPage("http://www.google.com");
+    const url = testServer.addResponse(
+      bodyToHtml(`
+Input Test Page <br/> <input type="text" value="" />
+    `)
+    );
+    await newPage(url);
   });
 
   it("works async", async ({ $ }) => {

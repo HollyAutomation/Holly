@@ -27,7 +27,8 @@ Extensible - Plugins allow extending commands.
 - [x] Eslint
 - [x] TypeScript?
 - [x] Assertions - use Jest POC
-- [ ] Integration tests POC
+- [x] Integration tests POC
+- [ ] Make tests work as typescript
 - [ ] add pipe and do - check promises resolve in pw
 - [ ] Retry tests POC
 - [ ] move these checkboxes into issues
