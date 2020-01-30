@@ -1,6 +1,6 @@
 ## Holly
 
-A reliable and simple automated testing framework built around playwright and mocha with Jest snapshots thrown in, running in parallel.
+A reliable and simple automated testing framework built around playwright and mocha with Jest matchers and snapshots thrown in, running in parallel with a timetravel capable UI.
 
 ## Current Status - POC
 
