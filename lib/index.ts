@@ -139,7 +139,8 @@ Mocha.Suite.prototype.afterEach = function(
 
   await Promise.all([
     runSuite("integration/inlineSnapshot.spec.ts"),
-    runSuite("integration/matchers.spec.ts")
+    runSuite("integration/matchers.spec.ts"),
+    runSuite("integration/assertionRetry.spec.ts")
   ]);
 
   await browser.close();

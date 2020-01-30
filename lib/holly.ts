@@ -113,7 +113,7 @@ export default function createHolly(): Holly {
     holly[command.name] = createInitialCommand(command);
   });
 
-  const MAX_RETRY_TIME = 100;
+  const MAX_RETRY_TIME = 5000;
 
   async function runCommand(commandInstance: CommandInstance): Promise<any> {
     debug(`Running command '${commandInstance.command.name}'`);
