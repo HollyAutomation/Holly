@@ -7,13 +7,16 @@ describe("Integration", () => {
     await $("input[type=text]").type("hello");
     await $("input[type=text]")
       .value()
-      .shouldMatchInlineSnapshot(`'hello'`);
+      .shouldNotEqual("test not equal");
   });
 
-  it("works sync", async ({ $ }) => {
+  it("works sync", async ({ $, any }) => {
     $("input[type=text]").type("hello");
     $("input[type=text]")
       .value()
-      .shouldMatchInlineSnapshot(`'hello'`);
+      .shouldMatch(/hello/);
+    $("input[type=text]")
+      .value()
+      .shouldEqual(any(String));
   });
 });

@@ -26,13 +26,16 @@ Extensible - Plugins allow extending commands.
 - [x] parallel tests POC.
 - [x] Eslint
 - [x] TypeScript?
+- [x] Assertions - use Jest POC
 - [ ] Integration tests POC
 - [ ] add pipe and do - check promises resolve in pw
-- [ ] Assertions - build simple set of our own
 - [ ] Retry tests POC
 - [ ] move these checkboxes into issues
+- [ ] UI POC - command viewer
+- [ ] UI POC - test control
+- [ ] UI POC - snapshots / history
 - [ ] Unit Tests
-- [ ] command first argument - object with various things in? { holly, stack, playwright }?
+- [ ] command first argument - object with various things in? { holly, stack, playwright, element?, receivedValue?, matcherState }?
 - [ ] more complete API mirroring playwright
 - [ ] support multiple pages
 - [ ] support multi browsers

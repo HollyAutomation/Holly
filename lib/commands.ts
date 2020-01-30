@@ -1,9 +1,10 @@
-import Debug from "debug";
-import { ElementHandle } from "playwright-core";
+// import Debug from "debug";
+import { ElementHandle } from "playwright";
 import matchInlineSnapshot from "./matchInlineSnapshot";
 import { Holly, CommandDefinition } from "./types";
+import { commandMatchers } from "./commandMatchers";
 
-const debug = Debug("holly:commands");
+// const debug = Debug("holly:commands");
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   {
@@ -27,21 +28,14 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
     canRetry: false
   }
 ];
+
 export const chainedCommands: ReadonlyArray<CommandDefinition> = [
+  ...commandMatchers,
   {
     name: "value",
     run(holly: Holly, element: ElementHandle) {
       // @ts-ignore
       return element.evaluate((elem: HTMLElement) => elem.value);
-    }
-  },
-  {
-    name: "shouldEqual",
-    run(holly: Holly, value: string, expectedValue: string) {
-      if (value !== expectedValue) {
-        debug(`shouldEqual not equal '${value}' '${expectedValue}'`);
-        throw new Error(`expected '${expectedValue}' but got '${value}'`);
-      }
     }
   },
   matchInlineSnapshot,

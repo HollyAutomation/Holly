@@ -7,6 +7,7 @@ import {
   HollyChain,
   CommandDefinition
 } from "./types";
+import { asymmetricMatchers } from "./commandMatchers";
 
 const debug = Debug("holly:holly");
 
@@ -19,7 +20,8 @@ function last<T>(ar: ReadonlyArray<T>): T {
 export default function createHolly(): Holly {
   // @ts-ignore
   const holly: Holly = {
-    __page: null
+    __page: null,
+    ...asymmetricMatchers
   };
 
   const chainedCommandsBase = {
@@ -111,6 +113,8 @@ export default function createHolly(): Holly {
     holly[command.name] = createInitialCommand(command);
   });
 
+  const MAX_RETRY_TIME = 100;
+
   async function runCommand(commandInstance: CommandInstance): Promise<any> {
     debug(`Running command '${commandInstance.command.name}'`);
     let args = commandInstance.args;
@@ -129,18 +133,33 @@ export default function createHolly(): Holly {
         };
       }
     } catch (e) {
-      if (commandInstance.parent && commandInstance.parent.retry) {
+      const doRetry = commandInstance.parent && commandInstance.parent.retry;
+      const hasTimedOut =
+        doRetry &&
+        Date.now() -
+          (commandInstance.retryStartTime || Number.MAX_SAFE_INTEGER) >
+          MAX_RETRY_TIME;
+
+      if (doRetry && !hasTimedOut) {
+        if (!commandInstance.retryStartTime) {
+          commandInstance.retryStartTime = Date.now();
+        }
+
         debug(
           `exception '${e}' so retrying command '${commandInstance.command.name}'`
         );
         await retryDelay();
-        await commandInstance.parent.retry();
+        await doRetry();
         return runCommand(commandInstance);
       } else {
+        let toThrow = e;
+        if (typeof e.message === "function") {
+          toThrow = new Error(e.message());
+        }
         debug(
-          `failure with no parent so just re-throwing '${commandInstance.command.name}'`
+          `failure with no parent or retry available so just re-throwing '${commandInstance.command.name}' 'e.message'`
         );
-        throw e;
+        throw toThrow;
       }
     }
   }

@@ -1,6 +1,6 @@
 import Debug from "debug";
 import Mocha = require("mocha");
-import { chromium } from "playwright-core";
+import { chromium } from "playwright";
 import createHolly from "./holly";
 import { Holly } from "./types";
 
@@ -104,12 +104,12 @@ Mocha.Suite.prototype.afterEach = function(
     return new Promise(resolve => {
       const holly = createHolly();
 
-      // @ts-ignore - https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41941
       const mocha = new Mocha({
         delay: true, // allow us to control when execution really starts
         timeout: "20s"
       });
 
+      // @ts-ignore
       mocha.suite.holly = holly;
 
       mocha.addFile(suiteFile);
@@ -121,13 +121,11 @@ Mocha.Suite.prototype.afterEach = function(
         resolve();
       });
 
-      // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41942
       runner.on(Mocha.Runner.constants.EVENT_TEST_BEGIN, function() {
         debug("test start");
         holly.__start(context);
       });
 
-      // @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/pull/41942
       mocha.suite.emit(Mocha.Suite.constants.EVENT_ROOT_SUITE_RUN);
     });
   };

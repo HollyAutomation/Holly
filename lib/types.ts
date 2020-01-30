@@ -25,6 +25,7 @@ export type CommandInstance = {
   command: CommandDefinition;
   args: ReadonlyArray<any>;
   retry?: null | (() => any);
+  retryStartTime?: number;
 };
 
 export type CommandDefinition = {
@@ -33,3 +34,25 @@ export type CommandDefinition = {
   canRetry?: boolean;
   captureStack?: boolean;
 };
+
+export type MatcherState = {
+  isNot: boolean;
+  expand: boolean;
+};
+
+export type ExpectationResult = {
+  pass: boolean;
+  message: () => string;
+};
+
+export type RawMatcherFn = {
+  (
+    this: MatcherState,
+    matcherName: string,
+    received: any,
+    expected: any,
+    options?: any
+  ): ExpectationResult;
+};
+
+export type MatchersObject = { [id: string]: RawMatcherFn };
