@@ -39,15 +39,17 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] Use glob to get the list of specs to run
 - [x] add dependabot
 - [x] add build
-- [ ] add cli command
-- [ ] Config file
+- [x] add cli command
+- [ ] move node-ts hook out of index
 - [ ] Integration tests that test failures
 - [ ] Integration tests that test inline snapshot updates
+- [ ] Config file
+- [ ] Expose mocha options
 - [ ] move these checkboxes into issues
 - [ ] UI POC - command viewer
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
-- [ ] Sample build and publishing typings which work?
+- [ ] How to consume types?
 - [ ] Unit Tests?
 - [ ] command first argument - object with various things in? { holly, stack, playwright, element?, receivedValue?, matcherState }?
 - [ ] more complete API mirroring playwright
@@ -56,7 +58,6 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [ ] Configuration for parallel - different contexts? (link to caching...)
 - [ ] Fix inline snapshot
 - [ ] snapshot serializers
-- [ ] pick up config for use as an external package
 - [ ] ability to extend commands
 - [ ] Documentation
 - [ ] Code coverage collection

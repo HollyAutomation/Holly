@@ -2,15 +2,18 @@
   "name": "holly",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "node build/index.js",
+    "test": " node bin/holly -s integration/**/*.spec.ts",
     "lint": "eslint . --ext=ts,js",
     "build": "tsc -p lib",
     "build:watch": "tsc --watch -p lib"
   },
-  "author": "",
+  "author": "Luke Page",
   "license": "ISC",
+  "bin": {
+    "holly": "./bin/holly"
+  },
   "dependencies": {
     "@babel/traverse": "7.8.4",
     "debug": "4.1.1",
@@ -19,7 +22,8 @@
     "jest-snapshot": "25.1.0",
     "mocha": "7.0.1",
     "playwright": "0.9.24",
-    "stack-utils": "2.0.1"
+    "stack-utils": "2.0.1",
+    "yargs": "15.1.0"
   },
   "devDependencies": {
     "@types/babel__traverse": "7.0.8",
@@ -29,6 +33,7 @@
     "@types/mocha": "7.0.1",
     "@types/node": "13.5.3",
     "@types/prettier": "1.19.0",
+    "@types/yargs": "15.0.2",
     "@typescript-eslint/eslint-plugin": "2.18.0",
     "@typescript-eslint/parser": "2.18.0",
     "eslint": "6.8.0",

@@ -109,7 +109,7 @@ Mocha.Suite.prototype.afterEach = function(
   });
 };
 
-(async () => {
+export const run = async ({ specs }: { specs: string }) => {
   const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
   // or await newContext()
   const context = browser.defaultContext();
@@ -171,7 +171,7 @@ Mocha.Suite.prototype.afterEach = function(
 
   start();
 
-  const files = await glob("**/*.spec.ts");
+  const files = await glob(specs);
 
   debug("Testing files..", files);
 
@@ -180,4 +180,4 @@ Mocha.Suite.prototype.afterEach = function(
   await finished();
 
   await browser.close();
-})();
+};
