@@ -15,6 +15,7 @@ Parallel suites - Suites can run in parallel
 Easy, simple API - the api provides helpers to enable writing short tests
 Escape Hatches - able to access the more advanced playwright API if needed
 Extensible - Plugins allow extending commands.
+Multiple Reporters - Supported out of the box (unlike Mocha)
 
 ## TODO for first initial version:
 
@@ -34,7 +35,8 @@ Extensible - Plugins allow extending commands.
 - [x] Retry tests POC
 - [x] add pipe and do
 - [x] What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
-- [ ] Manage the parallel process
+- [x] Manage the parallel process for reporters
+- [ ] Use glob to get the list of specs to run
 - [ ] Config file
 - [ ] File globbing
 - [ ] Integration tests that test failures
