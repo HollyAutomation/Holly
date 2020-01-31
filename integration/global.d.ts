@@ -19,10 +19,14 @@ type HollyChain = {
 
 type HollyChainAwaitable = Promise<HollyChain> & HollyChain;
 
-type HollyRunnable = (holly: Holly) => Promise<any> | void;
+type HollyRunnable = (this: MochaContext, holly: Holly) => Promise<any> | void;
+
+type MochaContext = {
+  retries: (retries: number) => void;
+};
 
 declare global {
-  function describe(title: string, fn: () => void): void;
+  function describe(title: string, fn: (this: MochaContext) => void): void;
   function before(
     titleOrFn: HollyRunnable | string,
     maybeFn: HollyRunnable | void

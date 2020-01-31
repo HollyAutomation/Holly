@@ -30,8 +30,12 @@ Extensible - Plugins allow extending commands.
 - [x] Integration tests POC
 - [x] Make tests work as typescript
 - [x] Fix inline snapshot to work with transformed files
+- [ ] Test we can wait for client side promises
+- [x] Retry tests POC
 - [ ] add pipe and do - check promises resolve in pw
-- [ ] Retry tests POC
+- [ ] Manage the parallel process
+- [ ] Config file
+- [ ] File globbing
 - [ ] Integration tests that test failures
 - [ ] Integration tests that test inline snapshot updates
 - [ ] move these checkboxes into issues
