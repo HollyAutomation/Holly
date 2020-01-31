@@ -11,13 +11,6 @@ import * as util from "util";
 
 const glob = util.promisify(globOriginal);
 
-// TODO this needs to move into the caller | be configured
-import * as tsNode from "ts-node";
-tsNode.register({
-  project: "integration/tsconfig.json",
-  transpileOnly: true
-});
-
 const debug = Debug("holly:index");
 
 function getHollyFromSuite(suite: Mocha.Suite): Holly {

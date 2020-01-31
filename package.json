@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "test": " node bin/holly -s integration/**/*.spec.ts",
+    "test": " node bin/holly -c ../../integration/.hollyrc",
     "lint": "eslint . --ext=ts,js",
     "build": "tsc -p lib",
     "build:watch": "tsc --watch -p lib"

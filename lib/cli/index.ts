@@ -1,7 +1,7 @@
 import yargs = require("yargs");
 import { run } from "../";
 
-const options = yargs.options({
+const commandLineOptions = yargs.options({
   headless: {
     type: "boolean",
     default: true,
@@ -16,7 +16,6 @@ const options = yargs.options({
   specs: {
     type: "string",
     alias: "s",
-    demandOption: true,
     desc: "Glob path to specs files to run"
   },
   reporter: {
@@ -25,6 +24,21 @@ const options = yargs.options({
       "adds a reporter. Can either be a standard mocha reporter like 'spec' or package to be required"
   }
 }).argv;
+
+let configOptions = {};
+
+if (commandLineOptions.config) {
+  configOptions = require(commandLineOptions.config);
+}
+
+const options = { ...configOptions, ...commandLineOptions };
+
+if (!options.specs) {
+  // convert to yargs error?
+  throw new Error(
+    "You must specify a specs argument or a config file containing specs"
+  );
+}
 
 run({
   specs: options.specs
