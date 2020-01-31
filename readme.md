@@ -33,7 +33,7 @@ Extensible - Plugins allow extending commands.
 - [x] Test we can wait for client side promises
 - [x] Retry tests POC
 - [x] add pipe and do
-- [ ] What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
+- [x] What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
 - [ ] Manage the parallel process
 - [ ] Config file
 - [ ] File globbing
@@ -67,12 +67,13 @@ Extensible - Plugins allow extending commands.
 ## Example
 
 ```
+const { newPage, $ } = holly;
 describe("Integration", () => {
-  beforeEach(async ({ newPage }) => {
+  beforeEach(async () => {
     await newPage("http://www.google.com");
   })
 
-  it("works", async ({ $ }) => {
+  it("works", async () => {
     await $("input[type=text]").type("hello");
     await $("input[type=text]")
       .value()
@@ -88,12 +89,13 @@ Holly can be used in a synchronous way (no `async` or `await`'s needed) if that 
 Example:
 
 ```
+const { newPage, $ } = holly;
 describe("Integration", () => {
-  beforeEach(({ newPage }) => {
+  beforeEach(() => {
     newPage("http://www.google.com");
   })
 
-  it("works synchronously", ({ $ }) => {
+  it("works synchronously", () => {
     $("input[type=text]").type("hello");
     $("input[type=text]")
       .value()
@@ -108,8 +110,6 @@ However it has two downsides:
 - If you need to access the playwright API (which we recommend anyplace where holly hasn't made it easier or provided an alternative), you will need to use `async` and `await` as its a promise based API so you may find yourself having inconsisent tests.
 
 ## Design Decisions
-
-- Holly is passed into every hook and test to allow us to create a consistent test but also allow the tests to be run in parallel. Because the driver cannot be shared between processes, all parallel tests run in the same process - thats OK because most of the work is on the browser which will be using multiple processes.
 
 - the "Magic" nature of the api regarding how a sync call can be executed async - this is because of the retry mechanism - its important that assertions can retry, but if the assertion moves inside the promise (so for instance using Playwrights waitFor) then it makes it difficult to use more advanced expectations or things like inline snapshots.
 

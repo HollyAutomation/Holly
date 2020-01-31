@@ -1,5 +1,7 @@
 import { createTestServer, bodyToHtml, TestServer } from "./testServer";
 
+const { newPage, pipe, evaluate } = holly;
+
 describe("Client Side Promises", () => {
   let testServer: TestServer;
   before(() => {
@@ -9,7 +11,7 @@ describe("Client Side Promises", () => {
     testServer.close();
   });
 
-  it("waits for a promise", async ({ newPage, pipe }) => {
+  it("waits for a promise", async () => {
     const url = testServer.addResponse(
       bodyToHtml(
         `Input Test Page <br/>
@@ -30,7 +32,7 @@ describe("Client Side Promises", () => {
     ).shouldEqual("hello");
   });
 
-  it("waits for a promise without retry", async ({ newPage, evaluate }) => {
+  it("waits for a promise without retry", async () => {
     const url = testServer.addResponse(
       bodyToHtml(
         `Input Test Page <br/>

@@ -17,6 +17,7 @@
     "expect": "25.1.0",
     "jest-snapshot": "25.1.0",
     "mocha": "7.0.1",
+    "node-hook": "^1.0.0",
     "playwright": "0.9.24",
     "stack-utils": "2.0.1"
   },

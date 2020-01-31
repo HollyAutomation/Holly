@@ -1,5 +1,7 @@
 import { createTestServer, bodyToHtml, TestServer } from "./testServer";
 
+const { newPage, $, any } = holly;
+
 describe("Matchers", () => {
   let testServer: TestServer;
   before(() => {
@@ -9,7 +11,7 @@ describe("Matchers", () => {
     testServer.close();
   });
 
-  beforeEach(async ({ newPage }) => {
+  beforeEach(async () => {
     const url = testServer.addResponse(
       bodyToHtml(`
 Input Test Page <br/> <input type="text" value="Hello World" />
@@ -19,13 +21,13 @@ Input Test Page <br/> <input type="text" value="Hello World" />
   });
 
   describe("command matchers", () => {
-    it("should not equal", async ({ $ }) => {
+    it("should not equal", async () => {
       await $("input[type=text]")
         .value()
         .shouldNotEqual("Hello Luke");
     });
 
-    it("should match", async ({ $, any }) => {
+    it("should match", async () => {
       $("input[type=text]")
         .value()
         .shouldMatch(/hello/i);
@@ -33,7 +35,7 @@ Input Test Page <br/> <input type="text" value="Hello World" />
   });
 
   describe("asymmetric matchers", () => {
-    it("any string", async ({ $, any }) => {
+    it("any string", async () => {
       $("input[type=text]")
         .value()
         .shouldEqual(any(String));

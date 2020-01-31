@@ -1,3 +1,4 @@
+import "./addHollyToGlobal";
 import Debug from "debug";
 import Mocha = require("mocha");
 import { chromium } from "playwright";
@@ -31,7 +32,7 @@ Mocha.Suite.prototype.addTest = function(test: Mocha.ITest) {
   const oldFn = test.fn;
   if (oldFn) {
     test.fn = async function() {
-      await oldFn.call(this, holly);
+      await oldFn.call(this);
       return holly.__executeSoFar();
     };
     // tests returning promises are classed as sync
@@ -67,7 +68,7 @@ Mocha.Suite.prototype.beforeEach = function(
   return oldBeforeEach.call(this, title, async function() {
     debug("calling beforeEach fn");
     // @ts-ignore
-    await fn.call(this, holly);
+    await fn.call(this);
     return holly.__executeSoFar();
   });
 };
@@ -97,7 +98,7 @@ Mocha.Suite.prototype.afterEach = function(
   return oldAfterEach.call(this, title, async function() {
     debug("calling afterEach fn");
     // @ts-ignore
-    await fn.call(this, holly);
+    await fn.call(this);
     return holly.__executeSoFar();
   });
 };
@@ -120,6 +121,16 @@ Mocha.Suite.prototype.afterEach = function(
       mocha.suite.holly = holly;
 
       mocha.addFile(suiteFile);
+
+      mocha.suite.on(Mocha.Suite.constants.EVENT_FILE_PRE_REQUIRE, context => {
+        // @ts-ignore
+        context.getHolly = () => holly;
+      });
+
+      mocha.suite.on(Mocha.Suite.constants.EVENT_FILE_POST_REQUIRE, context => {
+        // @ts-ignore
+        context.getHolly = null;
+      });
 
       const runner = mocha.run(async () => {
         if (holly.__page) {

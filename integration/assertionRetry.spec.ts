@@ -1,5 +1,7 @@
 import { createTestServer, bodyToHtml, TestServer } from "./testServer";
 
+const { newPage, $ } = holly;
+
 describe("Assertion Retry", () => {
   let testServer: TestServer;
   before(() => {
@@ -10,7 +12,7 @@ describe("Assertion Retry", () => {
   });
 
   describe("retries getting a value", () => {
-    beforeEach(async ({ newPage }) => {
+    beforeEach(async () => {
       const url = testServer.addResponse(
         bodyToHtml(`Input Test Page <br/> <input id="inp" type="text" value="" />
         <script>
@@ -22,13 +24,13 @@ describe("Assertion Retry", () => {
       await newPage(url);
     });
 
-    it("works async", async ({ $ }) => {
+    it("works async", async () => {
       await $("#inp")
         .value()
         .shouldEqual("hello");
     });
 
-    it("works sync", ({ $ }) => {
+    it("works sync", () => {
       $("#inp")
         .value()
         .shouldEqual("hello");
@@ -36,7 +38,7 @@ describe("Assertion Retry", () => {
   });
 
   describe("retries when the element is recreated", () => {
-    beforeEach(async ({ newPage }) => {
+    beforeEach(async () => {
       const url = testServer.addResponse(
         bodyToHtml(`Input Test Page <br/> <div id="replace_children"><input id="inp" type="text" value="" /></div>
         <script>
@@ -48,13 +50,13 @@ describe("Assertion Retry", () => {
       await newPage(url);
     });
 
-    it("works async", async ({ $ }) => {
+    it("works async", async () => {
       await $("#inp")
         .value()
         .shouldEqual("hello");
     });
 
-    it("works sync", ({ $ }) => {
+    it("works sync", () => {
       $("#inp")
         .value()
         .shouldEqual("hello");
