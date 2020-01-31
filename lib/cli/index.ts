@@ -1,5 +1,6 @@
 import yargs = require("yargs");
 import { run } from "../";
+import * as path from "path";
 
 const commandLineOptions = yargs.options({
   headless: {
@@ -28,7 +29,7 @@ const commandLineOptions = yargs.options({
 let configOptions = {};
 
 if (commandLineOptions.config) {
-  configOptions = require(commandLineOptions.config);
+  configOptions = require(path.resolve(commandLineOptions.config));
 }
 
 const options = { ...configOptions, ...commandLineOptions };
