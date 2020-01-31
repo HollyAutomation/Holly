@@ -38,12 +38,12 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] Manage the parallel process for reporters
 - [x] Use glob to get the list of specs to run
 - [x] add dependabot
+- [x] add build
 - [ ] add cli command
 - [ ] Config file
 - [ ] Integration tests that test failures
 - [ ] Integration tests that test inline snapshot updates
 - [ ] move these checkboxes into issues
-- [ ] add build
 - [ ] UI POC - command viewer
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
