@@ -37,12 +37,13 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
 - [x] Manage the parallel process for reporters
 - [x] Use glob to get the list of specs to run
+- [x] add dependabot
+- [ ] add cli command
 - [ ] Config file
 - [ ] Integration tests that test failures
 - [ ] Integration tests that test inline snapshot updates
 - [ ] move these checkboxes into issues
 - [ ] add build
-- [ ] add dependabot
 - [ ] UI POC - command viewer
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
