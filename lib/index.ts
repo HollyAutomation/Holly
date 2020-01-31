@@ -6,6 +6,10 @@ import { chromium } from "playwright";
 import createHolly from "./holly";
 import { Holly } from "./types";
 import { createMultiReporter } from "./multiReporter";
+import globOriginal = require("glob");
+import * as util from "util";
+
+const glob = util.promisify(globOriginal);
 
 // TODO this needs to move into the caller | be configured
 import * as tsNode from "ts-node";
@@ -167,13 +171,11 @@ Mocha.Suite.prototype.afterEach = function(
 
   start();
 
-  await Promise.all([
-    runSuite("integration/inlineSnapshot.spec.ts", Collector),
-    runSuite("integration/matchers.spec.ts", Collector),
-    runSuite("integration/assertionRetry.spec.ts", Collector),
-    runSuite("integration/testRetry.spec.ts", Collector),
-    runSuite("integration/clientSidePromises.spec.ts", Collector)
-  ]);
+  const files = await glob("**/*.spec.ts");
+
+  debug("Testing files..", files);
+
+  await Promise.all(files.map(file => runSuite(file, Collector)));
 
   await finished();
 

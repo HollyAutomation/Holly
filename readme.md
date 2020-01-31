@@ -36,9 +36,8 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] add pipe and do
 - [x] What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
 - [x] Manage the parallel process for reporters
-- [ ] Use glob to get the list of specs to run
+- [x] Use glob to get the list of specs to run
 - [ ] Config file
-- [ ] File globbing
 - [ ] Integration tests that test failures
 - [ ] Integration tests that test inline snapshot updates
 - [ ] move these checkboxes into issues
