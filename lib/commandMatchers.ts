@@ -47,6 +47,7 @@ function createMatcherCommand(
         debug(`matcher failed '${receivedValue}' '${expectedValue}'`);
         throw result;
       }
+      debug(`matcher passed '${receivedValue}' '${expectedValue}'`);
       return receivedValue;
     }
   };

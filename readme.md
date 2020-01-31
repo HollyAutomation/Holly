@@ -30,9 +30,10 @@ Extensible - Plugins allow extending commands.
 - [x] Integration tests POC
 - [x] Make tests work as typescript
 - [x] Fix inline snapshot to work with transformed files
-- [ ] Test we can wait for client side promises
+- [x] Test we can wait for client side promises
 - [x] Retry tests POC
-- [ ] add pipe and do - check promises resolve in pw
+- [x] add pipe and do
+- [ ] What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
 - [ ] Manage the parallel process
 - [ ] Config file
 - [ ] File globbing
@@ -44,7 +45,7 @@ Extensible - Plugins allow extending commands.
 - [ ] UI POC - command viewer
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
-- [ ] Sample build and publishing typings which work? What to do about types overlapping because I resused it to pass holly? change to getHolly() call? try to make a new vm context so I can have a global with holly in its thats unique per paralllel instance?
+- [ ] Sample build and publishing typings which work?
 - [ ] Unit Tests?
 - [ ] command first argument - object with various things in? { holly, stack, playwright, element?, receivedValue?, matcherState }?
 - [ ] more complete API mirroring playwright
