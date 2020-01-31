@@ -1,9 +1,11 @@
 import "./addHollyToGlobal";
 import Debug from "debug";
 import Mocha = require("mocha");
+import defaultMochaOptions = require("mocha/lib/mocharc.json");
 import { chromium } from "playwright";
 import createHolly from "./holly";
 import { Holly } from "./types";
+import { createMultiReporter } from "./multiReporter";
 
 // TODO this needs to move into the caller | be configured
 import * as tsNode from "ts-node";
@@ -108,29 +110,40 @@ Mocha.Suite.prototype.afterEach = function(
   // or await newContext()
   const context = browser.defaultContext();
 
-  const runSuite = (suiteFile: string) => {
+  const mochaOptions = {
+    ...defaultMochaOptions,
+    delay: true, // allow us to control when execution really starts
+    timeout: "20s"
+  };
+
+  const runSuite = (suiteFile: string, Collector: ReporterConstructor) => {
     return new Promise(resolve => {
       const holly = createHolly();
 
-      const mocha = new Mocha({
-        delay: true, // allow us to control when execution really starts
-        timeout: "20s"
-      });
+      // @ts-ignore
+      const mocha = new Mocha(mochaOptions);
+      mocha.reporter(Collector);
 
       // @ts-ignore
       mocha.suite.holly = holly;
 
       mocha.addFile(suiteFile);
 
-      mocha.suite.on(Mocha.Suite.constants.EVENT_FILE_PRE_REQUIRE, context => {
-        // @ts-ignore
-        context.getHolly = () => holly;
-      });
+      mocha.suite.on(
+        Mocha.Suite.constants.EVENT_FILE_PRE_REQUIRE,
+        (context: any) => {
+          // @ts-ignore
+          context.getHolly = () => holly;
+        }
+      );
 
-      mocha.suite.on(Mocha.Suite.constants.EVENT_FILE_POST_REQUIRE, context => {
-        // @ts-ignore
-        context.getHolly = null;
-      });
+      mocha.suite.on(
+        Mocha.Suite.constants.EVENT_FILE_POST_REQUIRE,
+        (context: any) => {
+          // @ts-ignore
+          context.getHolly = null;
+        }
+      );
 
       const runner = mocha.run(async () => {
         if (holly.__page) {
@@ -148,13 +161,21 @@ Mocha.Suite.prototype.afterEach = function(
     });
   };
 
+  const { Collector, addReporter, start, finished } = createMultiReporter();
+
+  addReporter("spec", undefined, mochaOptions);
+
+  start();
+
   await Promise.all([
-    runSuite("integration/inlineSnapshot.spec.ts"),
-    runSuite("integration/matchers.spec.ts"),
-    runSuite("integration/assertionRetry.spec.ts"),
-    runSuite("integration/testRetry.spec.ts"),
-    runSuite("integration/clientSidePromises.spec.ts")
+    runSuite("integration/inlineSnapshot.spec.ts", Collector),
+    runSuite("integration/matchers.spec.ts", Collector),
+    runSuite("integration/assertionRetry.spec.ts", Collector),
+    runSuite("integration/testRetry.spec.ts", Collector),
+    runSuite("integration/clientSidePromises.spec.ts", Collector)
   ]);
+
+  await finished();
 
   await browser.close();
 })();
