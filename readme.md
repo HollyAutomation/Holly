@@ -42,6 +42,8 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] add cli command
 - [x] move node-ts hook out of index
 - [ ] Integration tests that test failures
+- [ ] Code coverage collection
+- [ ] Remove internal paths from the stack trace
 - [ ] Integration tests that test inline snapshot updates
 - [ ] Config file
 - [ ] Expose mocha options
@@ -60,7 +62,6 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [ ] snapshot serializers
 - [ ] ability to extend commands
 - [ ] Documentation
-- [ ] Code coverage collection
 - [ ] Different assertion styles
 - [ ] Mocking time?
 - [ ] wait for finished?

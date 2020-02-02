@@ -1,4 +1,4 @@
-import { createTestServer, bodyToHtml, TestServer } from "./testServer";
+import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
 const { newPage, pipe, evaluate } = holly;
 

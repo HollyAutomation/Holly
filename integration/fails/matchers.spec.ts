@@ -1,4 +1,4 @@
-import { createTestServer, bodyToHtml, TestServer } from "./testServer";
+import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
 const { newPage, $, any } = holly;
 
@@ -24,13 +24,13 @@ Input Test Page <br/> <input type="text" value="Hello World" />
     it("should not equal", async () => {
       await $("input[type=text]")
         .value()
-        .shouldNotEqual("Hello Luke");
+        .shouldNotEqual("Hello World");
     });
 
     it("should match", async () => {
       $("input[type=text]")
         .value()
-        .shouldMatch(/hello/i);
+        .shouldMatch(/Luke/i);
     });
   });
 
@@ -38,7 +38,7 @@ Input Test Page <br/> <input type="text" value="Hello World" />
     it("any string", async () => {
       $("input[type=text]")
         .value()
-        .shouldEqual(any(String));
+        .shouldEqual(any(Function));
     });
   });
 });
