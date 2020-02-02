@@ -62,8 +62,10 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   {
     name: "value",
     run(holly: Holly, element: ElementHandle) {
-      // @ts-ignore
-      return element.evaluate((elem: HTMLElement) => elem.value);
+      return element.evaluate(
+        // @ts-ignore
+        /* istanbul ignore next */ (elem: HTMLElement) => elem.value
+      );
     }
   },
   matchInlineSnapshot,

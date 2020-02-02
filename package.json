@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "test": " node bin/holly -c integration/.hollyrc",
+    "test": "nyc bin/holly -c integration/.hollyrc",
     "lint": "eslint . --ext=ts,js",
     "build": "tsc -p lib",
     "build:watch": "tsc --watch -p lib"
@@ -13,6 +13,11 @@
   "license": "ISC",
   "bin": {
     "holly": "./bin/holly"
+  },
+  "nyc": {
+    "include": [
+      "build"
+    ]
   },
   "dependencies": {
     "@babel/traverse": "7.8.4",
