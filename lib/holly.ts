@@ -69,14 +69,16 @@ export default function createHolly(): Holly {
       if (getRootCommand(parent) !== last(holly.__rootCommands)) {
         throw new Error("do not use holly out of context");
       }
+      const error = new Error();
+      const stack = error.stack;
       if (command.captureStack) {
-        const error = new Error();
-        args = [error.stack, ...args];
+        args = [stack, ...args];
       }
       const commandInstance: CommandInstance = {
         parent,
         command,
         args,
+        stack,
         children: []
       };
       parent.children.push(commandInstance);
@@ -93,13 +95,15 @@ export default function createHolly(): Holly {
   function createInitialCommand(command: CommandDefinition) {
     return (...args: ReadonlyArray<any>) => {
       debug(`adding root command '${command.name}'`);
+      const error = new Error();
+      const stack = error.stack;
       if (command.captureStack) {
-        const error = new Error();
-        args = [error.stack, ...args];
+        args = [stack, ...args];
       }
       const commandInstance = {
         command,
         args,
+        stack,
         children: []
       };
       holly.__rootCommands.push(commandInstance);
@@ -152,12 +156,15 @@ export default function createHolly(): Holly {
         await doRetry();
         return runCommand(commandInstance);
       } else {
-        let toThrow = e;
+        let toThrow: { message?: string | void; stack?: string | void } = {};
         if (typeof e.message === "function") {
-          toThrow = new Error(e.message());
+          toThrow.message = e.message();
+        } else {
+          toThrow.message = e.message;
         }
+        toThrow.stack = commandInstance.stack;
         debug(
-          `failure with no parent or retry available so just re-throwing '${commandInstance.command.name}' 'e.message'`
+          `failure with no parent or retry available so just re-throwing '${commandInstance.command.name}' '${toThrow.message}'`
         );
         throw toThrow;
       }

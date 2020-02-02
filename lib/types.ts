@@ -23,6 +23,7 @@ export type CommandInstance = {
   children: Array<CommandInstance>;
   result?: any;
   command: CommandDefinition;
+  stack: string | void;
   args: ReadonlyArray<any>;
   retry?: null | (() => any);
   retryStartTime?: number;

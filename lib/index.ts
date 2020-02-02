@@ -102,6 +102,24 @@ Mocha.Suite.prototype.afterEach = function(
   });
 };
 
+// @ts-ignore
+const oldFail = Mocha.Runner.prototype.fail;
+// @ts-ignore
+Mocha.Runner.prototype.fail = function(test, err) {
+  if (!test.isPending() && err && err.stack) {
+    err.stack = err.stack
+      .split("\n")
+      .filter(
+        (stackLine: string) =>
+          !stackLine.match(
+            /([\\|/]holly[\\|/](build|lib)[\\|/])|(internal[\\|/]process[\\|/])/
+          )
+      )
+      .join("\n");
+  }
+  return oldFail.call(this, test, err);
+};
+
 export const run = async ({ specs }: { specs: string }) => {
   const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
   // or await newContext()
