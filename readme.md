@@ -40,7 +40,7 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] add dependabot
 - [x] add build
 - [x] add cli command
-- [ ] move node-ts hook out of index
+- [x] move node-ts hook out of index
 - [ ] Integration tests that test failures
 - [ ] Integration tests that test inline snapshot updates
 - [ ] Config file
