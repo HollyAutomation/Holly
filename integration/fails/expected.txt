@@ -1,0 +1,75 @@
+
+
+  Inline Snapshot
+    1) works async
+    2) works sync
+
+
+  Matchers
+    command matchers
+      3) should not equal
+      4) should match
+    asymmetric matchers
+      5) any string
+
+
+  0 passing
+  5 failing
+
+  1) Inline Snapshot
+       works async:
+     Error: expected ''fail'' but got ''hello''
+      at Object.run (lib\matchInlineSnapshot.ts:2:44)
+      at runCommand (build\holly.js:10:589)
+      at runCommand (build\holly.js:10:2149)
+      at processTicksAndRejections (internal/process/task_queues.js:93:5)
+      at Object.holly.__executeSoFar (build\holly.js:10:3358)
+
+  2) Inline Snapshot
+       works sync:
+     Error: expected ''fail'' but got ''hello''
+      at Object.run (lib\matchInlineSnapshot.ts:2:44)
+      at runCommand (build\holly.js:10:589)
+      at runCommand (build\holly.js:10:2149)
+      at processTicksAndRejections (internal/process/task_queues.js:93:5)
+      at Object.holly.__executeSoFar (build\holly.js:10:3358)
+
+  3) Matchers
+       command matchers
+         should not equal:
+     Error: expect(received).not.shouldNotEqual(expected) // deep equality
+
+Expected: not "Hello World"
+
+      at runCommand (build\holly.js:10:2367)
+      at runCommand (build\holly.js:10:2149)
+      at processTicksAndRejections (internal/process/task_queues.js:93:5)
+      at Object.holly.__executeSoFar (build\holly.js:10:3358)
+
+  4) Matchers
+       command matchers
+         should match:
+     Error: expect(received).shouldMatch(expected)
+
+Expected pattern: /Luke/i
+Received string:  "Hello World"
+      at runCommand (build\holly.js:10:2367)
+      at runCommand (build\holly.js:10:2149)
+      at processTicksAndRejections (internal/process/task_queues.js:93:5)
+      at Object.holly.__executeSoFar (build\holly.js:10:3358)
+
+  5) Matchers
+       asymmetric matchers
+         any string:
+     Error: expect(received).shouldEqual(expected) // deep equality
+
+Expected: Any<Function>
+Received: "Hello World"
+      at runCommand (build\holly.js:10:2367)
+      at runCommand (build\holly.js:10:2149)
+      at runMicrotasks (<anonymous>)
+      at processTicksAndRejections (internal/process/task_queues.js:93:5)
+      at Object.holly.__executeSoFar (build\holly.js:10:3358)
+
+
+

@@ -28,9 +28,7 @@ cache:
   directories:
     - node_modules
 script:
-  - "npm run lint"
-  - "npm run build"
-  - "npm run test"
+  - "npm run ci"
 jobs:
   include:
     - node_js: "12"

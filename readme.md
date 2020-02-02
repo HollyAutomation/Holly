@@ -41,8 +41,10 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] add build
 - [x] add cli command
 - [x] move node-ts hook out of index
-- [ ] Integration tests that test failures
-- [ ] Code coverage collection
+- [ ] reporter config
+- [x] Integration tests that test failures
+- [ ] error with exit code when tests fail
+- [x] Code coverage collection
 - [ ] Remove internal paths from the stack trace
 - [ ] Integration tests that test inline snapshot updates
 - [ ] Config file
