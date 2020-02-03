@@ -82,7 +82,7 @@ const { newPage, $ } = holly;
 describe("Integration", () => {
   beforeEach(async () => {
     await newPage("http://www.google.com");
-  })
+  });
 
   it("works", async () => {
     await $("input[type=text]").type("hello");
@@ -104,7 +104,7 @@ const { newPage, $ } = holly;
 describe("Integration", () => {
   beforeEach(() => {
     newPage("http://www.google.com");
-  })
+  });
 
   it("works synchronously", () => {
     $("input[type=text]").type("hello");
