@@ -7,5 +7,6 @@ tsNode.register({
 });
 
 module.exports = {
-  specs: "integration/passes/**/*.spec.ts"
+  specs: "integration/passes/**/*.spec.ts",
+  reporters: ["spec"]
 };

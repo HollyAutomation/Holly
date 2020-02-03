@@ -7,5 +7,6 @@ tsNode.register({
 });
 
 module.exports = {
-  specs: "integration/fails/**/*.spec.ts"
+  specs: "integration/fails/**/*.spec.ts",
+  consistentResultsOrdering: true
 };

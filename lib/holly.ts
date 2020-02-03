@@ -33,7 +33,6 @@ export default function createHolly(): Holly {
         // return a new chainable but remove the then
         // function otherwise we get stuck in a loop
         // constantly resolving ourself.
-        // @ts-ignore
         const { then, ...newChainInstance } = createNewChainInstance({
           ...previousCommandInstance,
           retry: null

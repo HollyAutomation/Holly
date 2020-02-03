@@ -1,7 +1,7 @@
 import Mocha = require("mocha");
 import { EventEmitter } from "events";
 
-export function createMultiReporter() {
+export function createMultiReporter(hasConsistentReportingOrder?: boolean) {
   const reporters: Array<{
     done?: (failures: number, callback: () => void) => void;
   }> = [];
@@ -16,6 +16,7 @@ export function createMultiReporter() {
   };
   // @ts-ignore
   fakeRunner.stats = allStats;
+  const collectors: Array<Collector> = [];
 
   class Collector {
     events: Array<{
@@ -27,6 +28,7 @@ export function createMultiReporter() {
 
     constructor(runner: Mocha.Runner) {
       this.stats = runner.stats;
+      collectors.push(this);
       Object.keys(Mocha.Runner.constants).forEach(eventConstantKey => {
         if (
           eventConstantKey === "EVENT_RUN_BEGIN" ||
@@ -50,9 +52,11 @@ export function createMultiReporter() {
     }
 
     done(failures: number, fn: () => void) {
-      this.events.forEach(event => {
-        fakeRunner.emit(event.name, ...event.args);
-      });
+      if (!hasConsistentReportingOrder) {
+        this.events.forEach(event => {
+          fakeRunner.emit(event.name, ...event.args);
+        });
+      }
 
       if (this.stats) {
         allStats.suites += this.stats.suites;
@@ -76,6 +80,15 @@ export function createMultiReporter() {
   const finished = async () => {
     allStats.end = new Date();
     allStats.duration = Number(allStats.end) - Number(allStats.start);
+
+    if (hasConsistentReportingOrder) {
+      collectors.forEach((collector: Collector) => {
+        collector.events.forEach(event => {
+          fakeRunner.emit(event.name, ...event.args);
+        });
+      });
+    }
+
     fakeRunner.emit(Mocha.Runner.constants.EVENT_RUN_END);
     await Promise.all(
       reporters.map(reporter => {
