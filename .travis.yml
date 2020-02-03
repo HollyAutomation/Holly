@@ -32,3 +32,6 @@ script:
 jobs:
   include:
     - node_js: "12"
+branches:
+   only:
+    - master
