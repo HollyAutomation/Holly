@@ -27,12 +27,13 @@ module.exports = () => {
     }
   }).argv;
 
-  let configOptions = {};
+  let configOptions;
 
   if (commandLineOptions.config) {
     configOptions = require(path.resolve(commandLineOptions.config));
   }
 
+  // TODO - convert commandLineOptions properly so we can just pass options into run.
   const options = { ...configOptions, ...commandLineOptions };
 
   if (!options.specs) {
@@ -43,6 +44,8 @@ module.exports = () => {
   }
 
   return run({
-    specs: options.specs
+    specs: options.specs,
+    reporters: options.reporter || configOptions.reporters,
+    consistentResultsOrdering: options.consistentResultsOrdering
   });
 };

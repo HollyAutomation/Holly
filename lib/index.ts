@@ -4,7 +4,7 @@ import Mocha = require("mocha");
 import defaultMochaOptions = require("mocha/lib/mocharc.json");
 import { chromium } from "playwright";
 import createHolly from "./holly";
-import { Holly } from "./types";
+import { Holly, Config } from "./types";
 import { createMultiReporter } from "./multiReporter";
 import globOriginal = require("glob");
 import * as util from "util";
@@ -129,7 +129,15 @@ Mocha.Runner.prototype.fail = function(test, err) {
   return oldFail.call(this, test, err);
 };
 
-export const run = async ({ specs }: { specs: string }) => {
+export const run = async ({
+  specs,
+  reporters,
+  consistentResultsOrdering
+}: Config) => {
+  if (!reporters) {
+    reporters = ["spec"];
+  }
+
   const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
   // or await newContext()
   const context = browser.defaultContext();
@@ -185,9 +193,13 @@ export const run = async ({ specs }: { specs: string }) => {
     });
   };
 
-  const { Collector, addReporter, start, finished } = createMultiReporter();
+  const { Collector, addReporter, start, finished } = createMultiReporter(
+    consistentResultsOrdering
+  );
 
-  addReporter("spec", undefined, mochaOptions);
+  reporters.forEach((reporter: string) =>
+    addReporter(reporter, undefined, mochaOptions)
+  );
 
   start();
 

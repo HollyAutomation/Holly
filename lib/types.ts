@@ -58,3 +58,9 @@ export type RawMatcherFn = {
 };
 
 export type MatchersObject = { [id: string]: RawMatcherFn };
+
+export type Config = {
+  specs: string;
+  reporters?: ReadonlyArray<string>;
+  consistentResultsOrdering?: boolean;
+};

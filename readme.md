@@ -43,13 +43,15 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] add build
 - [x] add cli command
 - [x] move node-ts hook out of index
-- [ ] reporter config
+- [x] reporter config
 - [x] Integration tests that test failures
-- [ ] error with exit code when tests fail
+- [x] Ordering of test results can differ causing different reports
 - [x] Code coverage collection
 - [x] Remove internal paths from the stack trace
-- [ ] Integration tests that test inline snapshot updates
 - [x] Config file
+- [ ] Expose our timeout options and turn down timeouts for failures test
+- [ ] error with exit code when tests fail
+- [ ] Integration tests that test inline snapshot updates
 - [ ] Not hints are wrong on matcher errors
 - [ ] Expose mocha options
 - [ ] move these checkboxes into issues
@@ -57,14 +59,14 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [ ] UI POC - test control
 - [ ] UI POC - snapshots / history
 - [ ] How to consume types?
-- [ ] Unit Tests?
 - [ ] command first argument - object with various things in? { holly, stack, playwright, element?, receivedValue?, matcherState }?
 - [ ] more complete API mirroring playwright
+- [ ] playwright or pupeteer
 - [ ] support multiple pages
 - [ ] support multi browsers
-- [ ] Configuration for parallel - different contexts? (link to caching...)
 - [ ] Fix inline snapshot
 - [ ] snapshot serializers
+- [ ] Configuration for parallel - different contexts? (link to caching...)
 - [ ] ability to extend commands
 - [ ] Documentation
 - [ ] Different assertion styles
