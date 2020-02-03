@@ -12,7 +12,10 @@
     "test:failures": "cross-env FORCE_COLOR=0 HOLLY_INT_TEST=1 nyc --silent --no-clean scripts/test-failures.js -c integration/fails/.hollyrc",
     "test:coverage": "nyc report --reporter=lcov --reporter=text --reporter=html",
     "test:codecov": "codecov",
-    "lint": "eslint . --ext=ts,js",
+    "lint": "run-p prettier:check lint:eslint",
+    "lint:eslint": "eslint . --ext=ts,js",
+    "prettier:check": "prettier --ignore-path .gitignore --check **/*.{md,js,json,yml}",
+    "prettier:write": "prettier --ignore-path .gitignore --write **/*.{md,js,json,yml}",
     "build": "tsc -p lib",
     "build:watch": "tsc --watch -p lib"
   },
