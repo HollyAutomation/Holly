@@ -14,9 +14,21 @@ type HollyChain = {
   value: () => HollyChainAwaitable;
   type: (value: string) => HollyChainAwaitable;
   shouldMatchInlineSnapshot: (snapshot?: string) => HollyChainAwaitable;
-  shouldNotEqual: (expected: any) => HollyChainAwaitable;
   shouldEqual: (expected: any) => HollyChainAwaitable;
+  shouldNotEqual: (expected: any) => HollyChainAwaitable;
   shouldMatch: (expected: any) => HollyChainAwaitable;
+  shouldNotMatch: (expected: any) => HollyChainAwaitable;
+  shouldBeDefined: () => HollyChainAwaitable;
+  shouldNotBeDefined: () => HollyChainAwaitable;
+  shouldBeCloseTo: (
+    expected: number,
+    precision?: number
+  ) => HollyChainAwaitable;
+  shouldNotBeCloseTo: (
+    expected: number,
+    precision?: number
+  ) => HollyChainAwaitable;
+  and: HollyChainAwaitable;
   pipe: (fn: (anything: any) => any) => HollyChainAwaitable;
   evaluate: (fn: (anything: any) => any) => HollyChainAwaitable;
 };

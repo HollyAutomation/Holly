@@ -1,6 +1,6 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, any } = holly;
+const { newPage, $, any, pipe } = holly;
 
 describe("Matchers", () => {
   let testServer: TestServer;
@@ -14,31 +14,50 @@ describe("Matchers", () => {
   beforeEach(async () => {
     const url = testServer.addResponse(
       bodyToHtml(`
-Input Test Page <br/> <input type="text" value="Hello World" />
+Input Test Page <br/> <input type="text" value="Hello World" /><script>window.num = 1.234;</script>
     `)
     );
     await newPage(url);
   });
 
-  describe("command matchers", () => {
-    it("should not equal", async () => {
-      await $("input[type=text]")
-        .value()
-        .shouldNotEqual("Hello Luke");
-    });
+  it("command matchers - positive", async () => {
+    await pipe(
+      // @ts-ignore
+      () => window.num
+    )
+      .shouldBeDefined()
+      .and.shouldBeCloseTo(1.23);
 
-    it("should match", async () => {
-      $("input[type=text]")
-        .value()
-        .shouldMatch(/hello/i);
-    });
+    await $("input[type=text]")
+      .value()
+      .shouldNotEqual("Hello Luke");
+    $("input[type=text]")
+      .value()
+      .shouldMatch(/hello/i);
   });
 
-  describe("asymmetric matchers", () => {
-    it("any string", async () => {
-      $("input[type=text]")
-        .value()
-        .shouldEqual(any(String));
-    });
+  it("command matchers - negative", async () => {
+    await pipe(
+      // @ts-ignore
+      () => window.not_defined
+    ).shouldNotBeDefined();
+
+    await pipe(
+      // @ts-ignore
+      () => window.num
+    ).shouldNotBeCloseTo(1.23, 3);
+
+    await $("input[type=text]")
+      .value()
+      .shouldNotEqual("Hello Luke");
+    $("input[type=text]")
+      .value()
+      .shouldMatch(/hello/i);
+  });
+
+  it("asymmetric matchers", async () => {
+    $("input[type=text]")
+      .value()
+      .shouldEqual(any(String));
   });
 });

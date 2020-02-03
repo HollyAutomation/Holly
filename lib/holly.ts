@@ -39,6 +39,9 @@ export default function createHolly(): Holly {
         });
         resolve(newChainInstance);
       }, reject);
+    },
+    and: function and() {
+      return this;
     }
   };
 
