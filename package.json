@@ -34,7 +34,7 @@
     "glob": "7.1.6",
     "jest-snapshot": "25.1.0",
     "mocha": "7.0.1",
-    "playwright": "0.9.24",
+    "playwright": "0.10.0",
     "stack-utils": "2.0.1",
     "yargs": "15.1.0"
   },
