@@ -1,6 +1,6 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, any } = holly;
+const { newPage, $ } = holly;
 
 describe("Matchers", () => {
   let testServer: TestServer;
