@@ -8,6 +8,7 @@ import { Holly } from "./types";
 import { createMultiReporter } from "./multiReporter";
 import globOriginal = require("glob");
 import * as util from "util";
+import * as path from "path";
 
 const glob = util.promisify(globOriginal);
 
@@ -107,14 +108,22 @@ const oldFail = Mocha.Runner.prototype.fail;
 // @ts-ignore
 Mocha.Runner.prototype.fail = function(test, err) {
   if (!test.isPending() && err && err.stack) {
+    const slash = path.sep;
+    const cwd = process.cwd() + slash;
+
+    const isInternal = (line: string) => {
+      return (
+        line.indexOf("node_modules" + slash + "holly" + slash) >= 0 ||
+        line.match(/internal(\/|\\)process(\/|\\)/) ||
+        (Number(process.env.HOLLY_INT_TEST) > 0 &&
+          (line.indexOf(cwd + "build" + slash) >= 0 ||
+            line.indexOf(cwd + "lib" + slash) >= 0))
+      );
+    };
+
     err.stack = err.stack
       .split("\n")
-      .filter(
-        (stackLine: string) =>
-          !stackLine.match(
-            /([\\|/]holly[\\|/](build|lib)[\\|/])|(internal[\\|/]process[\\|/])/
-          )
-      )
+      .filter((stackLine: string) => !isInternal(stackLine))
       .join("\n");
   }
   return oldFail.call(this, test, err);

@@ -48,7 +48,9 @@ const runCli = require("../build/cli");
     "integration/fails/expected.txt",
     "utf8"
   );
-  mochaOutput = mochaOutput.replace(/0 passing (.+)/, "0 passing");
+  mochaOutput = mochaOutput
+    .replace(/0 passing (.+)/, "0 passing")
+    .replace(/integration\\fails\\/g, "integration/fails/");
   const pass = outputExpected === mochaOutput;
   if (!pass) {
     oldLog("Failures didn't match:");

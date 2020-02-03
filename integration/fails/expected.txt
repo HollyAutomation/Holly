@@ -20,13 +20,13 @@
        works async:
      expected ''fail'' but got ''hello''
   Error: 
-      at Context.<anonymous> (integration\fails\inlineSnapshot.spec.ts:25:8)
+      at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:25:8)
 
   2) Inline Snapshot
        works sync:
      expected ''fail'' but got ''hello''
   Error: 
-      at Context.<anonymous> (integration\fails\inlineSnapshot.spec.ts:32:8)
+      at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:32:8)
 
   3) Matchers
        command matchers
@@ -36,7 +36,7 @@
 Expected: not "Hello World"
 
   Error: 
-      at Context.<anonymous> (integration\fails\matchers.spec.ts:27:10)
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:27:10)
 
   4) Matchers
        command matchers
@@ -46,7 +46,7 @@ Expected: not "Hello World"
 Expected pattern: /Luke/i
 Received string:  "Hello World"
   Error: 
-      at Context.<anonymous> (integration\fails\matchers.spec.ts:33:10)
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:33:10)
 
   5) Matchers
        asymmetric matchers
@@ -56,7 +56,7 @@ Received string:  "Hello World"
 Expected: Any<Function>
 Received: "Hello World"
   Error: 
-      at Context.<anonymous> (integration\fails\matchers.spec.ts:41:10)
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:41:10)
 
 
 
