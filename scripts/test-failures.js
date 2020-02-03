@@ -26,8 +26,8 @@ function logFormat(args) {
         return x;
     }
   });
-  for (const x = args[i]; i < args.length; x = args[++i]) {
-    str += " " + x;
+  for (; i < args.length; i++) {
+    str += " " + args[i];
   }
   return str;
 }
