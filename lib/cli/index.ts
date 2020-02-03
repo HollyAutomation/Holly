@@ -1,6 +1,7 @@
 import yargs = require("yargs");
 import { run } from "../";
 import * as path from "path";
+import { Config } from "../types";
 
 module.exports = () => {
   const commandLineOptions = yargs.options({
@@ -27,16 +28,19 @@ module.exports = () => {
     }
   }).argv;
 
-  let configOptions;
+  let configOptions: Partial<Config> = {};
 
   if (commandLineOptions.config) {
     configOptions = require(path.resolve(commandLineOptions.config));
   }
 
-  // TODO - convert commandLineOptions properly so we can just pass options into run.
-  const options = { ...configOptions, ...commandLineOptions };
+  const specs =
+    commandLineOptions.specs || (configOptions && configOptions.specs);
 
-  if (!options.specs) {
+  const commandLineReporters =
+    commandLineOptions.reporter && commandLineOptions.reporter.map(String);
+
+  if (!specs) {
     // convert to yargs error?
     throw new Error(
       "You must specify a specs argument or a config file containing specs"
@@ -44,8 +48,8 @@ module.exports = () => {
   }
 
   return run({
-    specs: options.specs,
-    reporters: options.reporter || configOptions.reporters,
-    consistentResultsOrdering: options.consistentResultsOrdering
+    specs,
+    reporters: commandLineReporters || configOptions.reporters,
+    consistentResultsOrdering: configOptions.consistentResultsOrdering
   });
 };
