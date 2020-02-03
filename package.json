@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "ci": "run-s ci:build test:ci",
+    "ci": "run-s ci:build ci:test",
     "ci:build": "run-p lint build",
     "ci:test": "run-s test test:codecov",
     "test": "run-s test:passes test:failures test:coverage",
