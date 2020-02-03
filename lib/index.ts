@@ -114,7 +114,7 @@ Mocha.Runner.prototype.fail = function(test, err) {
     const isInternal = (line: string) => {
       return (
         line.indexOf("node_modules" + slash + "holly" + slash) >= 0 ||
-        line.match(/internal(\/|\\)process(\/|\\)/) ||
+        line.match(/\(internal(\/|\\)/) ||
         (Number(process.env.HOLLY_INT_TEST) > 0 &&
           (line.indexOf(cwd + "build" + slash) >= 0 ||
             line.indexOf(cwd + "lib" + slash) >= 0))

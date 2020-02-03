@@ -1,34 +1,62 @@
 
 
+  Matchers
+    hooks - beforeEach failure
+      1) "before each" hook for "should fail"
+    hooks - afterEach failure
+      √ should pass
+      2) "after each" hook: failing hook for "should pass"
+
+
   Inline Snapshot
-    1) works async
-    2) works sync
+    3) works async
+    4) works sync
 
 
   Matchers
     command matchers
-      3) should not equal
-      4) should match
+      5) should not equal
+      6) should match
     asymmetric matchers
-      5) any string
+      7) any string
 
 
-  0 passing
-  5 failing
+  1 passing
+  7 failing
 
-  1) Inline Snapshot
+  1) Matchers
+       hooks - beforeEach failure
+         "before each" hook for "should fail":
+     expect(received).shouldEqual(expected) // deep equality
+
+Expected: "Failure"
+Received: "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/hooks.spec.ts:27:10)
+
+  2) Matchers
+       hooks - afterEach failure
+         "after each" hook: failing hook for "should pass":
+     expect(received).shouldEqual(expected) // deep equality
+
+Expected: "Failure"
+Received: "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/hooks.spec.ts:37:10)
+
+  3) Inline Snapshot
        works async:
      expected ''fail'' but got ''hello''
   Error: 
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:25:8)
 
-  2) Inline Snapshot
+  4) Inline Snapshot
        works sync:
      expected ''fail'' but got ''hello''
   Error: 
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:32:8)
 
-  3) Matchers
+  5) Matchers
        command matchers
          should not equal:
      expect(received).not.shouldNotEqual(expected) // deep equality
@@ -38,7 +66,7 @@ Expected: not "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:27:10)
 
-  4) Matchers
+  6) Matchers
        command matchers
          should match:
      expect(received).shouldMatch(expected)
@@ -48,7 +76,7 @@ Received string:  "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:33:10)
 
-  5) Matchers
+  7) Matchers
        asymmetric matchers
          any string:
      expect(received).shouldEqual(expected) // deep equality
