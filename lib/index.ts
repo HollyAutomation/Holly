@@ -121,7 +121,7 @@ Mocha.Runner.prototype.fail = function(test, err) {
 };
 
 export const run = async ({ specs }: { specs: string }) => {
-  const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
+  const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
   // or await newContext()
   const context = browser.defaultContext();
 
