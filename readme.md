@@ -45,7 +45,7 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] move node-ts hook out of index
 - [x] reporter config
 - [x] Integration tests that test failures
-- [ ] Ordering of test results can differ causing different reports
+- [x] Ordering of test results can differ causing different reports
 - [ ] error with exit code when tests fail
 - [x] Code coverage collection
 - [x] Remove internal paths from the stack trace
