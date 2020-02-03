@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/HollyAutomation/Holly.svg?branch=master)](https://travis-ci.org/HollyAutomation/Holly) [![codecov](https://codecov.io/gh/HollyAutomation/Holly/branch/master/graph/badge.svg)](https://codecov.io/gh/HollyAutomation/Holly)
 ## Holly
 
 A reliable and simple automated testing framework built around playwright and mocha with Jest matchers and snapshots thrown in, running in parallel with a timetravel capable UI.
