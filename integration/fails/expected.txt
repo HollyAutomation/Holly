@@ -21,7 +21,7 @@
       7) any string
 
 
-  1 passing (18s)
+  1 passing
   7 failing
 
   1) Matchers

@@ -40,6 +40,11 @@ console.log = (...args) => {
 };
 const runCli = require("../build/cli");
 
+function color(type, str) {
+  if (!type) return str;
+  return "\u001b[" + (type === "+" ? 31 : 32) + "m" + str + "\u001b[0m";
+}
+
 (async () => {
   oldLog("starting Holly cli...");
   await runCli();
@@ -49,14 +54,26 @@ const runCli = require("../build/cli");
     "utf8"
   );
   mochaOutput = mochaOutput
-    .replace(/0 passing (.+)/, "0 passing")
+    // use more basic window equivalents - https://github.com/mochajs/mocha/blob/master/lib/reporters/base.js#L88
+    .replace(/✓/g, "\u221A")
+    .replace(/✖/g, "\u00D7")
+    .replace(/․/g, ".")
+    // get rid of times
+    .replace(/ passing \(.+\)/, " passing")
+    // get rid of inconsistent slashes
     .replace(/integration\\fails\\/g, "integration/fails/");
+
   const pass = outputExpected === mochaOutput;
   if (!pass) {
+    const diff = require("diff");
     oldLog("Failures didn't match:");
-    oldLog(outputExpected);
-    oldLog("but got");
-    oldLog(mochaOutput);
+
+    diff.diffChars(outputExpected, mochaOutput).forEach(part => {
+      process.stderr.write(
+        color(part.added ? "+" : part.removed ? "-" : "", part.value)
+      );
+    });
+    oldLog();
     oldLog("\nreplacing expected...\n");
 
     process.exitCode = 1;
