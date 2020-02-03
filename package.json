@@ -8,7 +8,7 @@
     "ci:build": "run-p lint build",
     "ci:test": "run-s test test:codecov",
     "test": "run-s test:passes test:failures test:coverage",
-    "test:passes": "nyc --silent bin/holly -c integration/passes/.hollyrc",
+    "test:passes": "cross-env HOLLY_INT_TEST=1 nyc --silent bin/holly -c integration/passes/.hollyrc",
     "test:failures": "cross-env FORCE_COLOR=0 HOLLY_INT_TEST=1 nyc --silent --no-clean scripts/test-failures.js -c integration/fails/.hollyrc",
     "test:coverage": "nyc report --reporter=lcov --reporter=text --reporter=html",
     "test:codecov": "codecov",

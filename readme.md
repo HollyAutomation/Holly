@@ -50,6 +50,7 @@ Multiple Reporters - Supported out of the box (unlike Mocha)
 - [x] Remove internal paths from the stack trace
 - [ ] Integration tests that test inline snapshot updates
 - [x] Config file
+- [ ] Not hints are wrong on matcher errors
 - [ ] Expose mocha options
 - [ ] move these checkboxes into issues
 - [ ] UI POC - command viewer
