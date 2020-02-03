@@ -14,6 +14,7 @@ export type HollyChain = {
   value: () => HollyChainAwaitable;
   shouldMatchInlineSnapshot: () => HollyChainAwaitable;
   __currentCommandInstance: CommandInstance;
+  and: HollyChain;
 };
 
 export type HollyChainAwaitable = Promise<HollyChain> & HollyChain;

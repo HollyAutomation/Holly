@@ -14,15 +14,52 @@
 
 
   Matchers
-    command matchers
-      5) should not equal
-      6) should match
+    command matchers - positive
+      5) shouldBeDefined
+      6) shouldBeTruthy
+      7) shouldBeCloseTo
+      8) shouldBeGreaterThan
+      9) shouldBeGreaterThanOrEqual
+      10) shouldBeLessThan
+      11) shouldBeLessThanOrEqual
+      12) shouldBeFalsy
+      13) shouldBeUndefined
+      14) shouldBeNull
+      15) shouldContain string
+      16) shouldContainEqual
+      17) shouldHaveLength array
+      18) shouldHaveProperty 1
+      19) shouldHaveProperty 2
+      20) shouldMatchObject
+      21) shouldEqual
+      22) shouldContain array
+      23) shouldMatch
+    command matchers - negative
+      24) shouldNotBeDefined
+      25) shouldNotBeTruthy
+      26) shouldNotBeCloseTo
+      27) shouldNotBeGreaterThan
+      28) shouldNotBeGreaterThanOrEqual
+      29) shouldNotBeLessThan
+      30) shouldNotBeLessThanOrEqual
+      31) shouldNotBeFalsy
+      32) shouldNotBeUndefined
+      33) shouldNotBeNull
+      34) shouldNotContain array
+      35) shouldNotContainEqual
+      36) shouldNotHaveLength
+      37) shouldNotHaveProperty 1
+      38) shouldNotHaveProperty 2
+      39) shouldNotMatchObject
+      40) shouldNotEqual
+      41) shouldNotContain string
+      42) shouldNotMatch
     asymmetric matchers
-      7) any string
+      43) any string
 
 
   1 passing
-  7 failing
+  43 failing
 
   1) Matchers
        hooks - beforeEach failure
@@ -57,26 +94,400 @@ Received: "Hello World"
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:32:8)
 
   5) Matchers
-       command matchers
-         should not equal:
-     expect(received).not.shouldNotEqual(expected) // deep equality
+       command matchers - positive
+         shouldBeDefined:
+     expect(received).shouldBeDefined()
 
-Expected: not "Hello World"
-
+Received: undefined
   Error: 
-      at Context.<anonymous> (integration/fails/matchers.spec.ts:27:10)
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:34:9)
 
   6) Matchers
-       command matchers
-         should match:
+       command matchers - positive
+         shouldBeTruthy:
+     expect(received).shouldBeTruthy()
+
+Received: undefined
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:41:9)
+
+  7) Matchers
+       command matchers - positive
+         shouldBeCloseTo:
+     expect(received).shouldBeCloseTo(expected)
+
+Expected: 1.23
+Received: 1.234
+
+Expected precision:    3
+Expected difference: < 0.0005
+Received difference:   0.0040000000000000036
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:48:9)
+
+  8) Matchers
+       command matchers - positive
+         shouldBeGreaterThan:
+     expect(received).shouldBeGreaterThan(expected)
+
+Expected: > 1.3
+Received:   1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:55:9)
+
+  9) Matchers
+       command matchers - positive
+         shouldBeGreaterThanOrEqual:
+     expect(received).shouldBeGreaterThanOrEqual(expected)
+
+Expected: >= 1.4
+Received:    1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:62:9)
+
+  10) Matchers
+       command matchers - positive
+         shouldBeLessThan:
+     expect(received).shouldBeLessThan(expected)
+
+Expected: < 1.1
+Received:   1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:69:9)
+
+  11) Matchers
+       command matchers - positive
+         shouldBeLessThanOrEqual:
+     expect(received).shouldBeLessThanOrEqual(expected)
+
+Expected: <= 1.1
+Received:    1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:76:9)
+
+  12) Matchers
+       command matchers - positive
+         shouldBeFalsy:
+     expect(received).shouldBeFalsy()
+
+Received: 1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:83:9)
+
+  13) Matchers
+       command matchers - positive
+         shouldBeUndefined:
+     expect(received).shouldBeUndefined()
+
+Received: "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:89:10)
+
+  14) Matchers
+       command matchers - positive
+         shouldBeNull:
+     expect(received).shouldBeNull()
+
+Received: undefined
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:96:9)
+
+  15) Matchers
+       command matchers - positive
+         shouldContain string:
+     expect(received).shouldContain(expected) // indexOf
+
+Expected substring: "Luke"
+Received string:    "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:102:10)
+
+  16) Matchers
+       command matchers - positive
+         shouldContainEqual:
+     expect(received).shouldContainEqual(expected) // deep equality
+
+Expected value: {"test": false}
+Received array: ["Hello", "World", {"test": true}]
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:109:9)
+
+  17) Matchers
+       command matchers - positive
+         shouldHaveLength array:
+     expect(received).shouldHaveLength(expected)
+
+Expected length: 4
+Received length: 3
+Received array:  ["Hello", "World", {"test": true}]
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:116:9)
+
+  18) Matchers
+       command matchers - positive
+         shouldHaveProperty 1:
+     expect(received).shouldHaveProperty(path)
+
+Expected path: "a.b.d"
+Received path: "a.b"
+
+Received value: {"c": "Hello World"}
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:123:9)
+
+  19) Matchers
+       command matchers - positive
+         shouldHaveProperty 2:
+     expect(received).shouldHaveProperty(path)
+
+Expected path: ["a", "b", "d"]
+Received path: ["a", "b"]
+
+Received value: {"c": "Hello World"}
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:130:9)
+
+  20) Matchers
+       command matchers - positive
+         shouldMatchObject:
+     expect(received).shouldMatchObject(expected)
+
+- Expected  - 1
++ Received  + 3
+
+  Object {
+    "a": Object {
+-     "b": "test",
++     "b": Object {
++       "c": "Hello World",
++     },
+    },
+  }
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:137:9)
+
+  21) Matchers
+       command matchers - positive
+         shouldEqual:
+     expect(received).shouldEqual(expected) // deep equality
+
+Expected: "Hello Luke"
+Received: "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:143:10)
+
+  22) Matchers
+       command matchers - positive
+         shouldContain array:
+     expect(received).shouldContain(expected) // indexOf
+
+Expected value: "Luke"
+Received array: ["Hello", "World", {"test": true}]
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:150:9)
+
+  23) Matchers
+       command matchers - positive
+         shouldMatch:
      expect(received).shouldMatch(expected)
 
 Expected pattern: /Luke/i
 Received string:  "Hello World"
   Error: 
-      at Context.<anonymous> (integration/fails/matchers.spec.ts:33:10)
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:156:10)
 
-  7) Matchers
+  24) Matchers
+       command matchers - negative
+         shouldNotBeDefined:
+     expect(received).not.shouldNotBeDefined()
+
+Received: 1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:165:9)
+
+  25) Matchers
+       command matchers - negative
+         shouldNotBeTruthy:
+     expect(received).not.shouldNotBeTruthy()
+
+Received: 1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:172:9)
+
+  26) Matchers
+       command matchers - negative
+         shouldNotBeCloseTo:
+     expect(received).not.shouldNotBeCloseTo(expected, precision)
+
+Expected: not 1.23
+Received:     1.234
+
+Expected precision:        2
+Expected difference: not < 0.005
+Received difference:       0.0040000000000000036
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:179:9)
+
+  27) Matchers
+       command matchers - negative
+         shouldNotBeGreaterThan:
+     expect(received).not.shouldNotBeGreaterThan(expected)
+
+Expected: not > 1
+Received:       1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:186:9)
+
+  28) Matchers
+       command matchers - negative
+         shouldNotBeGreaterThanOrEqual:
+     expect(received).not.shouldNotBeGreaterThanOrEqual(expected)
+
+Expected: not >= 1.234
+Received:        1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:193:9)
+
+  29) Matchers
+       command matchers - negative
+         shouldNotBeLessThan:
+     expect(received).not.shouldNotBeLessThan(expected)
+
+Expected: not < 1.4
+Received:       1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:200:9)
+
+  30) Matchers
+       command matchers - negative
+         shouldNotBeLessThanOrEqual:
+     expect(received).not.shouldNotBeLessThanOrEqual(expected)
+
+Expected: not <= 1.234
+Received:        1.234
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:207:9)
+
+  31) Matchers
+       command matchers - negative
+         shouldNotBeFalsy:
+     expect(received).not.shouldNotBeFalsy()
+
+Received: undefined
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:214:9)
+
+  32) Matchers
+       command matchers - negative
+         shouldNotBeUndefined:
+     expect(received).not.shouldNotBeUndefined()
+
+Received: undefined
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:221:9)
+
+  33) Matchers
+       command matchers - negative
+         shouldNotBeNull:
+     expect(received).not.shouldNotBeNull()
+
+Received: null
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:228:9)
+
+  34) Matchers
+       command matchers - negative
+         shouldNotContain array:
+     expect(received).not.shouldNotContain(expected) // indexOf
+
+Expected value: not "World"
+Received array:     ["Hello", "World", {"test": true}]
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:235:9)
+
+  35) Matchers
+       command matchers - negative
+         shouldNotContainEqual:
+     expect(received).not.shouldNotContainEqual(expected) // deep equality
+
+Expected value: not {"test": true}
+Received array:     ["Hello", "World", {"test": true}]
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:241:9)
+
+  36) Matchers
+       command matchers - negative
+         shouldNotHaveLength:
+     expect(received).not.shouldNotHaveLength(expected)
+
+Expected length: not 3
+Received array:      ["Hello", "World", {"test": true}]
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:248:9)
+
+  37) Matchers
+       command matchers - negative
+         shouldNotHaveProperty 1:
+     expect(received).not.shouldNotHaveProperty(path)
+
+Expected path: not "a.b.c"
+
+Received value: "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:255:9)
+
+  38) Matchers
+       command matchers - negative
+         shouldNotHaveProperty 2:
+     expect(received).not.shouldNotHaveProperty(path)
+
+Expected path: not ["a", "b", "c"]
+
+Received value: "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:262:9)
+
+  39) Matchers
+       command matchers - negative
+         shouldNotMatchObject:
+     expect(received).not.shouldNotMatchObject(expected)
+
+Expected: not {"a": {"d": "test"}}
+Received:     {"a": {"b": {"c": "Hello World"}, "d": "test"}}
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:269:9)
+
+  40) Matchers
+       command matchers - negative
+         shouldNotEqual:
+     expect(received).not.shouldNotEqual(expected) // deep equality
+
+Expected: not "Hello World"
+
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:275:10)
+
+  41) Matchers
+       command matchers - negative
+         shouldNotContain string:
+     expect(received).not.shouldNotContain(expected) // indexOf
+
+Expected substring: not "World"
+Received string:        "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:281:10)
+
+  42) Matchers
+       command matchers - negative
+         shouldNotMatch:
+     expect(received).not.shouldNotMatch(expected)
+
+Expected pattern: not /hello/i
+Received string:      "Hello World"
+  Error: 
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:287:10)
+
+  43) Matchers
        asymmetric matchers
          any string:
      expect(received).shouldEqual(expected) // deep equality
@@ -84,7 +495,7 @@ Received string:  "Hello World"
 Expected: Any<Function>
 Received: "Hello World"
   Error: 
-      at Context.<anonymous> (integration/fails/matchers.spec.ts:41:10)
+      at Context.<anonymous> (integration/fails/matchers.spec.ts:295:10)
 
 
 

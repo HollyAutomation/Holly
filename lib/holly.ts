@@ -33,10 +33,12 @@ export default function createHolly(): Holly {
         // return a new chainable but remove the then
         // function otherwise we get stuck in a loop
         // constantly resolving ourself.
+        // @ts-ignore
         const { then, ...newChainInstance } = createNewChainInstance({
           ...previousCommandInstance,
           retry: null
         });
+        newChainInstance.and = newChainInstance;
         resolve(newChainInstance);
       }, reject);
     }
@@ -45,11 +47,14 @@ export default function createHolly(): Holly {
   function createNewChainInstance(
     commandInstance: CommandInstance
   ): HollyChainAwaitable {
-    // @ts-ignore
-    return {
+    const newChainInstance = {
       ...chainedCommandsBase,
       __currentCommandInstance: commandInstance
     };
+    // @ts-ignore
+    newChainInstance.and = newChainInstance;
+    // @ts-ignore
+    return newChainInstance;
   }
 
   function getRootCommand(commandInstance: CommandInstance) {

@@ -26,7 +26,12 @@ function createMatcherCommand(
 ): CommandDefinition {
   return {
     name: alias,
-    run(holly: Holly, receivedValue: any, expectedValue: any) {
+    run(
+      holly: Holly,
+      receivedValue: any,
+      expectedValue: any,
+      ...otherArgs: ReadonlyArray<any>
+    ) {
       const matcherState = {
         isNot: Boolean(isNegative),
         expand: false
@@ -36,7 +41,8 @@ function createMatcherCommand(
         matcherState,
         alias,
         receivedValue,
-        expectedValue
+        expectedValue,
+        ...otherArgs
       );
       // @ts-ignore we won't get a async result here
       let pass = result.pass;
