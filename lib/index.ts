@@ -210,7 +210,9 @@ export const run = async (config: Config) => {
 
   await Promise.all(files.map(file => runSuite(file, Collector)));
 
-  await finished();
+  if ((await finished()) > 0) {
+    process.exitCode = 1;
+  }
 
   await browser.close();
 };
