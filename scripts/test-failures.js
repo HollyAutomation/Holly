@@ -40,11 +40,6 @@ console.log = (...args) => {
 };
 const runCli = require("../build/cli");
 
-function color(type, str) {
-  if (!type) return str;
-  return "\u001b[" + (type === "+" ? 31 : 32) + "m" + str + "\u001b[0m";
-}
-
 (async () => {
   oldLog("starting Holly cli...");
   await runCli();
@@ -65,14 +60,10 @@ function color(type, str) {
 
   const pass = outputExpected === mochaOutput;
   if (!pass) {
-    const diff = require("diff");
     oldLog("Failures didn't match:");
 
-    diff.diffChars(outputExpected, mochaOutput).forEach(part => {
-      process.stderr.write(
-        color(part.added ? "+" : part.removed ? "-" : "", part.value)
-      );
-    });
+    const diff = require("./diff");
+    diff(outputExpected, mochaOutput);
     oldLog();
     oldLog("\nreplacing expected...\n");
 

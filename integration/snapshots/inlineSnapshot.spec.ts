@@ -22,13 +22,13 @@ describe("Inline Snapshot", () => {
     await $("input[type=text]").type("hello");
     await $("input[type=text]")
       .value()
-      .shouldMatchInlineSnapshot(`"fail"`);
+      .shouldMatchInlineSnapshot();
   });
 
   it("works sync", () => {
     $("input[type=text]").type("hello");
     $("input[type=text]")
       .value()
-      .shouldMatchInlineSnapshot(`"fail"`);
+      .shouldMatchInlineSnapshot();
   });
 });
