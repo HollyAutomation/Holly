@@ -88,7 +88,7 @@ const matchers: MatchersObject = {
     const secondArgument = arguments.length === 3 ? "precision" : undefined;
     const isNot = this.isNot;
     const options: MatcherHintOptions = {
-      isNot,
+      // isNot, - used to add '.not' to the matcher hint
       secondArgument,
       secondArgumentColor: (arg: string) => arg
     };
@@ -155,7 +155,7 @@ const matchers: MatchersObject = {
     expected: void
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
     ensureNoExpected(expected, matcherName, options);
 
@@ -176,7 +176,7 @@ const matchers: MatchersObject = {
     expected: void
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
     ensureNoExpected(expected, matcherName, options);
 
@@ -289,7 +289,7 @@ const matchers: MatchersObject = {
     expected: void
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
     ensureNoExpected(expected, matcherName, options);
 
@@ -310,7 +310,7 @@ const matchers: MatchersObject = {
     expected: void
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
     ensureNoExpected(expected, matcherName, options);
 
@@ -331,7 +331,7 @@ const matchers: MatchersObject = {
     expected: void
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
     ensureNoExpected(expected, matcherName, options);
 
@@ -489,7 +489,7 @@ const matchers: MatchersObject = {
   ) {
     const options: MatcherHintOptions = {
       comment: "deep equality",
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
 
     const pass = equals(received, expected, [iterableEquality]);
@@ -589,7 +589,7 @@ const matchers: MatchersObject = {
     const expectedArgument = "path";
     const hasValue = arguments.length === 3;
     const options: MatcherHintOptions = {
-      isNot: this.isNot,
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
       secondArgument: hasValue ? "value" : ""
     };
 
@@ -708,7 +708,7 @@ const matchers: MatchersObject = {
     expected: string | RegExp
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
 
     if (typeof received !== "string") {
@@ -786,7 +786,7 @@ const matchers: MatchersObject = {
     expected: object
   ) {
     const options: MatcherHintOptions = {
-      isNot: this.isNot
+            // isNot: this.isNot, - used to add '.not' to the matcher hint
     };
 
     if (typeof received !== "object" || received === null) {
