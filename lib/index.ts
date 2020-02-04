@@ -9,6 +9,9 @@ import { createMultiReporter } from "./multiReporter";
 import globOriginal = require("glob");
 import * as util from "util";
 import * as path from "path";
+import parseTime from "./utils/parseTime";
+
+const DEFAULT_TEST_TIMEOUT = parseTime("20s", 0);
 
 const glob = util.promisify(globOriginal);
 
@@ -129,28 +132,26 @@ Mocha.Runner.prototype.fail = function(test, err) {
   return oldFail.call(this, test, err);
 };
 
-export const run = async ({
-  specs,
-  reporters,
-  consistentResultsOrdering
-}: Config) => {
+export const run = async (config: Config) => {
+  let { specs, reporters, consistentResultsOrdering, testTimeout } = config;
+
   if (!reporters) {
     reporters = ["spec"];
   }
 
-  const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
+  const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
   // or await newContext()
   const context = browser.defaultContext();
 
   const mochaOptions = {
     ...defaultMochaOptions,
     delay: true, // allow us to control when execution really starts
-    timeout: "20s"
+    timeout: parseTime(testTimeout, DEFAULT_TEST_TIMEOUT)
   };
 
   const runSuite = (suiteFile: string, Collector: ReporterConstructor) => {
     return new Promise(resolve => {
-      const holly = createHolly();
+      const holly = createHolly(config);
 
       // @ts-ignore
       const mocha = new Mocha(mochaOptions);

@@ -49,7 +49,7 @@ This project is in POC state. Anything could change or it could be abandoned.
 - [x] Code coverage collection
 - [x] Remove internal paths from the stack trace
 - [x] Config file
-- [ ] Expose our timeout options and turn down timeouts for failures test
+- [x] Expose our timeout options and turn down timeouts for failures test
 - [ ] error with exit code when tests fail
 - [ ] Integration tests that test inline snapshot updates
 - [ ] Not hints are wrong on matcher errors

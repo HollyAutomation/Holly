@@ -8,5 +8,6 @@ tsNode.register({
 
 module.exports = {
   specs: "integration/fails/**/*.spec.ts",
-  consistentResultsOrdering: true
+  consistentResultsOrdering: true,
+  maxRetryTime: "100ms"
 };

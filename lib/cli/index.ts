@@ -25,6 +25,21 @@ module.exports = () => {
       type: "array",
       desc:
         "adds a reporter. Can either be a standard mocha reporter like 'spec' or package to be required"
+    },
+    retryDelay: {
+      type: "string",
+      desc:
+        "Time to wait between retrying assertions, defaults to '20ms'. Can be a number in ms or a string with unit."
+    },
+    testTimeout: {
+      type: "string",
+      desc:
+        "Time to wait before failing a test. Defaults to '20s'. Can be a number in ms or a string with unit."
+    },
+    maxRetryTime: {
+      type: "string",
+      desc:
+        "Amount of time to keep trying a test. Defaults to '5s'. Can be a number in ms or a string with unit."
     }
   }).argv;
 
@@ -50,6 +65,9 @@ module.exports = () => {
   return run({
     specs,
     reporters: commandLineReporters || configOptions.reporters,
-    consistentResultsOrdering: configOptions.consistentResultsOrdering
+    consistentResultsOrdering: configOptions.consistentResultsOrdering,
+    retryDelay: configOptions.retryDelay || commandLineOptions.retryDelay,
+    testTimeout: configOptions.testTimeout || commandLineOptions.testTimeout,
+    maxRetryTime: configOptions.maxRetryTime || commandLineOptions.maxRetryTime
   });
 };
