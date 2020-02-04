@@ -101,6 +101,8 @@ export function createMultiReporter(hasConsistentReportingOrder?: boolean) {
         });
       })
     );
+
+    return allStats.failures;
   };
 
   function addReporter(

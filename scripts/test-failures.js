@@ -80,6 +80,12 @@ function color(type, str) {
     fs.writeFileSync("integration/fails/expected.txt", mochaOutput, "utf8");
   } else {
     oldLog("Output matched");
-    process.exitCode = 0;
+
+    if (process.exitCode === 0 || process.exitCode == null) {
+      oldLog("But exit code was not set, so failing.");
+      process.exitCode = 1;
+    } else {
+      process.exitCode = 0;
+    }
   }
 })();
