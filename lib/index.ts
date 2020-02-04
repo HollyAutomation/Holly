@@ -139,7 +139,7 @@ export const run = async (config: Config) => {
     reporters = ["spec"];
   }
 
-  const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
+  const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
   // or await newContext()
   const context = browser.defaultContext();
 
