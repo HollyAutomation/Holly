@@ -63,4 +63,7 @@ export type Config = {
   specs: string;
   reporters?: ReadonlyArray<string>;
   consistentResultsOrdering?: boolean;
+  retryDelay?: string | number;
+  testTimeout?: string | number;
+  maxRetryTime?: string | number;
 };

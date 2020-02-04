@@ -1,23 +1,33 @@
 import Debug from "debug";
+import milliseconds = require("ms");
 import { chainedCommands, rootCommands } from "./commands";
 import {
   Holly,
   CommandInstance,
   HollyChainAwaitable,
   HollyChain,
-  CommandDefinition
+  CommandDefinition,
+  Config
 } from "./types";
 import { asymmetricMatchers } from "./commandMatchers";
+import parseTime from "./utils/parseTime";
+
+const DEFAULT_RETRY_DELAY = milliseconds("20ms");
+const DEFAULT_MAX_RETRY = milliseconds("5s");
 
 const debug = Debug("holly:holly");
-
-const retryDelay = () => new Promise(resolve => setTimeout(resolve, 50));
 
 function last<T>(ar: ReadonlyArray<T>): T {
   return ar[ar.length - 1];
 }
 
-export default function createHolly(): Holly {
+export default function createHolly(config: Config): Holly {
+  const retryDelayMs = parseTime(config.retryDelay, DEFAULT_RETRY_DELAY);
+  const maxRetryTime = parseTime(config.maxRetryTime, DEFAULT_MAX_RETRY);
+
+  const retryDelay = () =>
+    new Promise(resolve => setTimeout(resolve, retryDelayMs));
+
   // @ts-ignore
   const holly: Holly = {
     __page: null,
@@ -121,8 +131,6 @@ export default function createHolly(): Holly {
     holly[command.name] = createInitialCommand(command);
   });
 
-  const MAX_RETRY_TIME = 5000;
-
   async function runCommand(commandInstance: CommandInstance): Promise<any> {
     debug(`Running command '${commandInstance.command.name}'`);
     let args = commandInstance.args;
@@ -142,11 +150,9 @@ export default function createHolly(): Holly {
       }
     } catch (e) {
       const doRetry = commandInstance.parent && commandInstance.parent.retry;
-      const hasTimedOut =
-        doRetry &&
-        Date.now() -
-          (commandInstance.retryStartTime || Number.MAX_SAFE_INTEGER) >
-          MAX_RETRY_TIME;
+      const retryStartTime =
+        commandInstance.retryStartTime || Number.MAX_SAFE_INTEGER;
+      const hasTimedOut = Date.now() - retryStartTime > maxRetryTime;
 
       if (doRetry && !hasTimedOut) {
         if (!commandInstance.retryStartTime) {
