@@ -51,7 +51,7 @@ This project is in POC state. Anything could change or it could be abandoned.
 - [x] Config file
 - [x] error with exit code when tests fail
 - [ ] Integration tests that test inline snapshot updates
-- [ ] Not hints are wrong on matcher errors
+- [x] Not hints are wrong on matcher errors
 - [ ] Add Max paralelism
 - [ ] Expose mocha options
 - [ ] move these checkboxes into issues
