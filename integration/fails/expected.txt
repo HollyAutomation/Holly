@@ -64,7 +64,7 @@
   1) Matchers
        hooks - beforeEach failure
          "before each" hook for "should fail":
-     expect(received).shouldEqual(expected) // deep equality
+     (received).shouldEqual(expected) // deep equality
 
 Expected: "Failure"
 Received: "Hello World"
@@ -74,7 +74,7 @@ Received: "Hello World"
   2) Matchers
        hooks - afterEach failure
          "after each" hook: failing hook for "should pass":
-     expect(received).shouldEqual(expected) // deep equality
+     (received).shouldEqual(expected) // deep equality
 
 Expected: "Failure"
 Received: "Hello World"
@@ -96,7 +96,7 @@ Received: "Hello World"
   5) Matchers
        command matchers - positive
          shouldBeDefined:
-     expect(received).shouldBeDefined()
+     (received).shouldBeDefined()
 
 Received: undefined
   Error: 
@@ -105,7 +105,7 @@ Received: undefined
   6) Matchers
        command matchers - positive
          shouldBeTruthy:
-     expect(received).shouldBeTruthy()
+     (received).shouldBeTruthy()
 
 Received: undefined
   Error: 
@@ -114,7 +114,7 @@ Received: undefined
   7) Matchers
        command matchers - positive
          shouldBeCloseTo:
-     expect(received).shouldBeCloseTo(expected)
+     (received).shouldBeCloseTo(expected)
 
 Expected: 1.23
 Received: 1.234
@@ -128,7 +128,7 @@ Received difference:   0.0040000000000000036
   8) Matchers
        command matchers - positive
          shouldBeGreaterThan:
-     expect(received).shouldBeGreaterThan(expected)
+     (received).shouldBeGreaterThan(expected)
 
 Expected: > 1.3
 Received:   1.234
@@ -138,7 +138,7 @@ Received:   1.234
   9) Matchers
        command matchers - positive
          shouldBeGreaterThanOrEqual:
-     expect(received).shouldBeGreaterThanOrEqual(expected)
+     (received).shouldBeGreaterThanOrEqual(expected)
 
 Expected: >= 1.4
 Received:    1.234
@@ -148,7 +148,7 @@ Received:    1.234
   10) Matchers
        command matchers - positive
          shouldBeLessThan:
-     expect(received).shouldBeLessThan(expected)
+     (received).shouldBeLessThan(expected)
 
 Expected: < 1.1
 Received:   1.234
@@ -158,7 +158,7 @@ Received:   1.234
   11) Matchers
        command matchers - positive
          shouldBeLessThanOrEqual:
-     expect(received).shouldBeLessThanOrEqual(expected)
+     (received).shouldBeLessThanOrEqual(expected)
 
 Expected: <= 1.1
 Received:    1.234
@@ -168,7 +168,7 @@ Received:    1.234
   12) Matchers
        command matchers - positive
          shouldBeFalsy:
-     expect(received).shouldBeFalsy()
+     (received).shouldBeFalsy()
 
 Received: 1.234
   Error: 
@@ -177,7 +177,7 @@ Received: 1.234
   13) Matchers
        command matchers - positive
          shouldBeUndefined:
-     expect(received).shouldBeUndefined()
+     (received).shouldBeUndefined()
 
 Received: "Hello World"
   Error: 
@@ -186,7 +186,7 @@ Received: "Hello World"
   14) Matchers
        command matchers - positive
          shouldBeNull:
-     expect(received).shouldBeNull()
+     (received).shouldBeNull()
 
 Received: undefined
   Error: 
@@ -195,7 +195,7 @@ Received: undefined
   15) Matchers
        command matchers - positive
          shouldContain string:
-     expect(received).shouldContain(expected) // indexOf
+     (received).shouldContain(expected) // indexOf
 
 Expected substring: "Luke"
 Received string:    "Hello World"
@@ -205,7 +205,7 @@ Received string:    "Hello World"
   16) Matchers
        command matchers - positive
          shouldContainEqual:
-     expect(received).shouldContainEqual(expected) // deep equality
+     (received).shouldContainEqual(expected) // deep equality
 
 Expected value: {"test": false}
 Received array: ["Hello", "World", {"test": true}]
@@ -215,7 +215,7 @@ Received array: ["Hello", "World", {"test": true}]
   17) Matchers
        command matchers - positive
          shouldHaveLength array:
-     expect(received).shouldHaveLength(expected)
+     (received).shouldHaveLength(expected)
 
 Expected length: 4
 Received length: 3
@@ -226,7 +226,7 @@ Received array:  ["Hello", "World", {"test": true}]
   18) Matchers
        command matchers - positive
          shouldHaveProperty 1:
-     expect(received).shouldHaveProperty(path)
+     (received).shouldHaveProperty(path)
 
 Expected path: "a.b.d"
 Received path: "a.b"
@@ -238,7 +238,7 @@ Received value: {"c": "Hello World"}
   19) Matchers
        command matchers - positive
          shouldHaveProperty 2:
-     expect(received).shouldHaveProperty(path)
+     (received).shouldHaveProperty(path)
 
 Expected path: ["a", "b", "d"]
 Received path: ["a", "b"]
@@ -250,7 +250,7 @@ Received value: {"c": "Hello World"}
   20) Matchers
        command matchers - positive
          shouldMatchObject:
-     expect(received).shouldMatchObject(expected)
+     (received).shouldMatchObject(expected)
 
 - Expected  - 1
 + Received  + 3
@@ -269,7 +269,7 @@ Received value: {"c": "Hello World"}
   21) Matchers
        command matchers - positive
          shouldEqual:
-     expect(received).shouldEqual(expected) // deep equality
+     (received).shouldEqual(expected) // deep equality
 
 Expected: "Hello Luke"
 Received: "Hello World"
@@ -279,7 +279,7 @@ Received: "Hello World"
   22) Matchers
        command matchers - positive
          shouldContain array:
-     expect(received).shouldContain(expected) // indexOf
+     (received).shouldContain(expected) // indexOf
 
 Expected value: "Luke"
 Received array: ["Hello", "World", {"test": true}]
@@ -289,7 +289,7 @@ Received array: ["Hello", "World", {"test": true}]
   23) Matchers
        command matchers - positive
          shouldMatch:
-     expect(received).shouldMatch(expected)
+     (received).shouldMatch(expected)
 
 Expected pattern: /Luke/i
 Received string:  "Hello World"
@@ -299,7 +299,7 @@ Received string:  "Hello World"
   24) Matchers
        command matchers - negative
          shouldNotBeDefined:
-     expect(received).not.shouldNotBeDefined()
+     (received).shouldNotBeDefined()
 
 Received: 1.234
   Error: 
@@ -308,7 +308,7 @@ Received: 1.234
   25) Matchers
        command matchers - negative
          shouldNotBeTruthy:
-     expect(received).not.shouldNotBeTruthy()
+     (received).shouldNotBeTruthy()
 
 Received: 1.234
   Error: 
@@ -317,7 +317,7 @@ Received: 1.234
   26) Matchers
        command matchers - negative
          shouldNotBeCloseTo:
-     expect(received).not.shouldNotBeCloseTo(expected, precision)
+     (received).shouldNotBeCloseTo(expected, precision)
 
 Expected: not 1.23
 Received:     1.234
@@ -331,7 +331,7 @@ Received difference:       0.0040000000000000036
   27) Matchers
        command matchers - negative
          shouldNotBeGreaterThan:
-     expect(received).not.shouldNotBeGreaterThan(expected)
+     (received).shouldNotBeGreaterThan(expected)
 
 Expected: not > 1
 Received:       1.234
@@ -341,7 +341,7 @@ Received:       1.234
   28) Matchers
        command matchers - negative
          shouldNotBeGreaterThanOrEqual:
-     expect(received).not.shouldNotBeGreaterThanOrEqual(expected)
+     (received).shouldNotBeGreaterThanOrEqual(expected)
 
 Expected: not >= 1.234
 Received:        1.234
@@ -351,7 +351,7 @@ Received:        1.234
   29) Matchers
        command matchers - negative
          shouldNotBeLessThan:
-     expect(received).not.shouldNotBeLessThan(expected)
+     (received).shouldNotBeLessThan(expected)
 
 Expected: not < 1.4
 Received:       1.234
@@ -361,7 +361,7 @@ Received:       1.234
   30) Matchers
        command matchers - negative
          shouldNotBeLessThanOrEqual:
-     expect(received).not.shouldNotBeLessThanOrEqual(expected)
+     (received).shouldNotBeLessThanOrEqual(expected)
 
 Expected: not <= 1.234
 Received:        1.234
@@ -371,7 +371,7 @@ Received:        1.234
   31) Matchers
        command matchers - negative
          shouldNotBeFalsy:
-     expect(received).not.shouldNotBeFalsy()
+     (received).shouldNotBeFalsy()
 
 Received: undefined
   Error: 
@@ -380,7 +380,7 @@ Received: undefined
   32) Matchers
        command matchers - negative
          shouldNotBeUndefined:
-     expect(received).not.shouldNotBeUndefined()
+     (received).shouldNotBeUndefined()
 
 Received: undefined
   Error: 
@@ -389,7 +389,7 @@ Received: undefined
   33) Matchers
        command matchers - negative
          shouldNotBeNull:
-     expect(received).not.shouldNotBeNull()
+     (received).shouldNotBeNull()
 
 Received: null
   Error: 
@@ -398,7 +398,7 @@ Received: null
   34) Matchers
        command matchers - negative
          shouldNotContain array:
-     expect(received).not.shouldNotContain(expected) // indexOf
+     (received).shouldNotContain(expected) // indexOf
 
 Expected value: not "World"
 Received array:     ["Hello", "World", {"test": true}]
@@ -408,7 +408,7 @@ Received array:     ["Hello", "World", {"test": true}]
   35) Matchers
        command matchers - negative
          shouldNotContainEqual:
-     expect(received).not.shouldNotContainEqual(expected) // deep equality
+     (received).shouldNotContainEqual(expected) // deep equality
 
 Expected value: not {"test": true}
 Received array:     ["Hello", "World", {"test": true}]
@@ -418,7 +418,7 @@ Received array:     ["Hello", "World", {"test": true}]
   36) Matchers
        command matchers - negative
          shouldNotHaveLength:
-     expect(received).not.shouldNotHaveLength(expected)
+     (received).shouldNotHaveLength(expected)
 
 Expected length: not 3
 Received array:      ["Hello", "World", {"test": true}]
@@ -428,7 +428,7 @@ Received array:      ["Hello", "World", {"test": true}]
   37) Matchers
        command matchers - negative
          shouldNotHaveProperty 1:
-     expect(received).not.shouldNotHaveProperty(path)
+     (received).shouldNotHaveProperty(path)
 
 Expected path: not "a.b.c"
 
@@ -439,7 +439,7 @@ Received value: "Hello World"
   38) Matchers
        command matchers - negative
          shouldNotHaveProperty 2:
-     expect(received).not.shouldNotHaveProperty(path)
+     (received).shouldNotHaveProperty(path)
 
 Expected path: not ["a", "b", "c"]
 
@@ -450,7 +450,7 @@ Received value: "Hello World"
   39) Matchers
        command matchers - negative
          shouldNotMatchObject:
-     expect(received).not.shouldNotMatchObject(expected)
+     (received).shouldNotMatchObject(expected)
 
 Expected: not {"a": {"d": "test"}}
 Received:     {"a": {"b": {"c": "Hello World"}, "d": "test"}}
@@ -460,7 +460,7 @@ Received:     {"a": {"b": {"c": "Hello World"}, "d": "test"}}
   40) Matchers
        command matchers - negative
          shouldNotEqual:
-     expect(received).not.shouldNotEqual(expected) // deep equality
+     (received).shouldNotEqual(expected) // deep equality
 
 Expected: not "Hello World"
 
@@ -470,7 +470,7 @@ Expected: not "Hello World"
   41) Matchers
        command matchers - negative
          shouldNotContain string:
-     expect(received).not.shouldNotContain(expected) // indexOf
+     (received).shouldNotContain(expected) // indexOf
 
 Expected substring: not "World"
 Received string:        "Hello World"
@@ -480,7 +480,7 @@ Received string:        "Hello World"
   42) Matchers
        command matchers - negative
          shouldNotMatch:
-     expect(received).not.shouldNotMatch(expected)
+     (received).shouldNotMatch(expected)
 
 Expected pattern: not /hello/i
 Received string:      "Hello World"
@@ -490,7 +490,7 @@ Received string:      "Hello World"
   43) Matchers
        asymmetric matchers
          any string:
-     expect(received).shouldEqual(expected) // deep equality
+     (received).shouldEqual(expected) // deep equality
 
 Expected: Any<Function>
 Received: "Hello World"
