@@ -10,7 +10,7 @@
     "test": "run-s test:passes test:unit test:failures test:snapshots test:coverage",
     "test:passes": "cross-env HOLLY_INT_TEST=1 nyc --silent bin/holly -c integration/passes/.hollyrc",
     "test:failures": "cross-env FORCE_COLOR=0 HOLLY_INT_TEST=1 nyc --silent --no-clean scripts/test-failures.js -c integration/fails/.hollyrc",
-    "test:snapshots": "nyc --silent --no-clean scripts/test-snapshots.js -c integration/snapshots/.hollyrc",
+    "test:snapshots": "cross-env DEBUG=holly:* nyc --silent --no-clean scripts/test-snapshots.js -c integration/snapshots/.hollyrc",
     "test:unit": "nyc --silent --no-clean mocha -r ts-node/register lib/**/*.spec.ts",
     "test:coverage": "nyc report --reporter=lcov --reporter=text --reporter=html",
     "test:codecov": "codecov",
