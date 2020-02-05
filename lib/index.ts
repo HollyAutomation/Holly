@@ -182,6 +182,7 @@ export const run = async (config: Config) => {
         if (holly.__page) {
           await holly.__page.close();
         }
+        mocha.unloadFiles();
         resolve();
       });
 

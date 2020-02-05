@@ -23,7 +23,7 @@ const makeExpected = file => file.replace(/\.ts$/, ".expected");
     console.log("starting Holly cli to auto update snapshots...");
     await runCli();
 
-    if (process.exitCode !== null || process.exitCode > 0) {
+    if (process.exitCode != null && process.exitCode > 0) {
       console.error("Run failed");
     } else {
       const updatedFileContents = await Promise.all(
@@ -60,7 +60,7 @@ const makeExpected = file => file.replace(/\.ts$/, ".expected");
           "starting Holly cli to check the updated snapshots pass..."
         );
         await runCli();
-        if (process.exitCode !== null || process.exitCode > 0) {
+        if (process.exitCode != null && process.exitCode > 0) {
           console.error("Run failed");
         }
       }
