@@ -1,6 +1,6 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, click } = holly;
+const { newPage, $, keypress } = holly;
 
 describe("Mouse", () => {
   let testServer: TestServer;
@@ -16,13 +16,12 @@ describe("Mouse", () => {
       const url = testServer.addResponse(
         bodyToHtml(
           `
-          <button class="testbtn">Test Button</button>
-          <div class="testdiv">Test Button</button>
+          <input class="testinp" value=""></input>
+          <div class="testdiv"></button>
           <script>
-            const el = document.getElementsByClassName("testbtn")[0];
-            el.onclick = () => {
-              document.getElementsByClassName("testdiv")[0].innerHTML = "clicked";
-            }
+            setInterval(() => {
+              document.getElementsByClassName("testdiv")[0].innerHTML = document.getElementsByClassName("testinp")[0].value;
+            }, 20);
           </script>
           `
         )
@@ -30,12 +29,12 @@ describe("Mouse", () => {
       await newPage(url);
     });
 
-    it("clicks a element", async () => {
-      await $(".testbtn").click();
+    it("types in an input", async () => {
+      await $(".testinp").type("Hello World");
 
       await $(".testdiv")
         .text()
-        .shouldEqual("clicked");
+        .shouldEqual("Hello World");
     });
   });
 
@@ -44,10 +43,10 @@ describe("Mouse", () => {
       const url = testServer.addResponse(
         bodyToHtml(
           `
-          <div class="testdiv">Test Button</button>
+          <div class="testdiv"></button>
           <script>
-            document.body.onclick = () => {
-              document.getElementsByClassName("testdiv")[0].innerHTML = "clicked";
+            document.body.onkeydown = (e) => {
+              document.getElementsByClassName("testdiv")[0].innerHTML += e.key;
             }
           </script>
           `
@@ -56,12 +55,14 @@ describe("Mouse", () => {
       await newPage(url);
     });
 
-    it("clicks a page", async () => {
-      await click(10, 10);
+    it("types in a page", async () => {
+      await keypress("a");
+      await keypress("b");
+      await keypress("c");
 
       await $(".testdiv")
         .text()
-        .shouldEqual("clicked");
+        .shouldEqual("abc");
     });
   });
 });

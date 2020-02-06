@@ -8,13 +8,13 @@ export {};
 type AssymmetricMatcher = {};
 
 type PageKeyboardCommands = {
-  down: (
+  keydown: (
     key: string,
     options?: {
       text?: string;
     }
   ) => HollyChainAwaitable;
-  up: (key: string) => HollyChainAwaitable;
+  keyup: (key: string) => HollyChainAwaitable;
   sendCharacters: (text: string) => HollyChainAwaitable;
   type: (
     text: string,
@@ -22,14 +22,12 @@ type PageKeyboardCommands = {
       delay?: number;
     }
   ) => HollyChainAwaitable;
-  press: (
+  keypress: (
     key: string,
-    options:
-      | {
-          delay?: number;
-          text?: string;
-        }
-      | undefined
+    options?: {
+      delay?: number;
+      text?: string;
+    }
   ) => HollyChainAwaitable;
 };
 
@@ -40,14 +38,12 @@ type ElementKeyboardCommands = {
       delay?: number;
     }
   ) => HollyChainAwaitable;
-  press: (
+  keypress: (
     key: string,
-    options:
-      | {
-          delay?: number;
-          text?: string;
-        }
-      | undefined
+    options?: {
+      delay?: number;
+      text?: string;
+    }
   ) => HollyChainAwaitable;
 };
 

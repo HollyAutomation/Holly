@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from "playwright-core";
+import { BrowserContext, Page } from "playwright";
 
 export type Holly = {
   __executeSoFar: () => Promise<void>;
