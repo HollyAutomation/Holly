@@ -84,8 +84,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
     run(holly: Holly, element: ElementHandle) {
       assertElementType(element, "type");
       return pipe(element, /* istanbul ignore next */ el => el.innerText);
-    },
-    canRetry: false
+    }
   },
   {
     name: "evaluate",
