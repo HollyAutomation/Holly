@@ -1,6 +1,46 @@
+import {
+  ClickOptions,
+  Button,
+  MultiClickOptions
+} from "playwright-core/lib/input";
 export {};
 
 type AssymmetricMatcher = {};
+
+type PageMouseCommands = {
+  click: (x: number, y: number, options?: ClickOptions) => HollyChainAwaitable;
+  dblclick: (
+    x: number,
+    y: number,
+    options?: MultiClickOptions
+  ) => HollyChainAwaitable;
+  down: (options?: {
+    button?: Button;
+    clickCount?: number;
+  }) => HollyChainAwaitable;
+  move: (
+    x: number,
+    y: number,
+    options?: {
+      steps?: number;
+    }
+  ) => HollyChainAwaitable;
+  tripleclick: (
+    x: number,
+    y: number,
+    options?: MultiClickOptions
+  ) => HollyChainAwaitable;
+  up: (options?: {
+    button?: Button;
+    clickCount?: number;
+  }) => HollyChainAwaitable;
+};
+
+type ElementMouseCommands = {
+  click: (options?: ClickOptions) => HollyChainAwaitable;
+  dblclick: (options?: MultiClickOptions) => HollyChainAwaitable;
+  tripleclick: (options?: MultiClickOptions) => HollyChainAwaitable;
+};
 
 type Holly = {
   newPage: (url: string) => HollyChainAwaitable;
@@ -8,10 +48,11 @@ type Holly = {
   any: (anyType: any) => AssymmetricMatcher;
   pipe: (fn: () => any) => HollyChainAwaitable;
   evaluate: (fn: () => any) => HollyChainAwaitable;
-};
+} & PageMouseCommands;
 
 type HollyChain = {
   value: () => HollyChainAwaitable;
+  text: () => HollyChainAwaitable;
   type: (value: string) => HollyChainAwaitable;
   shouldMatchInlineSnapshot: (snapshot?: string) => HollyChainAwaitable;
   shouldEqual: (expected: any) => HollyChainAwaitable;
@@ -58,10 +99,13 @@ type HollyChain = {
     path: string | ReadonlyArray<string>,
     value?: any
   ) => HollyChainAwaitable;
+  shouldMatchObject: (expected: Object) => HollyChainAwaitable;
+  shouldNotMatchObject: (expected: Object) => HollyChainAwaitable;
   and: HollyChainAwaitable;
   pipe: (fn: (anything: any) => any) => HollyChainAwaitable;
   evaluate: (fn: (anything: any) => any) => HollyChainAwaitable;
-};
+} & PageMouseCommands &
+  ElementMouseCommands;
 
 type HollyChainAwaitable = Promise<HollyChain> & HollyChain;
 

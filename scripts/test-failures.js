@@ -37,46 +37,51 @@ let mochaOutput = "";
 const oldLog = console.log;
 console.log = (...args) => {
   mochaOutput += logFormat(args) + "\n";
+  oldLog(...args);
 };
 const runCli = require("../build/cli");
 
 (async () => {
-  oldLog("starting Holly cli...");
-  await runCli();
+  try {
+    oldLog("starting Holly cli...");
+    await runCli();
 
-  const outputExpected = fs.readFileSync(
-    "integration/fails/expected.txt",
-    "utf8"
-  );
-  mochaOutput = mochaOutput
-    // use more basic window equivalents - https://github.com/mochajs/mocha/blob/master/lib/reporters/base.js#L88
-    .replace(/✓/g, "\u221A")
-    .replace(/✖/g, "\u00D7")
-    .replace(/․/g, ".")
-    // get rid of times
-    .replace(/ passing \(.+\)/, " passing")
-    // get rid of inconsistent slashes
-    .replace(/integration\\fails\\/g, "integration/fails/");
+    const outputExpected = fs.readFileSync(
+      "integration/fails/expected.txt",
+      "utf8"
+    );
+    mochaOutput = mochaOutput
+      // use more basic window equivalents - https://github.com/mochajs/mocha/blob/master/lib/reporters/base.js#L88
+      .replace(/✓/g, "\u221A")
+      .replace(/✖/g, "\u00D7")
+      .replace(/․/g, ".")
+      // get rid of times
+      .replace(/ passing \(.+\)/, " passing")
+      // get rid of inconsistent slashes
+      .replace(/integration\\fails\\/g, "integration/fails/");
 
-  const pass = outputExpected === mochaOutput;
-  if (!pass) {
-    oldLog("Failures didn't match:");
+    const pass = outputExpected === mochaOutput;
+    if (!pass) {
+      oldLog("Failures didn't match:");
 
-    const diff = require("./diff");
-    diff(outputExpected, mochaOutput);
-    oldLog();
-    oldLog("\nreplacing expected...\n");
+      const diff = require("./diff");
+      diff(outputExpected, mochaOutput);
+      oldLog();
+      oldLog("\nreplacing expected...\n");
 
-    process.exitCode = 1;
-    fs.writeFileSync("integration/fails/expected.txt", mochaOutput, "utf8");
-  } else {
-    oldLog("Output matched");
-
-    if (process.exitCode === 0 || process.exitCode == null) {
-      oldLog("But exit code was not set, so failing.");
       process.exitCode = 1;
+      fs.writeFileSync("integration/fails/expected.txt", mochaOutput, "utf8");
     } else {
-      process.exitCode = 0;
+      oldLog("Output matched");
+
+      if (process.exitCode === 0 || process.exitCode == null) {
+        oldLog("But exit code was not set, so failing.");
+        process.exitCode = 1;
+      } else {
+        process.exitCode = 0;
+      }
     }
+  } catch (e) {
+    oldLog("Failed with exception", e);
   }
 })();

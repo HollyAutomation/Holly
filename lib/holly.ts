@@ -166,6 +166,7 @@ export default function createHolly(config: Config): Holly {
         await doRetry();
         return runCommand(commandInstance);
       } else {
+        // TODO - special case an element so the error can be element can not be found
         let toThrow: { message?: string | void; stack?: string | void } = {};
         if (typeof e.message === "function") {
           toThrow.message = e.message();
