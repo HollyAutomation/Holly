@@ -3,7 +3,7 @@ import {
   Button,
   MultiClickOptions
 } from "playwright-core/lib/input";
-export {};
+import { Viewport } from "playwright-core/lib/types";
 
 type AssymmetricMatcher = {};
 
@@ -13,22 +13,22 @@ type PageKeyboardCommands = {
     options?: {
       text?: string;
     }
-  ) => HollyChainAwaitable;
-  keyup: (key: string) => HollyChainAwaitable;
-  sendCharacters: (text: string) => HollyChainAwaitable;
+  ) => HollyChainPageAwaitable;
+  keyup: (key: string) => HollyChainPageAwaitable;
+  sendCharacters: (text: string) => HollyChainPageAwaitable;
   type: (
     text: string,
     options?: {
       delay?: number;
     }
-  ) => HollyChainAwaitable;
+  ) => HollyChainPageAwaitable;
   keypress: (
     key: string,
     options?: {
       delay?: number;
       text?: string;
     }
-  ) => HollyChainAwaitable;
+  ) => HollyChainPageAwaitable;
 };
 
 type ElementKeyboardCommands = {
@@ -37,120 +37,149 @@ type ElementKeyboardCommands = {
     options?: {
       delay?: number;
     }
-  ) => HollyChainAwaitable;
+  ) => HollyChainElementAwaitable;
   keypress: (
     key: string,
     options?: {
       delay?: number;
       text?: string;
     }
-  ) => HollyChainAwaitable;
+  ) => HollyChainElementAwaitable;
 };
 
 type PageMouseCommands = {
-  click: (x: number, y: number, options?: ClickOptions) => HollyChainAwaitable;
+  click: (
+    x: number,
+    y: number,
+    options?: ClickOptions
+  ) => HollyChainPageAwaitable;
   dblclick: (
     x: number,
     y: number,
     options?: MultiClickOptions
-  ) => HollyChainAwaitable;
+  ) => HollyChainPageAwaitable;
   mousedown: (options?: {
     button?: Button;
     clickCount?: number;
-  }) => HollyChainAwaitable;
+  }) => HollyChainPageAwaitable;
   mousemove: (
     x: number,
     y: number,
     options?: {
       steps?: number;
     }
-  ) => HollyChainAwaitable;
+  ) => HollyChainPageAwaitable;
   tripleclick: (
     x: number,
     y: number,
     options?: MultiClickOptions
-  ) => HollyChainAwaitable;
+  ) => HollyChainPageAwaitable;
   mouseup: (options?: {
     button?: Button;
     clickCount?: number;
-  }) => HollyChainAwaitable;
+  }) => HollyChainPageAwaitable;
 };
 
 type ElementMouseCommands = {
-  click: (options?: ClickOptions) => HollyChainAwaitable;
-  dblclick: (options?: MultiClickOptions) => HollyChainAwaitable;
-  tripleclick: (options?: MultiClickOptions) => HollyChainAwaitable;
+  click: (options?: ClickOptions) => HollyChainElementAwaitable;
+  dblclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
+  tripleclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
+};
+
+type MiscPageCommands = {
+  setViewport: (viewport: Viewport) => HollyChainPageAwaitable;
+  $: (selector: string) => HollyChainElementAwaitable;
+};
+
+type EscapeHatchCommands = {
+  pipe: (fn: () => any) => HollyChainValueAwaitable;
+  evaluate: (fn: () => any) => HollyChainValueAwaitable;
 };
 
 type Holly = {
-  newPage: (url: string) => HollyChainAwaitable;
-  $: (selector: string) => HollyChainAwaitable;
-  any: (anyType: any) => AssymmetricMatcher;
-  pipe: (fn: () => any) => HollyChainAwaitable;
-  evaluate: (fn: () => any) => HollyChainAwaitable;
-} & PageMouseCommands &
-  PageKeyboardCommands;
+  newPage: (url: string) => HollyChainPageAwaitable;
 
-type HollyChain = {
-  value: () => HollyChainAwaitable;
-  text: () => HollyChainAwaitable;
-  type: (value: string) => HollyChainAwaitable;
-  shouldMatchInlineSnapshot: (snapshot?: string) => HollyChainAwaitable;
-  shouldEqual: (expected: any) => HollyChainAwaitable;
-  shouldNotEqual: (expected: any) => HollyChainAwaitable;
-  shouldMatch: (expected: any) => HollyChainAwaitable;
-  shouldNotMatch: (expected: any) => HollyChainAwaitable;
-  shouldBeDefined: () => HollyChainAwaitable;
-  shouldNotBeDefined: () => HollyChainAwaitable;
-  shouldBeUndefined: () => HollyChainAwaitable;
-  shouldNotBeUndefined: () => HollyChainAwaitable;
-  shouldBeNull: () => HollyChainAwaitable;
-  shouldNotBeNull: () => HollyChainAwaitable;
+  // TODO add the rest of the matchers
+  any: (anyType: any) => AssymmetricMatcher;
+} & PageMouseCommands &
+  PageKeyboardCommands &
+  MiscPageCommands &
+  EscapeHatchCommands;
+
+type HollyChainPage = {
+  and: HollyChainPageAwaitable;
+} & PageMouseCommands &
+  PageKeyboardCommands &
+  MiscPageCommands &
+  EscapeHatchCommands;
+
+type HollyChainPageAwaitable = HollyChainPage & Promise<void>;
+
+type HollyChainElement = {
+  value: () => HollyChainValueAwaitable;
+  text: () => HollyChainValueAwaitable;
+
+  type: (value: string) => HollyChainElementAwaitable;
+
+  and: HollyChainElementAwaitable;
+} & ElementMouseCommands &
+  ElementKeyboardCommands &
+  EscapeHatchCommands;
+
+type HollyChainElementAwaitable = HollyChainElement & Promise<void>;
+
+type HollyChainValue = {
+  shouldMatchInlineSnapshot: (snapshot?: string) => HollyChainValueAwaitable;
+  shouldEqual: (expected: any) => HollyChainValueAwaitable;
+  shouldNotEqual: (expected: any) => HollyChainValueAwaitable;
+  shouldMatch: (expected: any) => HollyChainValueAwaitable;
+  shouldNotMatch: (expected: any) => HollyChainValueAwaitable;
+  shouldBeDefined: () => HollyChainValueAwaitable;
+  shouldNotBeDefined: () => HollyChainValueAwaitable;
+  shouldBeUndefined: () => HollyChainValueAwaitable;
+  shouldNotBeUndefined: () => HollyChainValueAwaitable;
+  shouldBeNull: () => HollyChainValueAwaitable;
+  shouldNotBeNull: () => HollyChainValueAwaitable;
   shouldBeCloseTo: (
     expected: number,
     precision?: number
-  ) => HollyChainAwaitable;
+  ) => HollyChainValueAwaitable;
   shouldNotBeCloseTo: (
     expected: number,
     precision?: number
-  ) => HollyChainAwaitable;
-  shouldBeFalsy: () => HollyChainAwaitable;
-  shouldNotBeFalsy: () => HollyChainAwaitable;
-  shouldBeTruthy: () => HollyChainAwaitable;
-  shouldNotBeTruthy: () => HollyChainAwaitable;
-  shouldBeGreaterThan: (expected: number) => HollyChainAwaitable;
-  shouldNotBeGreaterThan: (expected: number) => HollyChainAwaitable;
-  shouldBeGreaterThanOrEqual: (expected: number) => HollyChainAwaitable;
-  shouldNotBeGreaterThanOrEqual: (expected: number) => HollyChainAwaitable;
-  shouldBeLessThan: (expected: number) => HollyChainAwaitable;
-  shouldNotBeLessThan: (expected: number) => HollyChainAwaitable;
-  shouldBeLessThanOrEqual: (expected: number) => HollyChainAwaitable;
-  shouldNotBeLessThanOrEqual: (expected: number) => HollyChainAwaitable;
-  shouldContain: (expected: any) => HollyChainAwaitable;
-  shouldNotContain: (expected: any) => HollyChainAwaitable;
-  shouldContainEqual: (expected: any) => HollyChainAwaitable;
-  shouldNotContainEqual: (expected: any) => HollyChainAwaitable;
-  shouldHaveLength: (length: number) => HollyChainAwaitable;
-  shouldNotHaveLength: (length: number) => HollyChainAwaitable;
+  ) => HollyChainValueAwaitable;
+  shouldBeFalsy: () => HollyChainValueAwaitable;
+  shouldNotBeFalsy: () => HollyChainValueAwaitable;
+  shouldBeTruthy: () => HollyChainValueAwaitable;
+  shouldNotBeTruthy: () => HollyChainValueAwaitable;
+  shouldBeGreaterThan: (expected: number) => HollyChainValueAwaitable;
+  shouldNotBeGreaterThan: (expected: number) => HollyChainValueAwaitable;
+  shouldBeGreaterThanOrEqual: (expected: number) => HollyChainValueAwaitable;
+  shouldNotBeGreaterThanOrEqual: (expected: number) => HollyChainValueAwaitable;
+  shouldBeLessThan: (expected: number) => HollyChainValueAwaitable;
+  shouldNotBeLessThan: (expected: number) => HollyChainValueAwaitable;
+  shouldBeLessThanOrEqual: (expected: number) => HollyChainValueAwaitable;
+  shouldNotBeLessThanOrEqual: (expected: number) => HollyChainValueAwaitable;
+  shouldContain: (expected: any) => HollyChainValueAwaitable;
+  shouldNotContain: (expected: any) => HollyChainValueAwaitable;
+  shouldContainEqual: (expected: any) => HollyChainValueAwaitable;
+  shouldNotContainEqual: (expected: any) => HollyChainValueAwaitable;
+  shouldHaveLength: (length: number) => HollyChainValueAwaitable;
+  shouldNotHaveLength: (length: number) => HollyChainValueAwaitable;
   shouldHaveProperty: (
     path: string | ReadonlyArray<string>,
     value?: any
-  ) => HollyChainAwaitable;
+  ) => HollyChainValueAwaitable;
   shouldNotHaveProperty: (
     path: string | ReadonlyArray<string>,
     value?: any
-  ) => HollyChainAwaitable;
-  shouldMatchObject: (expected: Object) => HollyChainAwaitable;
-  shouldNotMatchObject: (expected: Object) => HollyChainAwaitable;
-  and: HollyChainAwaitable;
-  pipe: (fn: (anything: any) => any) => HollyChainAwaitable;
-  evaluate: (fn: (anything: any) => any) => HollyChainAwaitable;
-} & PageMouseCommands &
-  ElementMouseCommands &
-  PageKeyboardCommands &
-  ElementKeyboardCommands;
+  ) => HollyChainValueAwaitable;
+  shouldMatchObject: (expected: Object) => HollyChainValueAwaitable;
+  shouldNotMatchObject: (expected: Object) => HollyChainValueAwaitable;
+  and: HollyChainValueAwaitable;
+} & EscapeHatchCommands;
 
-type HollyChainAwaitable = Promise<HollyChain> & HollyChain;
+type HollyChainValueAwaitable = HollyChainValue & Promise<void>;
 
 declare global {
   const holly: Holly;

@@ -6,6 +6,7 @@ import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
 import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "./utils/assert";
+import { Viewport } from "playwright-core/lib/types";
 
 // const debug = Debug("holly:commands");
 
@@ -41,6 +42,15 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
       holly.__page = page;
       // here would go coverage etc.
       await page.goto(url);
+      return page;
+    },
+    canRetry: false
+  },
+  {
+    name: "setViewport",
+    async run(holly: Holly, viewport: Viewport) {
+      const page = assertPageExists(holly.__page, "$");
+      page.setViewport(viewport);
       return page;
     },
     canRetry: false
