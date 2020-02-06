@@ -7,6 +7,46 @@ export {};
 
 type AssymmetricMatcher = {};
 
+type PageKeyboardCommands = {
+  keydown: (
+    key: string,
+    options?: {
+      text?: string;
+    }
+  ) => HollyChainAwaitable;
+  keyup: (key: string) => HollyChainAwaitable;
+  sendCharacters: (text: string) => HollyChainAwaitable;
+  type: (
+    text: string,
+    options?: {
+      delay?: number;
+    }
+  ) => HollyChainAwaitable;
+  keypress: (
+    key: string,
+    options?: {
+      delay?: number;
+      text?: string;
+    }
+  ) => HollyChainAwaitable;
+};
+
+type ElementKeyboardCommands = {
+  type: (
+    text: string,
+    options?: {
+      delay?: number;
+    }
+  ) => HollyChainAwaitable;
+  keypress: (
+    key: string,
+    options?: {
+      delay?: number;
+      text?: string;
+    }
+  ) => HollyChainAwaitable;
+};
+
 type PageMouseCommands = {
   click: (x: number, y: number, options?: ClickOptions) => HollyChainAwaitable;
   dblclick: (
@@ -14,11 +54,11 @@ type PageMouseCommands = {
     y: number,
     options?: MultiClickOptions
   ) => HollyChainAwaitable;
-  down: (options?: {
+  mousedown: (options?: {
     button?: Button;
     clickCount?: number;
   }) => HollyChainAwaitable;
-  move: (
+  mousemove: (
     x: number,
     y: number,
     options?: {
@@ -30,7 +70,7 @@ type PageMouseCommands = {
     y: number,
     options?: MultiClickOptions
   ) => HollyChainAwaitable;
-  up: (options?: {
+  mouseup: (options?: {
     button?: Button;
     clickCount?: number;
   }) => HollyChainAwaitable;
@@ -48,7 +88,8 @@ type Holly = {
   any: (anyType: any) => AssymmetricMatcher;
   pipe: (fn: () => any) => HollyChainAwaitable;
   evaluate: (fn: () => any) => HollyChainAwaitable;
-} & PageMouseCommands;
+} & PageMouseCommands &
+  PageKeyboardCommands;
 
 type HollyChain = {
   value: () => HollyChainAwaitable;
@@ -105,7 +146,9 @@ type HollyChain = {
   pipe: (fn: (anything: any) => any) => HollyChainAwaitable;
   evaluate: (fn: (anything: any) => any) => HollyChainAwaitable;
 } & PageMouseCommands &
-  ElementMouseCommands;
+  ElementMouseCommands &
+  PageKeyboardCommands &
+  ElementKeyboardCommands;
 
 type HollyChainAwaitable = Promise<HollyChain> & HollyChain;
 
