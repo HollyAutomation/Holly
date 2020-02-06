@@ -3,37 +3,32 @@ import { ElementHandle, Page } from "playwright";
 import matchInlineSnapshot from "./matchInlineSnapshot";
 import { Holly, CommandDefinition } from "./types";
 import { commandMatchers } from "./commandMatchers";
+import * as mouseCommands from "./mouseCommands";
+import { assertPageExists, assertElementType } from "./utils/assert";
 
 // const debug = Debug("holly:commands");
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
+  ...mouseCommands.rootCommands,
   {
     name: "$",
     run(holly: Holly, selector: string) {
-      if (!holly.__page) {
-        throw new Error(
-          "Go to a page before selecting an element (holly.newPage)"
-        );
-      }
-      return holly.__page.$(selector);
+      const page = assertPageExists(holly.__page, "$");
+      return page.$(selector);
     }
   },
   {
     name: "pipe",
     run(holly: Holly, fn: () => any) {
-      if (!holly.__page) {
-        throw new Error("Go to a page before using pipe (holly.newPage)");
-      }
-      return holly.__page.evaluate(fn);
+      const page = assertPageExists(holly.__page, "pipe");
+      return page.evaluate(fn);
     }
   },
   {
     name: "evaluate",
     run(holly: Holly, fn: () => any) {
-      if (!holly.__page) {
-        throw new Error("Go to a page before using evaluate (holly.newPage)");
-      }
-      return holly.__page.evaluate(fn);
+      const page = assertPageExists(holly.__page, "evaluate");
+      return page.evaluate(fn);
     },
     canRetry: false
   },
@@ -59,9 +54,11 @@ function pipe(base: any, anything: (anything?: any) => any) {
 
 export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   ...commandMatchers,
+  ...mouseCommands.chainedCommands,
   {
     name: "value",
     run(holly: Holly, element: ElementHandle) {
+      assertElementType(element, "value");
       return element.evaluate(
         // @ts-ignore
         /* istanbul ignore next */ (elem: HTMLElement) => elem.value
@@ -72,6 +69,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   {
     name: "type",
     run(holly: Holly, element: ElementHandle, value: string) {
+      assertElementType(element, "type");
       return element.type(value);
     },
     canRetry: false
@@ -85,6 +83,14 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
     ) {
       return pipe(elementOrPage, fn);
     }
+  },
+  {
+    name: "text",
+    run(holly: Holly, element: ElementHandle) {
+      assertElementType(element, "type");
+      return pipe(element, /* istanbul ignore next */ el => el.innerText);
+    },
+    canRetry: false
   },
   {
     name: "evaluate",
