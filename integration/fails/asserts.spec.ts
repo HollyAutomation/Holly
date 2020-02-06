@@ -1,6 +1,6 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, pipe, move } = holly;
+const { newPage, $, pipe, mousemove } = holly;
 
 describe("Asserts", () => {
   let testServer: TestServer;
@@ -20,7 +20,7 @@ describe("Asserts", () => {
   });
 
   it("mouse fails without newPage", async () => {
-    await move(100, 100);
+    await mousemove(100, 100);
   });
 
   it("value fails on a non element", async () => {
@@ -39,7 +39,7 @@ describe("Asserts", () => {
       bodyToHtml(`<div class="test">Test Element</div>`)
     );
     await newPage(url);
-    await $(".test").down();
+    await $(".test").mousedown();
   });
 
   it("fails on an element that doesn't exist", async () => {

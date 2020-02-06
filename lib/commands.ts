@@ -4,12 +4,14 @@ import matchInlineSnapshot from "./matchInlineSnapshot";
 import { Holly, CommandDefinition } from "./types";
 import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
+import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "./utils/assert";
 
 // const debug = Debug("holly:commands");
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
+  ...keyboardCommands.rootCommands,
   {
     name: "$",
     run(holly: Holly, selector: string) {
@@ -55,6 +57,7 @@ function pipe(base: any, anything: (anything?: any) => any) {
 export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   ...commandMatchers,
   ...mouseCommands.chainedCommands,
+  ...keyboardCommands.chainedCommands,
   {
     name: "value",
     run(holly: Holly, element: ElementHandle) {
@@ -66,14 +69,6 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
     }
   },
   matchInlineSnapshot,
-  {
-    name: "type",
-    run(holly: Holly, element: ElementHandle, value: string) {
-      assertElementType(element, "type");
-      return element.type(value);
-    },
-    canRetry: false
-  },
   {
     name: "pipe",
     run(
