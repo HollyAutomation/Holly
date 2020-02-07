@@ -191,6 +191,7 @@ export default function createHolly(config: Config): Holly {
     holly.__rootCommands = [];
     holly.__commands = [];
     holly.__currentTest = test;
+    holly.__currentTestState = {};
   };
   holly.__executeSoFar = async () => {
     debug("executing so far");
