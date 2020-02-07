@@ -4,8 +4,8 @@ import {
   assertPageExists,
   assertPageType,
   assertElementType
-} from "./utils/assert";
-import { Holly, CommandDefinition } from "./types";
+} from "../utils/assert";
+import { Holly, CommandDefinition } from "../types";
 
 const mouseApi = [
   {

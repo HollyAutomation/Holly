@@ -3,7 +3,7 @@ import StackUtils = require("stack-utils");
 import { saveInlineSnapshots } from "jest-snapshot/build/inline_snapshots";
 import babelTraverse from "@babel/traverse";
 import prettier = require("prettier");
-import { Holly } from "./types";
+import { Holly } from "../types";
 
 const debug = Debug("holly:matchInlineSnapshot");
 const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(build|node_modules)(\/|\\)/i;
