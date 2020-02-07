@@ -92,19 +92,19 @@
        value fails on a non element:
      The value command was expecting to be run on a element
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:34:8)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:35:8)
 
   5) Asserts
        mouse fails on an element:
      The mousedown command can only be run on a page
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:42:22)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:45:8)
 
   6) Asserts
        fails on an element that doesn't exist:
      The click command was expecting to be run on a element or a page
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:50:27)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:53:27)
 
   7) Matchers
        hooks - beforeEach failure
