@@ -1,7 +1,8 @@
 import {
   ClickOptions,
   Button,
-  MultiClickOptions
+  MultiClickOptions,
+  PointerActionOptions
 } from "playwright-core/lib/input";
 import { Viewport } from "playwright-core/lib/types";
 
@@ -91,13 +92,19 @@ type MiscPageCommands = {
   $: (selector: string) => HollyChainElementAwaitable;
 };
 
+type MiscElementCommands = {
+  focus: () => HollyChainElementAwaitable;
+  hover: (options?: PointerActionOptions) => HollyChainElementAwaitable;
+  scrollIntoViewIfNeeded: () => HollyChainElementAwaitable;
+};
+
 type EscapeHatchCommands = {
   pipe: (fn: () => any) => HollyChainValueAwaitable;
   evaluate: (fn: () => any) => HollyChainValueAwaitable;
 };
 
 type Holly = {
-  newPage: (url: string) => HollyChainPageAwaitable;
+  newPage: (url: string, viewport?: Viewport) => HollyChainPageAwaitable;
 
   // TODO add the rest of the matchers
   any: (anyType: any) => AssymmetricMatcher;
@@ -124,7 +131,8 @@ type HollyChainElement = {
   and: HollyChainElementAwaitable;
 } & ElementMouseCommands &
   ElementKeyboardCommands &
-  EscapeHatchCommands;
+  EscapeHatchCommands &
+  MiscElementCommands;
 
 type HollyChainElementAwaitable = HollyChainElement & Promise<void>;
 

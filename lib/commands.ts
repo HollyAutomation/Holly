@@ -7,7 +7,7 @@ import * as mouseCommands from "./mouseCommands";
 import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "./utils/assert";
 import { Viewport } from "playwright-core/lib/types";
-
+import { PointerActionOptions } from "playwright-core/lib/input";
 // const debug = Debug("holly:commands");
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
@@ -37,10 +37,13 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "newPage",
-    async run(holly: Holly, url: string) {
-      const page = await holly.__context.newPage("about:blank");
+    async run(holly: Holly, url: string, viewport?: Viewport) {
+      const page = await holly.__context.newPage();
       holly.__page = page;
       // here would go coverage etc.
+      if (viewport) {
+        await page.setViewport(viewport);
+      }
       await page.goto(url);
       return page;
     },
@@ -49,8 +52,8 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   {
     name: "setViewport",
     async run(holly: Holly, viewport: Viewport) {
-      const page = assertPageExists(holly.__page, "$");
-      page.setViewport(viewport);
+      const page = assertPageExists(holly.__page, "setViewport");
+      await page.setViewport(viewport);
       return page;
     },
     canRetry: false
@@ -76,6 +79,27 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
         // @ts-ignore
         /* istanbul ignore next */ (elem: HTMLElement) => elem.value
       );
+    }
+  },
+  {
+    name: "focus",
+    run(holly: Holly, element: ElementHandle) {
+      assertElementType(element, "value");
+      return element.focus();
+    }
+  },
+  {
+    name: "hover",
+    run(holly: Holly, element: ElementHandle, options: PointerActionOptions) {
+      assertElementType(element, "value");
+      return element.hover(options);
+    }
+  },
+  {
+    name: "scrollIntoViewIfNeeded",
+    run(holly: Holly, element: ElementHandle) {
+      assertElementType(element, "value");
+      return element.scrollIntoViewIfNeeded();
     }
   },
   matchInlineSnapshot,
