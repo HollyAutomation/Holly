@@ -1,5 +1,5 @@
 import Debug from "debug";
-import { Holly, CommandDefinition } from "../types";
+import { CommandDefinition } from "../types";
 import rawMatchers from "./matchers";
 import * as jestAsymmetricMatchers from "expect/build/asymmetricMatchers";
 
@@ -27,7 +27,7 @@ function createMatcherCommand(
   return {
     name: alias,
     run(
-      holly: Holly,
+      _,
       receivedValue: any,
       expectedValue: any,
       ...otherArgs: ReadonlyArray<any>

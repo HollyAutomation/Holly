@@ -1,13 +1,13 @@
-import { BrowserContext, Page } from "playwright";
+import { BrowserContext, Page, ElementHandle } from "playwright";
 
 export type Holly = {
   __executeSoFar: () => Promise<void>;
-  __start: (context: BrowserContext) => void;
+  __start: (context: BrowserContext, test: Mocha.Test) => void;
   __page: Page | null | void;
   __context: BrowserContext;
   __commands: Array<CommandInstance>;
   __rootCommands: Array<CommandInstance>;
-  type: () => HollyChainAwaitable;
+  __currentTest: Mocha.Test;
 };
 
 export type HollyChain = {
@@ -24,15 +24,22 @@ export type CommandInstance = {
   children: Array<CommandInstance>;
   result?: any;
   command: CommandDefinition;
-  stack: string | void;
+  stack: string;
   args: ReadonlyArray<any>;
   retry?: null | (() => any);
   retryStartTime?: number;
 };
 
+export type CommandData = {
+  holly: Holly;
+  commandInstance: CommandInstance;
+  element?: ElementHandle;
+  test: Mocha.Test;
+};
+
 export type CommandDefinition = {
   name: string;
-  run: (...args: Array<any>) => any;
+  run: (commandData: CommandData, ...args: Array<any>) => any;
   canRetry?: boolean;
   captureStack?: boolean;
 };

@@ -5,7 +5,7 @@ import {
   assertPageType,
   assertElementType
 } from "../utils/assert";
-import { Holly, CommandDefinition } from "../types";
+import { CommandDefinition } from "../types";
 
 const keyboardApi = [
   {
@@ -34,7 +34,7 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = keyboardApi.map(
     const commandName = alias || name;
     return {
       name: commandName,
-      run(holly: Holly, ...args: ReadonlyArray<any>) {
+      run({ holly }, ...args: ReadonlyArray<any>) {
         const page = assertPageExists(holly.__page, commandName);
         return runPageKeyboardCommand(name, page, ...args);
       },
@@ -49,7 +49,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = keyboardApi.map
     return {
       name: commandName,
       async run(
-        holly: Holly,
+        _,
         pageOrElement: Page | ElementHandle,
         ...args: ReadonlyArray<any>
       ) {

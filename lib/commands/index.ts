@@ -1,15 +1,13 @@
-// import Debug from "debug";
 import { ElementHandle, Page } from "playwright";
 import matchInlineSnapshot from "./matchInlineSnapshot";
 import * as screenshotCommand from "./screenshot";
-import { Holly, CommandDefinition } from "../types";
+import { CommandDefinition } from "../types";
 import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
 import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
-// const debug = Debug("holly:commands");
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
@@ -17,27 +15,27 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   screenshotCommand.root,
   {
     name: "wrap",
-    run(holly: Holly, value: any) {
+    run(_, value: any) {
       return value;
     }
   },
   {
     name: "$",
-    run(holly: Holly, selector: string) {
+    run({ holly }, selector: string) {
       const page = assertPageExists(holly.__page, "$");
       return page.$(selector);
     }
   },
   {
     name: "pipe",
-    run(holly: Holly, fn: () => any) {
+    run({ holly }, fn: () => any) {
       const page = assertPageExists(holly.__page, "pipe");
       return page.evaluate(fn);
     }
   },
   {
     name: "evaluate",
-    run(holly: Holly, fn: () => any) {
+    run({ holly }, fn: () => any) {
       const page = assertPageExists(holly.__page, "evaluate");
       return page.evaluate(fn);
     },
@@ -45,7 +43,8 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "newPage",
-    async run(holly: Holly, url: string, viewport?: Viewport) {
+    async run(x, url: string, viewport?: Viewport) {
+      const holly = x.holly;
       const page = await holly.__context.newPage();
       holly.__page = page;
       // here would go coverage etc.
@@ -59,7 +58,7 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "setViewport",
-    async run(holly: Holly, viewport: Viewport) {
+    async run({ holly }, viewport: Viewport) {
       const page = assertPageExists(holly.__page, "setViewport");
       await page.setViewport(viewport);
       return page;
@@ -82,7 +81,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   screenshotCommand.chained,
   {
     name: "value",
-    run(holly: Holly, element: ElementHandle) {
+    run(_, element: ElementHandle) {
       assertElementType(element, "value");
       return element.evaluate(
         // @ts-ignore
@@ -92,21 +91,21 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "focus",
-    run(holly: Holly, element: ElementHandle) {
+    run(_, element: ElementHandle) {
       assertElementType(element, "value");
       return element.focus();
     }
   },
   {
     name: "hover",
-    run(holly: Holly, element: ElementHandle, options: PointerActionOptions) {
+    run(_, element: ElementHandle, options: PointerActionOptions) {
       assertElementType(element, "value");
       return element.hover(options);
     }
   },
   {
     name: "scrollIntoViewIfNeeded",
-    run(holly: Holly, element: ElementHandle) {
+    run(_, element: ElementHandle) {
       assertElementType(element, "value");
       return element.scrollIntoViewIfNeeded();
     }
@@ -114,28 +113,20 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   matchInlineSnapshot,
   {
     name: "pipe",
-    run(
-      holly: Holly,
-      elementOrPage: ElementHandle | Page | any,
-      fn: () => any
-    ) {
+    run(_, elementOrPage: ElementHandle | Page | any, fn: () => any) {
       return pipe(elementOrPage, fn);
     }
   },
   {
     name: "text",
-    run(holly: Holly, element: ElementHandle) {
+    run(_, element: ElementHandle) {
       assertElementType(element, "type");
       return pipe(element, /* istanbul ignore next */ el => el.innerText);
     }
   },
   {
     name: "evaluate",
-    run(
-      holly: Holly,
-      elementOrPage: ElementHandle | Page | any,
-      fn: () => any
-    ) {
+    run(_, elementOrPage: ElementHandle | Page | any, fn: () => any) {
       return pipe(elementOrPage, fn);
     },
     canRetry: false
