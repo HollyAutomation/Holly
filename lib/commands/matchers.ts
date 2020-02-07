@@ -49,7 +49,7 @@ import {
   printWithType,
   stringify
 } from "jest-matcher-utils";
-import { MatcherState, MatchersObject } from "./types";
+import { MatcherState, MatchersObject } from "../types";
 import {
   printCloseTo,
   printReceivedArrayContainExpectedItem,

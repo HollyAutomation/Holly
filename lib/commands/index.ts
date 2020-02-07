@@ -16,6 +16,12 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...keyboardCommands.rootCommands,
   screenshotCommand.root,
   {
+    name: "wrap",
+    run(holly: Holly, value: any) {
+      return value;
+    }
+  },
+  {
     name: "$",
     run(holly: Holly, selector: string) {
       const page = assertPageExists(holly.__page, "$");

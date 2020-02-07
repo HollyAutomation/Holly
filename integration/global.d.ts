@@ -89,6 +89,7 @@ type ElementMouseCommands = {
 
 type MiscPageCommands = {
   setViewport: (viewport: Viewport) => HollyChainPageAwaitable;
+  screenshot: (name?: string) => HollyChainPageAwaitable;
   $: (selector: string) => HollyChainElementAwaitable;
 };
 
@@ -96,6 +97,7 @@ type MiscElementCommands = {
   focus: () => HollyChainElementAwaitable;
   hover: (options?: PointerActionOptions) => HollyChainElementAwaitable;
   scrollIntoViewIfNeeded: () => HollyChainElementAwaitable;
+  screenshot: (name?: string) => HollyChainElementAwaitable;
 };
 
 type EscapeHatchCommands = {
@@ -105,6 +107,8 @@ type EscapeHatchCommands = {
 
 type Holly = {
   newPage: (url: string, viewport?: Viewport) => HollyChainPageAwaitable;
+
+  wrap: (value: any) => HollyChainValueAwaitable;
 
   // TODO add the rest of the matchers
   any: (anyType: any) => AssymmetricMatcher;

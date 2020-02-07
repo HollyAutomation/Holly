@@ -9,7 +9,7 @@ import {
   CommandDefinition,
   Config
 } from "./types";
-import { asymmetricMatchers } from "./commandMatchers";
+import { asymmetricMatchers } from "./commands/commandMatchers";
 import parseTime from "./utils/parseTime";
 
 const DEFAULT_RETRY_DELAY = milliseconds("20ms");
