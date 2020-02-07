@@ -3,7 +3,7 @@ import StackUtils = require("stack-utils");
 import { saveInlineSnapshots } from "jest-snapshot/build/inline_snapshots";
 import babelTraverse from "@babel/traverse";
 import prettier = require("prettier");
-import { Holly } from "../types";
+import { CommandDefinition } from "../types";
 
 const debug = Debug("holly:matchInlineSnapshot");
 const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(build|node_modules)(\/|\\)/i;
@@ -32,13 +32,15 @@ const getTopFrame = (lines: ReadonlyArray<string>) => {
 
 export default {
   name: "shouldMatchInlineSnapshot",
-  run(holly: Holly, value: any, stack: string, snapshot: string) {
+  run({ commandInstance }, value: any, snapshot: string) {
     const serializedValue =
       typeof value === "string" ? "'" + value + "'" : value;
 
     if (serializedValue !== snapshot) {
       if (!snapshot) {
-        const stackLines = removeInternalLines(stack.split("\n"));
+        const stackLines = removeInternalLines(
+          commandInstance.stack.split("\n")
+        );
         const topFrame = getTopFrame(stackLines);
         if (!topFrame || !topFrame.file) {
           throw new Error("unable to find location for toMatchSnapshot");
@@ -61,4 +63,4 @@ export default {
     }
   },
   captureStack: true
-};
+} as CommandDefinition;

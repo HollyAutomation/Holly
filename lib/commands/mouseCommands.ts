@@ -5,7 +5,7 @@ import {
   assertPageType,
   assertElementType
 } from "../utils/assert";
-import { Holly, CommandDefinition } from "../types";
+import { CommandDefinition } from "../types";
 
 const mouseApi = [
   {
@@ -35,7 +35,7 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = mouseApi.map(
     const commandName = alias || name;
     return {
       name: commandName,
-      run(holly: Holly, ...args: ReadonlyArray<any>) {
+      run({ holly }, ...args: ReadonlyArray<any>) {
         const page = assertPageExists(holly.__page, commandName);
         return runPageMouseCommand(name, page, ...args);
       },
@@ -50,7 +50,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = mouseApi.map(
     return {
       name: commandName,
       async run(
-        holly: Holly,
+        _,
         pageOrElement: Page | ElementHandle,
         ...args: ReadonlyArray<any>
       ) {

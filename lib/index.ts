@@ -186,9 +186,11 @@ export const run = async (config: Config) => {
         resolve();
       });
 
-      runner.on(Mocha.Runner.constants.EVENT_TEST_BEGIN, function() {
+      runner.on(Mocha.Runner.constants.EVENT_TEST_BEGIN, function(
+        test: Mocha.Test
+      ) {
         debug("test start");
-        holly.__start(context);
+        holly.__start(context, test);
       });
 
       mocha.suite.emit(Mocha.Suite.constants.EVENT_ROOT_SUITE_RUN);

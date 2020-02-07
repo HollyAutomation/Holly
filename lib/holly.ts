@@ -11,6 +11,7 @@ import {
 } from "./types";
 import { asymmetricMatchers } from "./commands/commandMatchers";
 import parseTime from "./utils/parseTime";
+import { BrowserContext } from "playwright";
 
 const DEFAULT_RETRY_DELAY = milliseconds("20ms");
 const DEFAULT_MAX_RETRY = milliseconds("5s");
@@ -84,10 +85,8 @@ export default function createHolly(config: Config): Holly {
         throw new Error("do not use holly out of context");
       }
       const error = new Error();
-      const stack = error.stack;
-      if (command.captureStack) {
-        args = [stack, ...args];
-      }
+      // @ts-ignore assume stack is always not undefined
+      const stack: string = error.stack;
       const commandInstance: CommandInstance = {
         parent,
         command,
@@ -110,10 +109,8 @@ export default function createHolly(config: Config): Holly {
     return (...args: ReadonlyArray<any>) => {
       debug(`adding root command '${command.name}'`);
       const error = new Error();
-      const stack = error.stack;
-      if (command.captureStack) {
-        args = [stack, ...args];
-      }
+      // @ts-ignore
+      const stack: string = error.stack;
       const commandInstance = {
         command,
         args,
@@ -138,7 +135,10 @@ export default function createHolly(config: Config): Holly {
       args = [commandInstance.parent.result, ...args];
     }
     try {
-      const result = await commandInstance.command.run(holly, ...args);
+      const result = await commandInstance.command.run(
+        { holly, commandInstance, test: holly.__currentTest },
+        ...args
+      );
       commandInstance.result = result;
       if (commandInstance.command.canRetry !== false) {
         commandInstance.retry = async () => {
@@ -182,7 +182,7 @@ export default function createHolly(config: Config): Holly {
     }
   }
 
-  holly.__start = context => {
+  holly.__start = (context: BrowserContext, test: Mocha.Test) => {
     if (holly.__page) {
       holly.__page.close();
       holly.__page = null;
@@ -190,6 +190,7 @@ export default function createHolly(config: Config): Holly {
     holly.__context = context;
     holly.__rootCommands = [];
     holly.__commands = [];
+    holly.__currentTest = test;
   };
   holly.__executeSoFar = async () => {
     debug("executing so far");
