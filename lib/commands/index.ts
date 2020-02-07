@@ -1,11 +1,12 @@
 // import Debug from "debug";
 import { ElementHandle, Page } from "playwright";
 import matchInlineSnapshot from "./matchInlineSnapshot";
-import { Holly, CommandDefinition } from "./types";
+import * as screenshotCommand from "./screenshot";
+import { Holly, CommandDefinition } from "../types";
 import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
 import * as keyboardCommands from "./keyboardCommands";
-import { assertPageExists, assertElementType } from "./utils/assert";
+import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
 // const debug = Debug("holly:commands");
@@ -13,6 +14,7 @@ import { PointerActionOptions } from "playwright-core/lib/input";
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
   ...keyboardCommands.rootCommands,
+  screenshotCommand.root,
   {
     name: "$",
     run(holly: Holly, selector: string) {
@@ -71,6 +73,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   ...commandMatchers,
   ...mouseCommands.chainedCommands,
   ...keyboardCommands.chainedCommands,
+  screenshotCommand.chained,
   {
     name: "value",
     run(holly: Holly, element: ElementHandle) {

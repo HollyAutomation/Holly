@@ -1,5 +1,5 @@
 import Debug from "debug";
-import { Holly, CommandDefinition } from "./types";
+import { Holly, CommandDefinition } from "../types";
 import rawMatchers from "./matchers";
 import * as jestAsymmetricMatchers from "expect/build/asymmetricMatchers";
 
