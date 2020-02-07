@@ -3,7 +3,7 @@ import looksSame = require("looks-same");
 
 const { newPage, $, screenshot, wrap } = holly;
 
-describe("screenshots", () => {
+describe("screenshot command", () => {
   let testServer: TestServer;
   before(() => {
     testServer = createTestServer();
@@ -21,15 +21,31 @@ describe("screenshots", () => {
         `
       )
     );
-    await newPage(url, { width: 100, height: 100 });
+    await newPage(url, { width: 100, height: 100 }).screenshot();
   });
 
   it("takes screenshots of an element and a page", async () => {
+    const pageComparisonEqual1 = await new Promise<boolean>((resolve, reject) =>
+      looksSame(
+        "screenshots/screenshot command/takes screenshots of an element and a page1.png",
+        "integration/passes/expected-screenshots/page.png",
+        { strict: true },
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result.equal);
+        }
+      )
+    );
+
+    wrap(pageComparisonEqual1).shouldEqual(true);
+
     await $(".testdiv1").screenshot("testdiv1");
 
     const divComparisonEqual = await new Promise<boolean>((resolve, reject) =>
       looksSame(
-        "screenshots/test-suite/testdiv1.png",
+        "screenshots/screenshot command/testdiv1.png",
         "integration/passes/expected-screenshots/testdiv1.png",
         { strict: true },
         (err, result) => {
@@ -43,11 +59,11 @@ describe("screenshots", () => {
 
     wrap(divComparisonEqual).shouldEqual(true);
 
-    await screenshot("page");
+    await screenshot();
 
-    const pageComparisonEqual = await new Promise<boolean>((resolve, reject) =>
+    const pageComparisonEqual2 = await new Promise<boolean>((resolve, reject) =>
       looksSame(
-        "screenshots/test-suite/page.png",
+        "screenshots/screenshot command/takes screenshots of an element and a page2.png",
         "integration/passes/expected-screenshots/page.png",
         { strict: true },
         (err, result) => {
@@ -59,6 +75,6 @@ describe("screenshots", () => {
       )
     );
 
-    wrap(pageComparisonEqual).shouldEqual(true);
+    wrap(pageComparisonEqual2).shouldEqual(true);
   });
 });

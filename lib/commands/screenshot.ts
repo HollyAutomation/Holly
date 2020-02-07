@@ -1,23 +1,41 @@
 import { Page } from "playwright-core/lib/page";
 import { assertPageExists, assertElementType } from "../utils/assert";
 import { ElementHandle } from "playwright";
-import { CommandDefinition } from "../types";
+import { CommandDefinition, Holly } from "../types";
 import * as path from "path";
 import mkdirp = require("mkdirp");
 
 const DEFAULT_SCREENSHOT_DIR = "screenshots";
 
-async function pageScreenshot(page: Page, name?: string) {
+async function makePath(holly: Holly, test: Mocha.Test, name?: string) {
   // TODO: make configurable
   const screenshotDir = DEFAULT_SCREENSHOT_DIR;
-  const count = 1;
-
-  const dir = path.join(screenshotDir, "test-suite");
+  if (!holly.__currentTestState.screenshotCount) {
+    holly.__currentTestState.screenshotCount = 1;
+  }
+  const dir = path.join(screenshotDir, test.parent?.fullTitle() || "");
   // @ts-ignore awaiting https://github.com/DefinitelyTyped/DefinitelyTyped/pull/42136/files/0fa160d0bbf00fc5bc0176a0ae29a0c5c6566bb0#diff-f6e2b66f57850da0627f3bf5a678f6c8
   await mkdirp(dir);
 
+  const filename =
+    (name || test.title + holly.__currentTestState.screenshotCount++) + ".png";
+
+  return {
+    dir,
+    filename
+  };
+}
+
+async function pageScreenshot(
+  holly: Holly,
+  test: Mocha.Test,
+  page: Page,
+  name?: string
+) {
+  const { dir, filename } = await makePath(holly, test, name);
+
   await page.screenshot({
-    path: path.join(dir, (name || "test-title" + count) + ".png"),
+    path: path.join(dir, filename),
     type: "png",
     fullPage: true,
     clip: undefined, // allow passing
@@ -25,17 +43,16 @@ async function pageScreenshot(page: Page, name?: string) {
   });
 }
 
-async function elementScreenshot(element: ElementHandle, name?: string) {
-  // TODO: make configurable
-  const screenshotDir = DEFAULT_SCREENSHOT_DIR;
-  const count = 1;
-
-  const dir = path.join(screenshotDir, "test-suite");
-  // @ts-ignore awaiting https://github.com/DefinitelyTyped/DefinitelyTyped/pull/42136/files/0fa160d0bbf00fc5bc0176a0ae29a0c5c6566bb0#diff-f6e2b66f57850da0627f3bf5a678f6c8
-  await mkdirp(dir);
+async function elementScreenshot(
+  holly: Holly,
+  test: Mocha.Test,
+  element: ElementHandle,
+  name?: string
+) {
+  const { dir, filename } = await makePath(holly, test, name);
 
   await element.screenshot({
-    path: path.join(dir, (name || "test-title" + count) + ".png"),
+    path: path.join(dir, filename),
     type: "png",
     omitBackground: false // allow passing
   });
@@ -43,21 +60,21 @@ async function elementScreenshot(element: ElementHandle, name?: string) {
 
 export const root = {
   name: "screenshot",
-  run({ holly }, name?: string) {
+  run({ holly, test }, name?: string) {
     const page = assertPageExists(holly.__page, "screenshot");
-    return pageScreenshot(page, name);
+    return pageScreenshot(holly, test, page, name);
   },
   canRetry: false
 } as CommandDefinition;
 
 export const chained = {
   name: "screenshot",
-  run(_, value: any, name?: string) {
+  run({ holly, test }, value: any, name?: string) {
     if (value instanceof Page) {
-      return pageScreenshot(value, name);
+      return pageScreenshot(holly, test, value, name);
     }
     const element = assertElementType(value, "screenshot", " or a page");
-    return elementScreenshot(element, name);
+    return elementScreenshot(holly, test, element, name);
   },
   canRetry: false
 } as CommandDefinition;

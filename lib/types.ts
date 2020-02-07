@@ -8,6 +8,7 @@ export type Holly = {
   __commands: Array<CommandInstance>;
   __rootCommands: Array<CommandInstance>;
   __currentTest: Mocha.Test;
+  __currentTestState: { [key: string]: any };
 };
 
 export type HollyChain = {
