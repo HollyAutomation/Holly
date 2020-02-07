@@ -21,10 +21,26 @@ describe("screenshot command", () => {
         `
       )
     );
-    await newPage(url, { width: 100, height: 100 });
+    await newPage(url, { width: 100, height: 100 }).screenshot();
   });
 
   it("takes screenshots of an element and a page", async () => {
+    const pageComparisonEqual1 = await new Promise<boolean>((resolve, reject) =>
+      looksSame(
+        "screenshots/screenshot command/takes screenshots of an element and a page1.png",
+        "integration/passes/expected-screenshots/page.png",
+        { strict: true },
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result.equal);
+        }
+      )
+    );
+
+    wrap(pageComparisonEqual1).shouldEqual(true);
+
     await $(".testdiv1").screenshot("testdiv1");
 
     const divComparisonEqual = await new Promise<boolean>((resolve, reject) =>
@@ -45,9 +61,9 @@ describe("screenshot command", () => {
 
     await screenshot();
 
-    const pageComparisonEqual = await new Promise<boolean>((resolve, reject) =>
+    const pageComparisonEqual2 = await new Promise<boolean>((resolve, reject) =>
       looksSame(
-        "screenshots/screenshot command/takes screenshots of an element and a page1.png",
+        "screenshots/screenshot command/takes screenshots of an element and a page2.png",
         "integration/passes/expected-screenshots/page.png",
         { strict: true },
         (err, result) => {
@@ -59,6 +75,6 @@ describe("screenshot command", () => {
       )
     );
 
-    wrap(pageComparisonEqual).shouldEqual(true);
+    wrap(pageComparisonEqual2).shouldEqual(true);
   });
 });
