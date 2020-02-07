@@ -3,7 +3,7 @@ import looksSame = require("looks-same");
 
 const { newPage, $, screenshot, wrap } = holly;
 
-describe("screenshots", () => {
+describe("screenshot command", () => {
   let testServer: TestServer;
   before(() => {
     testServer = createTestServer();
@@ -29,7 +29,7 @@ describe("screenshots", () => {
 
     const divComparisonEqual = await new Promise<boolean>((resolve, reject) =>
       looksSame(
-        "screenshots/test-suite/testdiv1.png",
+        "screenshots/screenshot command/testdiv1.png",
         "integration/passes/expected-screenshots/testdiv1.png",
         { strict: true },
         (err, result) => {
@@ -43,11 +43,11 @@ describe("screenshots", () => {
 
     wrap(divComparisonEqual).shouldEqual(true);
 
-    await screenshot("page");
+    await screenshot();
 
     const pageComparisonEqual = await new Promise<boolean>((resolve, reject) =>
       looksSame(
-        "screenshots/test-suite/page.png",
+        "screenshots/screenshot command/takes screenshots of an element and a page1.png",
         "integration/passes/expected-screenshots/page.png",
         { strict: true },
         (err, result) => {
