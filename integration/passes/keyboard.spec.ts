@@ -17,7 +17,7 @@ describe("Mouse", () => {
         bodyToHtml(
           `
           <input class="testinp" value=""></input>
-          <div class="testdiv"></button>
+          <div class="testdiv"></div>
           <script>
             setInterval(() => {
               document.getElementsByClassName("testdiv")[0].innerHTML = document.getElementsByClassName("testinp")[0].value;
@@ -43,7 +43,7 @@ describe("Mouse", () => {
       const url = testServer.addResponse(
         bodyToHtml(
           `
-          <div class="testdiv"></button>
+          <div class="testdiv"></div>
           <script>
             document.body.onkeydown = (e) => {
               document.getElementsByClassName("testdiv")[0].innerHTML += e.key;
@@ -52,11 +52,10 @@ describe("Mouse", () => {
           `
         )
       );
-      await newPage(url);
+      await newPage(url).keypress("a");
     });
 
     it("types in a page", async () => {
-      await keypress("a");
       await keypress("b");
       await keypress("c");
 

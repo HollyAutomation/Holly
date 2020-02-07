@@ -17,7 +17,7 @@ describe("Mouse", () => {
         bodyToHtml(
           `
           <button class="testbtn">Test Button</button>
-          <div class="testdiv">Test Button</button>
+          <div class="testdiv">Test Button</div>
           <script>
             const el = document.getElementsByClassName("testbtn")[0];
             el.onclick = () => {
@@ -44,7 +44,7 @@ describe("Mouse", () => {
       const url = testServer.addResponse(
         bodyToHtml(
           `
-          <div class="testdiv">Test Button</button>
+          <div class="testdiv"></div>
           <script>
             document.body.onclick = () => {
               document.getElementsByClassName("testdiv")[0].innerHTML = "clicked";

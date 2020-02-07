@@ -31,6 +31,7 @@ describe("Asserts", () => {
 
     await $(".test")
       .text()
+      // @ts-ignore (types protect this too :)
       .value();
   });
 
@@ -39,7 +40,9 @@ describe("Asserts", () => {
       bodyToHtml(`<div class="test">Test Element</div>`)
     );
     await newPage(url);
-    await $(".test").mousedown();
+    await $(".test")
+      // @ts-ignore (types protect this too :)
+      .mousedown();
   });
 
   it("fails on an element that doesn't exist", async () => {
