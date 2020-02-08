@@ -33,8 +33,8 @@
     "test:clean": "rimraf screenshots",
     "lint": "run-p prettier:check lint:eslint",
     "lint:eslint": "eslint . --ext=ts,js",
-    "prettier:check": "prettier --ignore-path .gitignore --check **/*.{md,js,json,yml}",
-    "prettier:write": "prettier --ignore-path .gitignore --write **/*.{md,js,json,yml}",
+    "prettier:check": "prettier --ignore-path ../../.prettierignore --check **/*.{md,js,json,yml}",
+    "prettier:write": "prettier --ignore-path ../../.prettierignore --write **/*.{md,js,json,yml}",
     "build": "tsc -p lib",
     "build:watch": "tsc --watch -p lib"
   },

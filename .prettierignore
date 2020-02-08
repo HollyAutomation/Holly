@@ -1,0 +1,7 @@
+node_modules
+build
+*.tsbuildinfo
+.nyc_output
+coverage
+screenshots
+package-lock.json
