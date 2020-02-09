@@ -43,7 +43,7 @@
   "jest": {
     "coverageReporters": [
       "text-summary",
-      "lcov"
+      "json"
     ]
   }
 }

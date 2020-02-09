@@ -4,7 +4,12 @@
   "author": "Luke Page",
   "license": "ISC",
   "scripts": {
-    "ci": "lerna run ci"
+    "ci": "run-s sub:ci test:coverage test:codecov",
+    "sub:ci": "lerna run ci",
+    "test:coverage": "run-s test:coverage-merge test:coverage-report",
+    "test:coverage-merge": "node scripts/mergeCoverage",
+    "test:coverage-report": "nyc report --reporter=lcov --reporter=text --reporter=html",
+    "test:codecov": "codecov"
   },
   "private": true,
   "devDependencies": {
@@ -17,6 +22,7 @@
     "npm-run-all": "4.1.5",
     "nyc": "15.0.0",
     "prettier": "1.19.1",
+    "rimraf": "3.0.2",
     "typescript": "3.7.5"
   }
 }
