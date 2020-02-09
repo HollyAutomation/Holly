@@ -27,7 +27,10 @@ notifications:
 cache:
   directories:
     - node_modules
+    - packages/holly/node_modules
+    - packages/holly-ui/node_modules
 script:
+  - "npx lerna bootstrap"
   - "npm run ci"
 jobs:
   include:
