@@ -1,17 +1,22 @@
 import React from "react";
 import { ListGroup } from "reactstrap";
-import SpecsListItem, { Spec } from "./SpecListItem";
+import SpecsListItem from "./SpecListItem";
 
 interface Props {
   specs: any;
+  chooseSpec: (spec: string) => void;
 }
 
-const SpecList: React.FC<Props> = ({ specs }) => {
+const SpecList: React.FC<Props> = ({ specs, chooseSpec }) => {
   return (
     <>
-      <ListGroup>
-        {specs.map((spec: Spec, index: number) => (
-          <SpecsListItem key={`spec-${index}`} spec={spec} />
+      <ListGroup className="tst-spec-list">
+        {specs.map((spec: string, index: number) => (
+          <SpecsListItem
+            key={`spec-${index}`}
+            spec={spec}
+            chooseSpec={chooseSpec}
+          />
         ))}
       </ListGroup>
     </>

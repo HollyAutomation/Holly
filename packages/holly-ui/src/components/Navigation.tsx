@@ -19,7 +19,7 @@ const Navigation: React.FC = () => {
         <NavbarBrand href="/">Holly</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
-          {window.__holly && <NavControls />}
+          <NavControls />
         </Collapse>
       </Container>
     </Navbar>

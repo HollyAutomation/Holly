@@ -71,7 +71,7 @@ const EXPECTED_VALUE_LABEL = "Expected value";
 const RECEIVED_VALUE_LABEL = "Received value";
 
 function cleanMessageString(msg: string) {
-  return msg.replace(/expect\(/g, '(').replace(/expect\./, 'holly.');
+  return msg.replace(/expect\(/g, "(").replace(/expect\./, "holly.");
 }
 
 function throwHollyError(msg: string) {
@@ -137,21 +137,25 @@ const matchers: MatchersObject = {
 
     const message = pass
       ? () =>
-      cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          `Expected: not ${printExpected(expected)}\n` +
-          (receivedDiff === 0
-            ? ""
-            : `Received:     ${printReceived(received)}\n` +
-              "\n" +
-              printCloseTo(receivedDiff, expectedDiff, precision, isNot)))
+          cleanMessageString(
+            matcherHint(matcherName, undefined, undefined, options) +
+              "\n\n" +
+              `Expected: not ${printExpected(expected)}\n` +
+              (receivedDiff === 0
+                ? ""
+                : `Received:     ${printReceived(received)}\n` +
+                  "\n" +
+                  printCloseTo(receivedDiff, expectedDiff, precision, isNot))
+          )
       : () =>
-      cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          `Expected: ${printExpected(expected)}\n` +
-          `Received: ${printReceived(received)}\n` +
-          "\n" +
-          printCloseTo(receivedDiff, expectedDiff, precision, isNot));
+          cleanMessageString(
+            matcherHint(matcherName, undefined, undefined, options) +
+              "\n\n" +
+              `Expected: ${printExpected(expected)}\n` +
+              `Received: ${printReceived(received)}\n` +
+              "\n" +
+              printCloseTo(receivedDiff, expectedDiff, precision, isNot)
+          );
 
     return { message, pass };
   },
@@ -170,9 +174,11 @@ const matchers: MatchersObject = {
     const pass = received !== void 0;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, "", options) +
-      "\n\n" +
-      `Received: ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, "", options) +
+          "\n\n" +
+          `Received: ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -191,9 +197,11 @@ const matchers: MatchersObject = {
     const pass = !received;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, "", options) +
-      "\n\n" +
-      `Received: ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, "", options) +
+          "\n\n" +
+          `Received: ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -213,10 +221,12 @@ const matchers: MatchersObject = {
     const pass = received > expected;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-      "\n\n" +
-      `Expected:${isNot ? " not" : ""} > ${printExpected(expected)}\n` +
-      `Received:${isNot ? "    " : ""}   ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, undefined, options) +
+          "\n\n" +
+          `Expected:${isNot ? " not" : ""} > ${printExpected(expected)}\n` +
+          `Received:${isNot ? "    " : ""}   ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -236,10 +246,12 @@ const matchers: MatchersObject = {
     const pass = received >= expected;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-      "\n\n" +
-      `Expected:${isNot ? " not" : ""} >= ${printExpected(expected)}\n` +
-      `Received:${isNot ? "    " : ""}    ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, undefined, options) +
+          "\n\n" +
+          `Expected:${isNot ? " not" : ""} >= ${printExpected(expected)}\n` +
+          `Received:${isNot ? "    " : ""}    ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -259,10 +271,12 @@ const matchers: MatchersObject = {
     const pass = received < expected;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-      "\n\n" +
-      `Expected:${isNot ? " not" : ""} < ${printExpected(expected)}\n` +
-      `Received:${isNot ? "    " : ""}   ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, undefined, options) +
+          "\n\n" +
+          `Expected:${isNot ? " not" : ""} < ${printExpected(expected)}\n` +
+          `Received:${isNot ? "    " : ""}   ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -282,10 +296,12 @@ const matchers: MatchersObject = {
     const pass = received <= expected;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-      "\n\n" +
-      `Expected:${isNot ? " not" : ""} <= ${printExpected(expected)}\n` +
-      `Received:${isNot ? "    " : ""}    ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, undefined, options) +
+          "\n\n" +
+          `Expected:${isNot ? " not" : ""} <= ${printExpected(expected)}\n` +
+          `Received:${isNot ? "    " : ""}    ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -304,9 +320,11 @@ const matchers: MatchersObject = {
     const pass = received === null;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, "", options) +
-      "\n\n" +
-      `Received: ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, "", options) +
+          "\n\n" +
+          `Received: ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -325,9 +343,11 @@ const matchers: MatchersObject = {
     const pass = !!received;
 
     const message = () =>
-    cleanMessageString(matcherHint(matcherName, undefined, "", options) +
-      "\n\n" +
-      `Received: ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, "", options) +
+          "\n\n" +
+          `Received: ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -346,10 +366,11 @@ const matchers: MatchersObject = {
     const pass = received === void 0;
 
     const message = () =>
-    cleanMessageString(
-      matcherHint(matcherName, undefined, "", options) +
-      "\n\n" +
-      `Received: ${printReceived(received)}`);
+      cleanMessageString(
+        matcherHint(matcherName, undefined, "", options) +
+          "\n\n" +
+          `Received: ${printReceived(received)}`
+      );
 
     return { message, pass };
   },
@@ -389,19 +410,19 @@ const matchers: MatchersObject = {
 
         return cleanMessageString(
           matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
-            expected
-          )}\n` +
-          `${printLabel(labelReceived)}${isNot ? "    " : ""}${
-            isNot
-              ? printReceivedStringContainExpectedSubstring(
-                  received,
-                  index,
-                  String(expected).length
-                )
-              : printReceived(received)
-          }`
+            "\n\n" +
+            `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
+              expected
+            )}\n` +
+            `${printLabel(labelReceived)}${isNot ? "    " : ""}${
+              isNot
+                ? printReceivedStringContainExpectedSubstring(
+                    received,
+                    index,
+                    String(expected).length
+                  )
+                : printReceived(received)
+            }`
         );
       };
 
@@ -419,21 +440,21 @@ const matchers: MatchersObject = {
 
       return cleanMessageString(
         matcherHint(matcherName, undefined, undefined, options) +
-        "\n\n" +
-        `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
-          expected
-        )}\n` +
-        `${printLabel(labelReceived)}${isNot ? "    " : ""}${
-          isNot && Array.isArray(received)
-            ? printReceivedArrayContainExpectedItem(received, index)
-            : printReceived(received)
-        }` +
-        (!isNot &&
-        indexable.findIndex(item =>
-          equals(item, expected, [iterableEquality])
-        ) !== -1
-          ? `\n\n${SUGGEST_TO_CONTAIN_EQUAL}`
-          : "")
+          "\n\n" +
+          `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
+            expected
+          )}\n` +
+          `${printLabel(labelReceived)}${isNot ? "    " : ""}${
+            isNot && Array.isArray(received)
+              ? printReceivedArrayContainExpectedItem(received, index)
+              : printReceived(received)
+          }` +
+          (!isNot &&
+          indexable.findIndex(item =>
+            equals(item, expected, [iterableEquality])
+          ) !== -1
+            ? `\n\n${SUGGEST_TO_CONTAIN_EQUAL}`
+            : "")
       );
     };
 
@@ -442,7 +463,6 @@ const matchers: MatchersObject = {
 
   toContainEqual(
     this: MatcherState,
-
     matcherName: string,
     received: ContainIterable,
     expected: unknown
@@ -475,15 +495,15 @@ const matchers: MatchersObject = {
 
       return cleanMessageString(
         matcherHint(matcherName, undefined, undefined, options) +
-        "\n\n" +
-        `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
-          expected
-        )}\n` +
-        `${printLabel(labelReceived)}${isNot ? "    " : ""}${
-          isNot && Array.isArray(received)
-            ? printReceivedArrayContainExpectedItem(received, index)
-            : printReceived(received)
-        }`
+          "\n\n" +
+          `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
+            expected
+          )}\n` +
+          `${printLabel(labelReceived)}${isNot ? "    " : ""}${
+            isNot && Array.isArray(received)
+              ? printReceivedArrayContainExpectedItem(received, index)
+              : printReceived(received)
+          }`
       );
     };
 
@@ -505,22 +525,26 @@ const matchers: MatchersObject = {
 
     const message = pass
       ? () =>
-      cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          `Expected: not ${printExpected(expected)}\n` +
-          (stringify(expected) !== stringify(received)
-            ? `Received:     ${printReceived(received)}`
-            : ""))
+          cleanMessageString(
+            matcherHint(matcherName, undefined, undefined, options) +
+              "\n\n" +
+              `Expected: not ${printExpected(expected)}\n` +
+              (stringify(expected) !== stringify(received)
+                ? `Received:     ${printReceived(received)}`
+                : "")
+          )
       : () =>
-      cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          printDiffOrStringify(
-            expected,
-            received,
-            EXPECTED_LABEL,
-            RECEIVED_LABEL,
-            this.expand
-          ));
+          cleanMessageString(
+            matcherHint(matcherName, undefined, undefined, options) +
+              "\n\n" +
+              printDiffOrStringify(
+                expected,
+                received,
+                EXPECTED_LABEL,
+                RECEIVED_LABEL,
+                this.expand
+              )
+          );
 
     // Passing the actual and expected objects so that a custom reporter
     // could access them, for example in order to display a custom visual diff,
@@ -570,18 +594,18 @@ const matchers: MatchersObject = {
 
       return cleanMessageString(
         matcherHint(matcherName, undefined, undefined, options) +
-        "\n\n" +
-        `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
-          expected
-        )}\n` +
-        (isNot
-          ? ""
-          : `${printLabel(labelReceivedLength)}${printReceived(
-              received.length
-            )}\n`) +
-        `${printLabel(labelReceivedValue)}${isNot ? "    " : ""}${printReceived(
-          received
-        )}`
+          "\n\n" +
+          `${printLabel(labelExpected)}${isNot ? "not " : ""}${printExpected(
+            expected
+          )}\n` +
+          (isNot
+            ? ""
+            : `${printLabel(labelReceivedLength)}${printReceived(
+                received.length
+              )}\n`) +
+          `${printLabel(labelReceivedValue)}${
+            isNot ? "    " : ""
+          }${printReceived(received)}`
       );
     };
 
@@ -654,58 +678,64 @@ const matchers: MatchersObject = {
     // removes the edge case that expected value undefined
     // also matches absence of a property with the key path.
     if (pass && !hasCompletePath) {
-      const message = () => cleanMessageString(
-        matcherHint(matcherName, undefined, expectedArgument, options) +
-        "\n\n" +
-        `Expected path: ${printExpected(expectedPath)}\n` +
-        `Received path: ${printReceived(
-          expectedPathType === "array" || receivedPath.length === 0
-            ? receivedPath
-            : receivedPath.join(".")
-        )}\n\n` +
-        `Expected value: not ${printExpected(expectedValue)}\n` +
-        `Received value:     ${printReceived(receivedValue)}\n\n` +
-        DIM_COLOR(
-          "Because a positive assertion passes for expected value undefined if the property does not exist, this negative assertion fails unless the property does exist and has a defined value"
-        ));
+      const message = () =>
+        cleanMessageString(
+          matcherHint(matcherName, undefined, expectedArgument, options) +
+            "\n\n" +
+            `Expected path: ${printExpected(expectedPath)}\n` +
+            `Received path: ${printReceived(
+              expectedPathType === "array" || receivedPath.length === 0
+                ? receivedPath
+                : receivedPath.join(".")
+            )}\n\n` +
+            `Expected value: not ${printExpected(expectedValue)}\n` +
+            `Received value:     ${printReceived(receivedValue)}\n\n` +
+            DIM_COLOR(
+              "Because a positive assertion passes for expected value undefined if the property does not exist, this negative assertion fails unless the property does exist and has a defined value"
+            )
+        );
 
       return { message, pass };
     }
 
     const message = pass
       ? () =>
-      cleanMessageString(matcherHint(matcherName, undefined, expectedArgument, options) +
-          "\n\n" +
-          (hasValue
-            ? `Expected path: ${printExpected(expectedPath)}\n\n` +
-              `Expected value: not ${printExpected(expectedValue)}` +
-              (stringify(expectedValue) !== stringify(receivedValue)
-                ? `\nReceived value:     ${printReceived(receivedValue)}`
-                : "")
-            : `Expected path: not ${printExpected(expectedPath)}\n\n` +
-              `Received value: ${printReceived(receivedValue)}`))
-      : () =>
-      cleanMessageString(matcherHint(matcherName, undefined, expectedArgument, options) +
-          "\n\n" +
-          `Expected path: ${printExpected(expectedPath)}\n` +
-          (hasCompletePath
-            ? "\n" +
-              printDiffOrStringify(
-                expectedValue,
-                receivedValue,
-                EXPECTED_VALUE_LABEL,
-                RECEIVED_VALUE_LABEL,
-                this.expand
-              )
-            : `Received path: ${printReceived(
-                expectedPathType === "array" || receivedPath.length === 0
-                  ? receivedPath
-                  : receivedPath.join(".")
-              )}\n\n` +
+          cleanMessageString(
+            matcherHint(matcherName, undefined, expectedArgument, options) +
+              "\n\n" +
               (hasValue
-                ? `Expected value: ${printExpected(expectedValue)}\n`
-                : "") +
-              `Received value: ${printReceived(receivedValue)}`));
+                ? `Expected path: ${printExpected(expectedPath)}\n\n` +
+                  `Expected value: not ${printExpected(expectedValue)}` +
+                  (stringify(expectedValue) !== stringify(receivedValue)
+                    ? `\nReceived value:     ${printReceived(receivedValue)}`
+                    : "")
+                : `Expected path: not ${printExpected(expectedPath)}\n\n` +
+                  `Received value: ${printReceived(receivedValue)}`)
+          )
+      : () =>
+          cleanMessageString(
+            matcherHint(matcherName, undefined, expectedArgument, options) +
+              "\n\n" +
+              `Expected path: ${printExpected(expectedPath)}\n` +
+              (hasCompletePath
+                ? "\n" +
+                  printDiffOrStringify(
+                    expectedValue,
+                    receivedValue,
+                    EXPECTED_VALUE_LABEL,
+                    RECEIVED_VALUE_LABEL,
+                    this.expand
+                  )
+                : `Received path: ${printReceived(
+                    expectedPathType === "array" || receivedPath.length === 0
+                      ? receivedPath
+                      : receivedPath.join(".")
+                  )}\n\n` +
+                  (hasValue
+                    ? `Expected value: ${printExpected(expectedValue)}\n`
+                    : "") +
+                  `Received value: ${printReceived(receivedValue)}`)
+          );
 
     return { message, pass };
   },
@@ -753,23 +783,27 @@ const matchers: MatchersObject = {
     const message = pass
       ? () =>
           typeof expected === "string"
-            ? cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-              "\n\n" +
-              `Expected substring: not ${printExpected(expected)}\n` +
-              `Received string:        ${printReceivedStringContainExpectedSubstring(
-                received,
-                received.indexOf(expected),
-                expected.length
-              )}`)
-            : cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-              "\n\n" +
-              `Expected pattern: not ${printExpected(expected)}\n` +
-              `Received string:      ${printReceivedStringContainExpectedResult(
-                received,
-                typeof expected.exec === "function"
-                  ? expected.exec(received)
-                  : null
-              )}`)
+            ? cleanMessageString(
+                matcherHint(matcherName, undefined, undefined, options) +
+                  "\n\n" +
+                  `Expected substring: not ${printExpected(expected)}\n` +
+                  `Received string:        ${printReceivedStringContainExpectedSubstring(
+                    received,
+                    received.indexOf(expected),
+                    expected.length
+                  )}`
+              )
+            : cleanMessageString(
+                matcherHint(matcherName, undefined, undefined, options) +
+                  "\n\n" +
+                  `Expected pattern: not ${printExpected(expected)}\n` +
+                  `Received string:      ${printReceivedStringContainExpectedResult(
+                    received,
+                    typeof expected.exec === "function"
+                      ? expected.exec(received)
+                      : null
+                  )}`
+              )
       : () => {
           const labelExpected = `Expected ${
             typeof expected === "string" ? "substring" : "pattern"
@@ -779,9 +813,9 @@ const matchers: MatchersObject = {
 
           return cleanMessageString(
             matcherHint(matcherName, undefined, undefined, options) +
-            "\n\n" +
-            `${printLabel(labelExpected)}${printExpected(expected)}\n` +
-            `${printLabel(labelReceived)}${printReceived(received)}`
+              "\n\n" +
+              `${printLabel(labelExpected)}${printExpected(expected)}\n` +
+              `${printLabel(labelReceived)}${printReceived(received)}`
           );
         };
 
@@ -822,22 +856,26 @@ const matchers: MatchersObject = {
 
     const message = pass
       ? () =>
-      cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          `Expected: not ${printExpected(expected)}` +
-          (stringify(expected) !== stringify(received)
-            ? `\nReceived:     ${printReceived(received)}`
-            : ""))
+          cleanMessageString(
+            matcherHint(matcherName, undefined, undefined, options) +
+              "\n\n" +
+              `Expected: not ${printExpected(expected)}` +
+              (stringify(expected) !== stringify(received)
+                ? `\nReceived:     ${printReceived(received)}`
+                : "")
+          )
       : () =>
-      cleanMessageString(matcherHint(matcherName, undefined, undefined, options) +
-          "\n\n" +
-          printDiffOrStringify(
-            expected,
-            getObjectSubset(received, expected),
-            EXPECTED_LABEL,
-            RECEIVED_LABEL,
-            this.expand
-          ));
+          cleanMessageString(
+            matcherHint(matcherName, undefined, undefined, options) +
+              "\n\n" +
+              printDiffOrStringify(
+                expected,
+                getObjectSubset(received, expected),
+                EXPECTED_LABEL,
+                RECEIVED_LABEL,
+                this.expand
+              )
+          );
 
     return { message, pass };
   }

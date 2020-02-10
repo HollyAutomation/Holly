@@ -1,30 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import Navigation from "./components/Navigation";
 import SpecList from "./components/SpecList";
-import { Spec } from "./components/SpecListItem";
 import Footer from "./components/Footer";
 
-declare global {
-  interface Window {
-    __holly: {
-      start: () => void;
-      stop: () => void;
-      pause: () => void;
-      specs: Array<Spec>;
-    };
+const MSG_SPECS = "specs";
+
+let ws: WebSocket;
+
+const chooseSpec = (spec: string) => {
+  if (ws) {
+    ws.send(
+      JSON.stringify({
+        type: "runspec",
+        data: spec
+      })
+    );
   }
-}
+};
 
 const App: React.FC = () => {
-  const specs = [
-    // TODO: Fill with actual specs
-    { path: "./src/tests/example-0.spec.js", displayName: "example-0.spec.js" },
-    { path: "./src/tests/example-1.spec.js", displayName: "example-1.spec.js" },
-    { path: "./src/tests/example-2.spec.js", displayName: "example-2.spec.js" },
-    { path: "./src/tests/example-3.spec.js", displayName: "example-3.spec.js" },
-    { path: "./src/tests/example-4.spec.js", displayName: "example-4.spec.js" }
-  ];
+  const [specs, setSpecs] = useState([]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timer | null;
+
+    function open(event: Event) {
+      console.log("open");
+      console.log(ws.readyState);
+    }
+
+    function message(event: MessageEvent) {
+      var msg = JSON.parse(event.data);
+
+      switch (msg.type) {
+        case MSG_SPECS:
+          setSpecs(msg.data);
+          break;
+      }
+    }
+
+    function close() {
+      console.log("closed");
+      if (!timer) {
+        timer = setTimeout(create, 500);
+      }
+    }
+
+    function error() {
+      console.log("error");
+      if (!timer) {
+        timer = setTimeout(create, 500);
+      }
+    }
+
+    function create() {
+      if (ws) {
+        ws.onerror = null;
+        ws.onclose = null;
+        ws.close();
+      }
+      timer = null;
+      ws = new WebSocket("ws://localhost:8080");
+      ws.onopen = open;
+      ws.onerror = error;
+      ws.onmessage = message;
+      ws.onclose = close;
+    }
+
+    create();
+  }, []);
 
   return (
     <div className="App">
@@ -32,7 +77,7 @@ const App: React.FC = () => {
       <Container fluid>
         <Row>
           <Col>
-            <SpecList specs={specs} />
+            <SpecList specs={specs} chooseSpec={chooseSpec} />
           </Col>
         </Row>
         <Footer />
