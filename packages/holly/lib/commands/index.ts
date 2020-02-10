@@ -125,6 +125,41 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
     }
   },
   {
+    name: "textArray",
+    run(_, element: ElementHandle) {
+      assertElementType(element, "type");
+      return pipe(
+        element,
+        /* istanbul ignore next */ el => {
+          type TextArray = string | Array<TextArray>;
+          function getTextArray(node: ChildNode | null) {
+            const textNodes: TextArray = [];
+            if (!node) {
+              return textNodes;
+            }
+            for (node = node.firstChild; node; node = node.nextSibling) {
+              if (node.nodeType == 3) {
+                if (node.textContent) {
+                  textNodes.push(node.textContent);
+                }
+              } else {
+                const subNodes = getTextArray(node);
+                if (subNodes.length > 0) {
+                  textNodes.push(subNodes);
+                }
+              }
+            }
+            if (textNodes.length === 1) {
+              return textNodes[0];
+            }
+            return textNodes;
+          }
+          return getTextArray(el);
+        }
+      );
+    }
+  },
+  {
     name: "evaluate",
     run(_, elementOrPage: ElementHandle | Page | any, fn: () => any) {
       return pipe(elementOrPage, fn);

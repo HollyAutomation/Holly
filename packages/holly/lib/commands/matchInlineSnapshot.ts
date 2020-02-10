@@ -34,7 +34,9 @@ export default {
   name: "shouldMatchInlineSnapshot",
   run({ commandInstance }, value: any, snapshot: string) {
     const serializedValue =
-      typeof value === "string" ? "'" + value + "'" : value;
+      typeof value === "string"
+        ? "'" + value + "'"
+        : JSON.stringify(value, null, 4);
 
     if (serializedValue !== snapshot) {
       if (!snapshot) {

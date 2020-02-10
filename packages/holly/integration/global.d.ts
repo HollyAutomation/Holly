@@ -129,6 +129,7 @@ type HollyChainPageAwaitable = HollyChainPage & Promise<void>;
 type HollyChainElement = {
   value: () => HollyChainValueAwaitable;
   text: () => HollyChainValueAwaitable;
+  textArray: () => HollyChainValueAwaitable;
 
   type: (value: string) => HollyChainElementAwaitable;
 
