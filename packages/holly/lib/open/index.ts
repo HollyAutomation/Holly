@@ -1,4 +1,5 @@
 import * as wsServer from "./wsServer";
+import * as httpServer from "./httpServer";
 import { Config } from "../types";
 import globOriginal = require("glob");
 import * as util from "util";
@@ -13,6 +14,7 @@ export default async (config: Config) => {
   await new Promise(() => {
     // TODO - resolve promise when browser closed? when all connections stop? never?
 
+    httpServer.start();
     wsServer.start({
       getSpecs: () => {
         return files;
@@ -21,4 +23,5 @@ export default async (config: Config) => {
   });
 
   wsServer.stop();
+  httpServer.stop();
 };

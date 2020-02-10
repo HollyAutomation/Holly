@@ -5,9 +5,9 @@ const NavControls: React.FC = () => {
   return (
     <Nav className="mr-auto" navbar>
       <ButtonGroup>
-        <Button onClick={() => window.__holly.start()}>Start</Button>
-        <Button onClick={() => window.__holly.stop()}>Stop</Button>
-        <Button onClick={() => window.__holly.pause()}>Pause</Button>
+        <Button>Start</Button>
+        <Button>Stop</Button>
+        <Button>Pause</Button>
       </ButtonGroup>
     </Nav>
   );

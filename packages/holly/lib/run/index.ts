@@ -1,4 +1,4 @@
-import "./addHollyToGlobal";
+import "../addHollyToGlobal";
 import Debug from "debug";
 import defaultMochaOptions = require("mocha/lib/mocharc.json");
 import { chromium } from "playwright";
@@ -26,7 +26,8 @@ export default async (config: Config) => {
   // or await newContext()
   const context = browser.defaultContext();
 
-  const mochaOptions = {
+  // @ts-ignore the json imported is not properly typed
+  const mochaOptions: Mocha.MochaOptions = {
     ...defaultMochaOptions,
     delay: true, // allow us to control when execution really starts
     timeout: parseTime(testTimeout, DEFAULT_TEST_TIMEOUT)
@@ -47,7 +48,7 @@ export default async (config: Config) => {
   debug("Testing files..", files);
 
   await Promise.all(
-    files.map(file => runSuite(context, config, file, Collector))
+    files.map(file => runSuite(mochaOptions, context, config, file, Collector))
   );
 
   if ((await finished()) > 0) {

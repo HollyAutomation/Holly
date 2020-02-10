@@ -1,27 +1,22 @@
 import React from "react";
 import { ListGroupItem } from "reactstrap";
 
-export interface Spec {
-  displayName: string;
-  path: string;
-}
-
 interface Props {
-  spec: Spec;
+  spec: string;
+  chooseSpec: (spec: string) => void;
   nestingLevel?: number;
   hasChildren?: boolean;
   isExpanded?: boolean;
 }
 
-const chooseSpec = () => {
-  // TODO
-  console.log("choose");
-};
-
-const SpecsListItem: React.FC<Props> = ({ spec, nestingLevel = 0 }) => {
+const SpecsListItem: React.FC<Props> = ({
+  spec,
+  nestingLevel = 0,
+  chooseSpec
+}) => {
   return (
-    <ListGroupItem key={spec.path} className={`level-${nestingLevel}`}>
-      <a onClick={chooseSpec}>{spec.displayName}</a>
+    <ListGroupItem key={spec} className={`level-${nestingLevel}`}>
+      <a onClick={() => chooseSpec(spec)}>{spec}</a>
     </ListGroupItem>
   );
 };

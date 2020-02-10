@@ -16,14 +16,21 @@ const MSG_SPECS = "specs";
 export const start = (hollyUI: HollyUI) => {
   server = new WebSocket.Server({ port: 8080 });
 
+  server.on("error", () => console.log("error on server"));
+
   server.on("connection", function connection(ws: WebSocketWithAlive) {
     ws.isAlive = true;
     ws.on("pong", function heartbeat() {
+      console.log("pong");
       ws.isAlive = true;
     });
 
     ws.on("message", function incoming(message) {
       console.log("received: %s", message);
+    });
+
+    ws.on("error", function incoming() {
+      console.log("error");
     });
 
     ws.send(JSON.stringify({ type: MSG_SPECS, data: hollyUI.getSpecs() }));
