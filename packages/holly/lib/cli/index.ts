@@ -1,48 +1,48 @@
 import yargs = require("yargs");
-import { run } from "../";
+import { run, open } from "../";
 import * as path from "path";
 import { Config } from "../types";
 
-module.exports = () => {
-  const commandLineOptions = yargs.options({
-    headless: {
-      type: "boolean",
-      default: true,
-      desc:
-        "Whether to run in headless mode (no browser visible). Only valid for running tests, not for UI mode."
-    },
-    config: {
-      type: "string",
-      alias: "c",
-      desc: "Path to a config file for loading"
-    },
-    specs: {
-      type: "string",
-      alias: "s",
-      desc: "Glob path to specs files to run"
-    },
-    reporter: {
-      type: "array",
-      desc:
-        "adds a reporter. Can either be a standard mocha reporter like 'spec' or package to be required"
-    },
-    retryDelay: {
-      type: "string",
-      desc:
-        "Time to wait between retrying assertions, defaults to '20ms'. Can be a number in ms or a string with unit."
-    },
-    testTimeout: {
-      type: "string",
-      desc:
-        "Time to wait before failing a test. Defaults to '20s'. Can be a number in ms or a string with unit."
-    },
-    maxRetryTime: {
-      type: "string",
-      desc:
-        "Amount of time to keep trying a test. Defaults to '5s'. Can be a number in ms or a string with unit."
-    }
-  }).argv;
+const options = {
+  headless: {
+    type: "boolean" as yargs.PositionalOptionsType,
+    default: true,
+    desc:
+      "Whether to run in headless mode (no browser visible). Only valid for running tests, not for UI mode."
+  },
+  config: {
+    type: "string" as yargs.PositionalOptionsType,
+    alias: "c",
+    desc: "Path to a config file for loading"
+  },
+  specs: {
+    type: "string" as yargs.PositionalOptionsType,
+    alias: "s",
+    desc: "Glob path to specs files to run"
+  },
+  reporter: {
+    type: "array" as "array",
+    desc:
+      "adds a reporter. Can either be a standard mocha reporter like 'spec' or package to be required"
+  },
+  retryDelay: {
+    type: "string" as yargs.PositionalOptionsType,
+    desc:
+      "Time to wait between retrying assertions, defaults to '20ms'. Can be a number in ms or a string with unit."
+  },
+  testTimeout: {
+    type: "string" as yargs.PositionalOptionsType,
+    desc:
+      "Time to wait before failing a test. Defaults to '20s'. Can be a number in ms or a string with unit."
+  },
+  maxRetryTime: {
+    type: "string" as yargs.PositionalOptionsType,
+    desc:
+      "Amount of time to keep trying a test. Defaults to '5s'. Can be a number in ms or a string with unit."
+  }
+};
 
+const getConfig = (commandLineOptions: CommandLineOptions) => {
   let configOptions: Partial<Config> = {};
 
   if (commandLineOptions.config) {
@@ -62,12 +62,45 @@ module.exports = () => {
     );
   }
 
-  return run({
+  return {
     specs,
     reporters: commandLineReporters || configOptions.reporters,
     consistentResultsOrdering: configOptions.consistentResultsOrdering,
-    retryDelay: configOptions.retryDelay || commandLineOptions.retryDelay,
-    testTimeout: configOptions.testTimeout || commandLineOptions.testTimeout,
-    maxRetryTime: configOptions.maxRetryTime || commandLineOptions.maxRetryTime
-  });
+    retryDelay: commandLineOptions.retryDelay || configOptions.retryDelay,
+    testTimeout: commandLineOptions.testTimeout || configOptions.testTimeout,
+    maxRetryTime: commandLineOptions.maxRetryTime || configOptions.maxRetryTime
+  };
+};
+
+interface CommandLineOptions {
+  config?: string;
+  retryDelay?: string;
+  testTimeout?: string;
+  maxRetryTime?: string;
+  reporter?: Array<number | string>;
+  specs?: string;
+  headless?: boolean;
+}
+
+module.exports = () => {
+  yargs
+    .command(
+      "open",
+      "Opens the UI",
+      options,
+      // @ts-ignore yargs typing doesnt work with commands and shared options
+      (commandLineOptions: CommandLineOptions) => {
+        const config = getConfig(commandLineOptions);
+        return open(config);
+      }
+    )
+    .command(
+      ["run", "$0"],
+      "Runs the specs",
+      options,
+      (commandLineOptions: CommandLineOptions) => {
+        const config = getConfig(commandLineOptions);
+        return run(config);
+      }
+    ).argv;
 };
