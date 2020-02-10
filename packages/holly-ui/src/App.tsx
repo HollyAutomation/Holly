@@ -1,13 +1,9 @@
-import React, { useState } from "react";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  Button
-} from "reactstrap";
+import React from "react";
+import { Container, Row, Col } from "reactstrap";
+import Navigation from "./components/Navigation";
+import SpecList from "./components/SpecList";
+import { Spec } from "./components/SpecListItem";
+import Footer from "./components/Footer";
 
 declare global {
   interface Window {
@@ -15,34 +11,32 @@ declare global {
       start: () => void;
       stop: () => void;
       pause: () => void;
+      specs: Array<Spec>;
     };
   }
 }
 
 const App: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => setIsOpen(!isOpen);
+  const specs = [
+    // TODO: Fill with actual specs
+    { path: "./src/tests/example-0.spec.js", displayName: "example-0.spec.js" },
+    { path: "./src/tests/example-1.spec.js", displayName: "example-1.spec.js" },
+    { path: "./src/tests/example-2.spec.js", displayName: "example-2.spec.js" },
+    { path: "./src/tests/example-3.spec.js", displayName: "example-3.spec.js" },
+    { path: "./src/tests/example-4.spec.js", displayName: "example-4.spec.js" }
+  ];
 
   return (
     <div className="App">
-      <Navbar color="light" light expand="md" fixed="top">
-        <NavbarBrand href="/">Holly</NavbarBrand>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
-            <NavItem>
-              <Button onClick={() => window.__holly.start()}>Start</Button>
-            </NavItem>
-            <NavItem>
-              <Button onClick={() => window.__holly.stop()}>Stop</Button>
-            </NavItem>
-            <NavItem>
-              <Button onClick={() => window.__holly.pause()}>Pause</Button>
-            </NavItem>
-          </Nav>
-        </Collapse>
-      </Navbar>
+      <Navigation />
+      <Container fluid>
+        <Row>
+          <Col>
+            <SpecList specs={specs} />
+          </Col>
+        </Row>
+        <Footer />
+      </Container>
     </div>
   );
 };
