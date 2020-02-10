@@ -128,13 +128,13 @@ Received: "Hello World"
 
   9) Inline Snapshot
        works async:
-     expected '"fail"' but got ''hello''
+     expected '"fail"' but got '"hello"'
   Error: 
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:25:8)
 
   10) Inline Snapshot
        works sync:
-     expected '"fail"' but got ''hello''
+     expected '"fail"' but got '"hello"'
   Error: 
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:32:8)
 

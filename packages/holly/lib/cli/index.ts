@@ -83,6 +83,7 @@ interface CommandLineOptions {
 }
 
 module.exports = () => {
+  let commandPromise;
   yargs
     .command(
       "open",
@@ -91,7 +92,8 @@ module.exports = () => {
       // @ts-ignore yargs typing doesnt work with commands and shared options
       (commandLineOptions: CommandLineOptions) => {
         const config = getConfig(commandLineOptions);
-        return open(config);
+        commandPromise = open(config);
+        return commandPromise;
       }
     )
     .command(
@@ -100,7 +102,9 @@ module.exports = () => {
       options,
       (commandLineOptions: CommandLineOptions) => {
         const config = getConfig(commandLineOptions);
-        return run(config);
+        commandPromise = run(config);
+        return commandPromise;
       }
     ).argv;
+  return commandPromise;
 };

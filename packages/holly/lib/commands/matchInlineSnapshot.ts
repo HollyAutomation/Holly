@@ -33,12 +33,11 @@ const getTopFrame = (lines: ReadonlyArray<string>) => {
 export default {
   name: "shouldMatchInlineSnapshot",
   run({ commandInstance }, value: any, snapshot: string) {
-    const serializedValue =
-      typeof value === "string"
-        ? "'" + value + "'"
-        : JSON.stringify(value, null, 4);
+    const snapshotFormatted =
+      snapshot && JSON.stringify(JSON.parse(snapshot), null, 4);
+    const serializedValue = JSON.stringify(value, null, 4);
 
-    if (serializedValue !== snapshot) {
+    if (serializedValue !== snapshotFormatted) {
       if (!snapshot) {
         const stackLines = removeInternalLines(
           commandInstance.stack.split("\n")
