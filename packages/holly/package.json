@@ -78,7 +78,7 @@
     "milliseconds": "1.0.3",
     "mkdirp": "1.0.3",
     "mocha": "7.0.1",
-    "playwright": "0.10.0",
+    "playwright": "0.11.0",
     "stack-utils": "2.0.1",
     "ws": "7.2.1",
     "yargs": "15.1.0"
