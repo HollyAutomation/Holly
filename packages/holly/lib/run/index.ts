@@ -24,7 +24,7 @@ export default async (config: Config) => {
 
   const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
   // TODO: Work out how to deal with contexts
-  const context = browser.newContext();
+  const context = await browser.newContext();
 
   // @ts-ignore the json imported is not properly typed
   const mochaOptions: Mocha.MochaOptions = {

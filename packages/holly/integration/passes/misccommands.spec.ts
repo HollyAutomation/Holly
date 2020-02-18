@@ -1,6 +1,6 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, setViewport } = holly;
+const { newPage, $, setViewportSize } = holly;
 
 describe("Misc commands", () => {
   let testServer: TestServer;
@@ -34,7 +34,7 @@ describe("Misc commands", () => {
         .text()
         .shouldEqual("10x11");
 
-      await setViewport({ width: 15, height: 16 });
+      await setViewportSize({ width: 15, height: 16 });
 
       await $(".testdiv")
         .text()
