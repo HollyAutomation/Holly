@@ -49,7 +49,7 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
       holly.__page = page;
       // here would go coverage etc.
       if (viewport) {
-        await page.setViewport(viewport);
+        await page.setViewportSize(viewport);
       }
       await page.goto(url);
       return page;
@@ -57,10 +57,10 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
     canRetry: false
   },
   {
-    name: "setViewport",
+    name: "setViewportSize",
     async run({ holly }, viewport: Viewport) {
-      const page = assertPageExists(holly.__page, "setViewport");
-      await page.setViewport(viewport);
+      const page = assertPageExists(holly.__page, "setViewportSize");
+      await page.setViewportSize(viewport);
       return page;
     },
     canRetry: false
