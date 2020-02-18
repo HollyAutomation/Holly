@@ -20,9 +20,6 @@
     ]
   },
   "scripts": {
-    "ci": "run-s ci:build ci:test",
-    "ci:build": "run-p lint build",
-    "ci:test": "run-s test",
     "test": "run-s test:clean test:passes test:unit test:failures test:snapshots test:open",
     "test:passes": "cross-env HOLLY_INT_TEST=1 nyc --silent bin/holly -c integration/passes/.hollyrc",
     "test:passes:open": "cross-env HOLLY_INT_TEST=1 bin/holly open -c integration/passes/.hollyrc",

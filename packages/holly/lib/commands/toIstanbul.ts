@@ -5,7 +5,7 @@ import v8toIstanbul = require("v8-to-istanbul");
 import convertSourceMap = require("convert-source-map");
 import Debug from "debug";
 
-const debug = Debug("holly:commandMatchers");
+const debug = Debug("holly:commands:toIstanbul");
 
 type JSRange = {
   startOffset: number;
@@ -66,12 +66,24 @@ class ToIstanbul {
         continue;
       }
 
+      let urlServedBasePath = null;
+      if (servedBasePath) {
+        urlServedBasePath = path.join(
+          servedBasePath,
+          path.dirname(new URL(coverageInfo.url).pathname)
+        );
+      }
+
+      debug(
+        `procesing coverage ${coverageInfo.url}, looking up paths at ${urlServedBasePath}`
+      );
+
       const sourceMap =
         convertSourceMap.fromSource(coverageInfo.source) ||
-        (servedBasePath &&
+        (urlServedBasePath &&
           convertSourceMap.fromMapFileSource(
             coverageInfo.source,
-            servedBasePath
+            urlServedBasePath
           ));
 
       if (!sourceMap) {

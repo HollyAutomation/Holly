@@ -78,4 +78,6 @@ export type Config = {
   testTimeout?: string | number;
   maxRetryTime?: string | number;
   coverage?: boolean;
+  sourceRoot?: string;
+  servedBasePath?: string;
 };

@@ -4,9 +4,11 @@
   "author": "Luke Page",
   "license": "ISC",
   "scripts": {
-    "ci": "run-s sub:ci test:coverage test:codecov",
-    "sub:ci": "lerna run ci",
-    "test:coverage": "run-s test:coverage-merge test:coverage-report",
+    "ci": "run-s lint build test test:coverage test:codecov",
+    "lint": "lerna run lint",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "test:coverage": "run-s test test:coverage-merge test:coverage-report",
     "test:coverage-merge": "node scripts/mergeCoverage",
     "test:coverage-report": "nyc report --reporter=lcov --reporter=text --reporter=html",
     "test:codecov": "codecov"

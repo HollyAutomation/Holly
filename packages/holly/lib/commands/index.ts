@@ -57,8 +57,8 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
           const jsCov = await page.coverage?.stopJSCoverage();
           if (jsCov) {
             await toIstanbul(jsCov, {
-              sourceRoot: "C:\\git\\holly\\packages\\holly-ui\\src",
-              servedBasePath: "C:\\git\\holly\\packages\\holly-ui\\build"
+              sourceRoot: config.sourceRoot,
+              servedBasePath: config.servedBasePath
             });
           }
         });
