@@ -57,6 +57,10 @@ export default (
       holly.__start(context, test);
     });
 
+    mocha.suite.afterEach(async () => {
+      await holly.__end();
+    });
+
     mocha.suite.emit(Mocha.Suite.constants.EVENT_ROOT_SUITE_RUN);
   });
 };

@@ -8,6 +8,8 @@ import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
+import pToIstanbul from "./puppeteerToIstanbul";
+import { CRCoverage } from "./jsCoverage";
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
@@ -43,13 +45,26 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "newPage",
-    async run(x, url: string, viewport?: Viewport) {
-      const holly = x.holly;
+    async run({ config, holly }, url: string, viewport?: Viewport) {
       const page = await holly.__context.newPage();
       holly.__page = page;
       // here would go coverage etc.
       if (viewport) {
         await page.setViewportSize(viewport);
+      }
+      if (config.coverage) {
+        // @ts-ignore
+        page.coverage = new CRCoverage(page);
+        await page.coverage?.startJSCoverage();
+        holly.__afterTestHooks.push(async () => {
+          const jsCov = await page.coverage?.stopJSCoverage();
+          // console.log(jsCov);
+          // //# sourceMappingURL=data:application/json;charset=utf-8;base64,
+          await pToIstanbul(jsCov, {
+            sourceRoot: "C:\\git\\holly\\packages\\holly-ui\\src",
+            servedBasePath: "C:\\git\\holly\\packages\\holly-ui\\build"
+          });
+        });
       }
       await page.goto(url);
       return page;

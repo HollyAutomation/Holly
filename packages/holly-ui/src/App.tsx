@@ -8,6 +8,8 @@ const MSG_SPECS = "specs";
 
 let ws: WebSocket;
 
+// test!!
+
 const chooseSpec = (spec: string) => {
   if (ws) {
     ws.send(

@@ -1,4 +1,5 @@
 module.exports = {
   specs: "integration/open/**/*.spec.ts",
-  reporters: ["spec"]
+  reporters: ["spec"],
+  coverage: true
 };

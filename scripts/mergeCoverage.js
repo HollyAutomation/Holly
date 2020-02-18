@@ -35,4 +35,4 @@ function mergePackage(nycOutput, mergePart) {
 }
 
 mergePackage("packages/holly/.nyc_output", ".nyc_output");
-mergePackage("packages/holly-ui/coverage", "coverage/lcov.info");
+//mergePackage("packages/holly-ui/coverage", "coverage/lcov.info");

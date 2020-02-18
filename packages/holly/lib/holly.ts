@@ -136,7 +136,7 @@ export default function createHolly(config: Config): Holly {
     }
     try {
       const result = await commandInstance.command.run(
-        { holly, commandInstance, test: holly.__currentTest },
+        { holly, commandInstance, test: holly.__currentTest, config },
         ...args
       );
       commandInstance.result = result;
@@ -183,15 +183,23 @@ export default function createHolly(config: Config): Holly {
   }
 
   holly.__start = (context: BrowserContext, test: Mocha.Test) => {
-    if (holly.__page) {
-      holly.__page.close();
-      holly.__page = null;
-    }
     holly.__context = context;
     holly.__rootCommands = [];
     holly.__commands = [];
     holly.__currentTest = test;
     holly.__currentTestState = {};
+    holly.__afterTestHooks = [];
+  };
+  holly.__end = async () => {
+    while (holly.__afterTestHooks.length) {
+      const fn = holly.__afterTestHooks.pop();
+      await fn?.();
+    }
+
+    if (holly.__page) {
+      await holly.__page.close();
+      holly.__page = null;
+    }
   };
   holly.__executeSoFar = async () => {
     debug("executing so far");
