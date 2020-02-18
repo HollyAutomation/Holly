@@ -1,13 +1,32 @@
-const fs = require("fs");
-const mkdirp = require("mkdirp");
-const path = require("path");
-const v8toIstanbul = require("v8-to-istanbul");
-const convertSourceMap = require("convert-source-map");
+import * as fs from "fs";
+import * as mkdirp from "mkdirp";
+import * as path from "path";
+import v8toIstanbul = require("v8-to-istanbul");
+import convertSourceMap = require("convert-source-map");
+import Debug from "debug";
 
-class PuppeteerToIstanbul {
-  coverageInfo: Array<any>;
+const debug = Debug("holly:commandMatchers");
 
-  constructor(coverageInfo: any) {
+type JSRange = {
+  startOffset: number;
+  endOffset: number;
+  count: number;
+};
+
+type JSCoverageEntry = {
+  url: string;
+  source?: string;
+  functions: {
+    functionName: string;
+    isBlockCoverage: boolean;
+    ranges: JSRange[];
+  }[];
+};
+
+class ToIstanbul {
+  coverageInfo: Array<JSCoverageEntry>;
+
+  constructor(coverageInfo: Array<JSCoverageEntry>) {
     this.coverageInfo = coverageInfo;
   }
 
@@ -42,20 +61,36 @@ class PuppeteerToIstanbul {
     for (let index = 0; index < this.coverageInfo.length; index++) {
       const coverageInfo = this.coverageInfo[index];
 
+      if (!coverageInfo.source) {
+        debug(`skipping coverage info ${coverageInfo.url} without source`);
+        continue;
+      }
+
       const sourceMap =
-        convertSourceMap.fromSource(coverageInfo.text) ||
-        convertSourceMap.fromMapFileSource(coverageInfo.text, servedBasePath);
+        convertSourceMap.fromSource(coverageInfo.source) ||
+        (servedBasePath &&
+          convertSourceMap.fromMapFileSource(
+            coverageInfo.source,
+            servedBasePath
+          ));
+
+      if (!sourceMap) {
+        debug(
+          `skipping coverage info ${coverageInfo.url} without sourcemap. servedBasePath = ${servedBasePath}`
+        );
+        continue;
+      }
 
       const script = v8toIstanbul(
         path.join(sourceRoot || "", `original_downloaded_file_${index}`),
         0,
         {
-          source: coverageInfo.text,
+          source: coverageInfo.source,
           sourceMap
         }
       );
       await script.load();
-      script.applyCoverage(coverageInfo.entry.functions);
+      script.applyCoverage(coverageInfo.functions);
 
       const istanbulCoverage = script.toIstanbul();
       Object.keys(istanbulCoverage).forEach(file => {
@@ -78,9 +113,9 @@ class PuppeteerToIstanbul {
 }
 
 export default function(
-  coverageInfo: any,
+  coverageInfo: Array<JSCoverageEntry>,
   options?: { sourceRoot?: string; servedBasePath?: string }
 ) {
-  const pti = new PuppeteerToIstanbul(coverageInfo);
-  return pti.writeIstanbulFormat(options || {});
+  const ti = new ToIstanbul(coverageInfo);
+  return ti.writeIstanbulFormat(options || {});
 }

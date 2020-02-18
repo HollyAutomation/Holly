@@ -8,8 +8,7 @@ import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
-import pToIstanbul from "./puppeteerToIstanbul";
-import { CRCoverage } from "./jsCoverage";
+import toIstanbul from "./toIstanbul";
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
@@ -53,17 +52,15 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
         await page.setViewportSize(viewport);
       }
       if (config.coverage) {
-        // @ts-ignore
-        page.coverage = new CRCoverage(page);
         await page.coverage?.startJSCoverage();
         holly.__afterTestHooks.push(async () => {
           const jsCov = await page.coverage?.stopJSCoverage();
-          // console.log(jsCov);
-          // //# sourceMappingURL=data:application/json;charset=utf-8;base64,
-          await pToIstanbul(jsCov, {
-            sourceRoot: "C:\\git\\holly\\packages\\holly-ui\\src",
-            servedBasePath: "C:\\git\\holly\\packages\\holly-ui\\build"
-          });
+          if (jsCov) {
+            await toIstanbul(jsCov, {
+              sourceRoot: "C:\\git\\holly\\packages\\holly-ui\\src",
+              servedBasePath: "C:\\git\\holly\\packages\\holly-ui\\build"
+            });
+          }
         });
       }
       await page.goto(url);
