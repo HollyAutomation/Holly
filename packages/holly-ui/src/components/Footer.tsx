@@ -9,6 +9,7 @@ const Footer: React.FC = () => {
             className="font-weight-bold small"
             href="https://github.com/HollyAutomation/Holly"
             target="_blank"
+            rel="noopener noreferrer"
           >
             GitHub
           </a>

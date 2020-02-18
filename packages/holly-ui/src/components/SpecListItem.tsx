@@ -16,9 +16,7 @@ const SpecsListItem: React.FC<Props> = ({
 }) => {
   return (
     <ListGroupItem key={spec} className={`level-${nestingLevel}`}>
-      <a onClick={() => chooseSpec(spec)} href="javascript:void">
-        {spec}
-      </a>
+      <button onClick={() => chooseSpec(spec)}>{spec}</button>
     </ListGroupItem>
   );
 };
