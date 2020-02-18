@@ -88,7 +88,7 @@ type ElementMouseCommands = {
 };
 
 type MiscPageCommands = {
-  setViewport: (viewport: Viewport) => HollyChainPageAwaitable;
+  setViewportSize: (viewport: Viewport) => HollyChainPageAwaitable;
   screenshot: (name?: string) => HollyChainPageAwaitable;
   $: (selector: string) => HollyChainElementAwaitable;
 };
