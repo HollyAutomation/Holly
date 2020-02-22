@@ -5,8 +5,6 @@
     "start": "react-scripts start",
     "build": "react-app-rewired build",
     "build:watch": "run-s start",
-    "test": "react-scripts test --coverage --watchAll=false",
-    "test:watch": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "run-s prettier:check",
     "prettier:check": "prettier --ignore-path ../../.prettierignore --check **/*.{md,js,ts,tsx,json,yml}",
