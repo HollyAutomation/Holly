@@ -37,7 +37,6 @@ let mochaOutput = "";
 const oldLog = console.log;
 console.log = (...args) => {
   mochaOutput += logFormat(args) + "\n";
-  oldLog(...args);
 };
 const runCli = require("../build/cli");
 

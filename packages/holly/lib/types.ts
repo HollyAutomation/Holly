@@ -3,12 +3,14 @@ import { BrowserContext, Page, ElementHandle } from "playwright";
 export type Holly = {
   __executeSoFar: () => Promise<void>;
   __start: (context: BrowserContext, test: Mocha.Test) => void;
+  __end: () => Promise<any>;
   __page: Page | null | void;
   __context: BrowserContext;
   __commands: Array<CommandInstance>;
   __rootCommands: Array<CommandInstance>;
   __currentTest: Mocha.Test;
   __currentTestState: { [key: string]: any };
+  __afterTestHooks: Array<() => void | Promise<any>>;
 };
 
 export type HollyChain = {
@@ -36,6 +38,7 @@ export type CommandData = {
   commandInstance: CommandInstance;
   element?: ElementHandle;
   test: Mocha.Test;
+  config: Config;
 };
 
 export type CommandDefinition = {
@@ -74,4 +77,7 @@ export type Config = {
   retryDelay?: string | number;
   testTimeout?: string | number;
   maxRetryTime?: string | number;
+  coverage?: boolean;
+  sourceRoot?: string;
+  servedBasePath?: string;
 };

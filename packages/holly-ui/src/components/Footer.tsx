@@ -1,5 +1,4 @@
 import React from "react";
-import { Container } from "reactstrap";
 
 const Footer: React.FC = () => {
   return (
@@ -10,11 +9,17 @@ const Footer: React.FC = () => {
             className="font-weight-bold small"
             href="https://github.com/HollyAutomation/Holly"
             target="_blank"
+            rel="noopener noreferrer"
           >
             GitHub
           </a>
           {" | "}
-          <a className="font-weight-bold small" href="/" target="_blank">
+          <a
+            className="font-weight-bold small"
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Documentation
           </a>
         </div>

@@ -8,6 +8,7 @@ import * as keyboardCommands from "./keyboardCommands";
 import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
+import toIstanbul from "./toIstanbul";
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
@@ -43,13 +44,24 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "newPage",
-    async run(x, url: string, viewport?: Viewport) {
-      const holly = x.holly;
+    async run({ config, holly }, url: string, viewport?: Viewport) {
       const page = await holly.__context.newPage();
       holly.__page = page;
       // here would go coverage etc.
       if (viewport) {
         await page.setViewportSize(viewport);
+      }
+      if (config.coverage) {
+        await page.coverage?.startJSCoverage();
+        holly.__afterTestHooks.push(async () => {
+          const jsCov = await page.coverage?.stopJSCoverage();
+          if (jsCov) {
+            await toIstanbul(jsCov, {
+              sourceRoot: config.sourceRoot,
+              servedBasePath: config.servedBasePath
+            });
+          }
+        });
       }
       await page.goto(url);
       return page;
