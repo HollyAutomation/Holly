@@ -80,4 +80,5 @@ export type Config = {
   coverage?: boolean;
   sourceRoot?: string;
   servedBasePath?: string;
+  pipeConsole?: boolean;
 };

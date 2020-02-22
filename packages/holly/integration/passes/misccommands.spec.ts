@@ -1,6 +1,6 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, setViewportSize } = holly;
+const { newPage, $, setViewportSize, byText } = holly;
 
 describe("Misc commands", () => {
   let testServer: TestServer;
@@ -133,6 +133,40 @@ describe("Misc commands", () => {
       await $(".testdiv2")
         .text()
         .shouldEqual("found me");
+    });
+  });
+
+  describe("byText", () => {
+    beforeEach(async () => {
+      const url = testServer.addResponse(
+        bodyToHtml(
+          `
+            <div><div>a</div>little<div><div>brown</div><div>fox</div></div></div>
+          `
+        )
+      );
+      await newPage(url);
+    });
+
+    it("gets the right element", async () => {
+      await byText("a")
+        .text()
+        .shouldMatchInlineSnapshot(`"a"`);
+      await byText("a\nlittle")
+        .text()
+        .shouldMatchInlineSnapshot(`"a\\nlittle\\nbrown\\nfox"`);
+      await byText("little")
+        .text()
+        .shouldMatchInlineSnapshot(`"a\\nlittle\\nbrown\\nfox"`);
+      await byText("brown")
+        .text()
+        .shouldMatchInlineSnapshot(`"brown"`);
+      await byText("brown fox")
+        .text()
+        .shouldMatchInlineSnapshot(`"brown\\nfox"`);
+      await byText("little brown fox")
+        .text()
+        .shouldMatchInlineSnapshot(`"a\\nlittle\\nbrown\\nfox"`);
     });
   });
 });

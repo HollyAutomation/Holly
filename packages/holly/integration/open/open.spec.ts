@@ -1,4 +1,4 @@
-const { newPage, $ } = holly;
+const { newPage, $, byText } = holly;
 
 describe("Open mode", () => {
   beforeEach(async () => {
@@ -16,5 +16,7 @@ describe("Open mode", () => {
                 "integration/passes/screenshots.spec.ts",
                 "integration/passes/testRetry.spec.ts"
           ]`);
+
+    await byText("mouse.spec.ts").click();
   });
 });

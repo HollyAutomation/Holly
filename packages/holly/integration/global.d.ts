@@ -91,6 +91,7 @@ type MiscPageCommands = {
   setViewportSize: (viewport: Viewport) => HollyChainPageAwaitable;
   screenshot: (name?: string) => HollyChainPageAwaitable;
   $: (selector: string) => HollyChainElementAwaitable;
+  byText: (text: string) => HollyChainElementAwaitable;
 };
 
 type MiscElementCommands = {

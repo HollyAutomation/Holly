@@ -28,6 +28,52 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
     }
   },
   {
+    name: "byText",
+    async run({ holly }, text: string) {
+      const page = assertPageExists(holly.__page, "byText");
+      const jsHandle = await page.evaluateHandle(
+        /* istanbul ignore next */ (text: string) => {
+          function count(haystack: string, needle: string): number {
+            let count = 0;
+            let i = 0;
+            while (i < haystack.length) {
+              i = haystack.indexOf(needle, i);
+              if (i < 0) {
+                break;
+              }
+              count++;
+              i += needle.length;
+            }
+            return count;
+          }
+          function searchNodes(node: Element): ReadonlyArray<HTMLElement> {
+            let foundNodes: Array<HTMLElement> = [];
+            if (node instanceof HTMLElement) {
+              const instancesInChildren = count(
+                node.innerText.replace(/\s+/g, " "),
+                text
+              );
+              if (instancesInChildren > 0) {
+                for (let i = 0; i < node.children.length; i++) {
+                  foundNodes = foundNodes.concat(searchNodes(node.children[i]));
+                }
+                if (foundNodes.length < instancesInChildren) {
+                  foundNodes.push(node);
+                }
+              }
+            }
+            return foundNodes;
+          }
+          text = text.replace(/\s+/g, " ");
+          const foundNodes = searchNodes(document.body);
+          return foundNodes.length <= 1 ? foundNodes[0] : foundNodes;
+        },
+        text
+      );
+      return jsHandle?.asElement();
+    }
+  },
+  {
     name: "pipe",
     run({ holly }, fn: () => any) {
       const page = assertPageExists(holly.__page, "pipe");
@@ -50,6 +96,9 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
       // here would go coverage etc.
       if (viewport) {
         await page.setViewportSize(viewport);
+      }
+      if (config.pipeConsole !== false) {
+        page.on("console", msg => console.log(msg.text()));
       }
       if (config.coverage) {
         await page.coverage?.startJSCoverage();
@@ -132,7 +181,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   {
     name: "text",
     run(_, element: ElementHandle) {
-      assertElementType(element, "type");
+      assertElementType(element, "text");
       return pipe(element, /* istanbul ignore next */ el => el.innerText);
     }
   },
