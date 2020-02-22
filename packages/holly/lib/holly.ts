@@ -185,7 +185,7 @@ export default function createHolly(config: Config): Holly {
   holly.__start = (context: BrowserContext, test: Mocha.Test) => {
     debug("starting test");
     if (holly.__page) {
-    	throw new Error('unexpected test not cleaned up');
+      throw new Error("unexpected test not cleaned up");
     }
     holly.__context = context;
     holly.__rootCommands = [];
