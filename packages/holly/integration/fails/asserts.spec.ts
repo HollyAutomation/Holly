@@ -15,6 +15,10 @@ describe("Asserts", () => {
     await $(".test");
   });
 
+  it("$ fails without newPage - sync", () => {
+    $(".test");
+  });
+
   it("pipe fails without newPage", () => {
     pipe(() => window.test);
   });

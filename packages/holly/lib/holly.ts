@@ -183,6 +183,10 @@ export default function createHolly(config: Config): Holly {
   }
 
   holly.__start = (context: BrowserContext, test: Mocha.Test) => {
+    debug("starting test");
+    if (holly.__page) {
+    	throw new Error('unexpected test not cleaned up');
+    }
     holly.__context = context;
     holly.__rootCommands = [];
     holly.__commands = [];
@@ -191,6 +195,7 @@ export default function createHolly(config: Config): Holly {
     holly.__afterTestHooks = [];
   };
   holly.__end = async () => {
+    debug("ending test");
     while (holly.__afterTestHooks.length) {
       const fn = holly.__afterTestHooks.pop();
       await fn?.();
@@ -204,12 +209,15 @@ export default function createHolly(config: Config): Holly {
   holly.__executeSoFar = async () => {
     debug("executing so far");
     const commands = holly.__commands;
-    for (let i = 0; i < commands.length; i++) {
-      const command = commands[i];
-      await runCommand(command);
+    try {
+      for (let i = 0; i < commands.length; i++) {
+        const command = commands[i];
+        await runCommand(command);
+      }
+    } finally {
+      holly.__commands.length = 0;
+      debug("all commands executed");
     }
-    holly.__commands.length = 0;
-    debug("all commands executed");
   };
 
   return holly;
