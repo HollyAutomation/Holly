@@ -19,8 +19,9 @@ describe("Open mode", () => {
 
     await byText("mouse.spec.ts").click();
 
-    await $(".tst-test-list")
-      .textArray()
-      .shouldMatchInlineSnapshot(`"test 1"`);
+    await $(".tst-test-list").textArray().shouldMatchInlineSnapshot(`[
+    "Mouse / element api / clicks a element",
+    "Mouse / page api / clicks a page"
+]`);
   });
 });

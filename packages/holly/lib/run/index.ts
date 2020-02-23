@@ -6,10 +6,8 @@ import { Config } from "../types";
 import { createMultiReporter } from "../multiReporter";
 import globOriginal = require("glob");
 import * as util from "util";
-import parseTime from "../utils/parseTime";
 import runSuite from "../runSuite";
-
-const DEFAULT_TEST_TIMEOUT = parseTime("20s", 0);
+import makeMochaOptions from "../makeMochaOptions";
 
 const glob = util.promisify(globOriginal);
 
@@ -26,12 +24,7 @@ export default async (config: Config) => {
   // TODO: Work out how to deal with contexts
   const context = await browser.newContext();
 
-  // @ts-ignore the json imported is not properly typed
-  const mochaOptions: Mocha.MochaOptions = {
-    ...defaultMochaOptions,
-    delay: true, // allow us to control when execution really starts
-    timeout: parseTime(testTimeout, DEFAULT_TEST_TIMEOUT)
-  };
+  const mochaOptions = makeMochaOptions(config);
 
   const { Collector, addReporter, start, finished } = createMultiReporter(
     consistentResultsOrdering

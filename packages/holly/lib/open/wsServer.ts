@@ -12,8 +12,8 @@ interface WebSocketWithAlive extends WebSocket {
 let interval: NodeJS.Timeout;
 
 interface HollyUI {
-  getSpecs: () => Array<string>;
-  runSpec: (spec: string) => Promise<Array<string>>;
+  getSpecs: () => ReadonlyArray<string>;
+  runSpec: (spec: string) => Promise<ReadonlyArray<string>>;
 }
 const MSG_SPECS = "specs";
 const MSG_RUN_SPEC = "runSpec";
