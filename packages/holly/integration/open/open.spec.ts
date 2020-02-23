@@ -18,5 +18,9 @@ describe("Open mode", () => {
           ]`);
 
     await byText("mouse.spec.ts").click();
+
+    await $(".tst-test-list")
+      .textArray()
+      .shouldMatchInlineSnapshot(`"test 1"`);
   });
 });

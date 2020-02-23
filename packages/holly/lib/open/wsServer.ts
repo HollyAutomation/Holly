@@ -1,4 +1,7 @@
 import WebSocket = require("ws");
+import Debug from "debug";
+
+const debug = Debug("holly:open:wsServer");
 
 let server: WebSocket.Server;
 
@@ -10,27 +13,37 @@ let interval: NodeJS.Timeout;
 
 interface HollyUI {
   getSpecs: () => Array<string>;
+  runSpec: (spec: string) => Promise<Array<string>>;
 }
 const MSG_SPECS = "specs";
+const MSG_RUN_SPEC = "runSpec";
+const MSG_TESTS = "tests";
 
 export const start = (hollyUI: HollyUI) => {
   server = new WebSocket.Server({ port: 8080 });
 
-  server.on("error", () => console.log("error on server"));
+  server.on("error", e => debug(`server websocket error - ${e}`));
 
   server.on("connection", function connection(ws: WebSocketWithAlive) {
     ws.isAlive = true;
     ws.on("pong", function heartbeat() {
-      console.log("pong");
       ws.isAlive = true;
     });
 
-    ws.on("message", function incoming(message) {
-      console.log("received: %s", message);
+    ws.on("message", function incoming(message: string) {
+      debug(`received ${message}`);
+      const msgObj = JSON.parse(message);
+      switch (msgObj.type) {
+        case MSG_RUN_SPEC:
+          hollyUI.runSpec(msgObj.data).then(tests => {
+            ws.send(JSON.stringify({ type: MSG_TESTS, data: tests }));
+          });
+          break;
+      }
     });
 
-    ws.on("error", function incoming() {
-      console.log("error");
+    ws.on("error", function incoming(e) {
+      debug(`websocket error - ${e}`);
     });
 
     ws.send(JSON.stringify({ type: MSG_SPECS, data: hollyUI.getSpecs() }));

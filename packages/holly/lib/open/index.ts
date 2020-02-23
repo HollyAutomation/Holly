@@ -18,6 +18,9 @@ export default async (config: Config) => {
     wsServer.start({
       getSpecs: () => {
         return files;
+      },
+      runSpec: async (spec: string) => {
+        return ["test 1"];
       }
     });
   });

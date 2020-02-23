@@ -1,34 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Container, Row, Col } from "reactstrap";
 import Navigation from "./components/Navigation";
 import SpecList from "./components/SpecList";
 import Footer from "./components/Footer";
+import TestList from "./components/TestList";
 
+// TODO - how to share? cross package since this is compiled before publish?
 const MSG_SPECS = "specs";
+const MSG_RUN_SPEC = "runSpec";
+const MSG_TESTS = "tests";
 
 let ws: WebSocket;
 
-const chooseSpec = (spec: string) => {
-  if (ws) {
-    ws.send(
-      JSON.stringify({
-        type: "runspec",
-        data: spec
-      })
-    );
-  }
-};
+const MODE_CHOOSE_SPEC = 1;
+const MODE_RUN_SPEC = 2;
 
 const App: React.FC = () => {
   const [specs, setSpecs] = useState([]);
+  const [mode, setMode] = useState(MODE_CHOOSE_SPEC);
+  const [tests, setTests] = useState([]);
+
+  const chooseSpec = useCallback((spec: string) => {
+    if (ws) {
+      setMode(MODE_RUN_SPEC);
+      ws.send(
+        JSON.stringify({
+          type: MSG_RUN_SPEC,
+          data: spec
+        })
+      );
+    }
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timer | null;
 
-    function open(event: Event) {
-      console.log("open");
-      console.log(ws.readyState);
-    }
+    function open(event: Event) {}
 
     function message(event: MessageEvent) {
       var msg = JSON.parse(event.data);
@@ -37,18 +44,21 @@ const App: React.FC = () => {
         case MSG_SPECS:
           setSpecs(msg.data);
           break;
+        case MSG_TESTS:
+          setTests(msg.data);
+          break;
       }
     }
 
     function close() {
-      console.log("closed");
+      console.log("ws: closed");
       if (!timer) {
         timer = setTimeout(create, 500);
       }
     }
 
     function error() {
-      console.log("error");
+      console.log("ws: error");
       if (!timer) {
         timer = setTimeout(create, 500);
       }
@@ -77,7 +87,11 @@ const App: React.FC = () => {
       <Container fluid>
         <Row>
           <Col>
-            <SpecList specs={specs} chooseSpec={chooseSpec} />
+            {mode === MODE_CHOOSE_SPEC ? (
+              <SpecList specs={specs} chooseSpec={chooseSpec} />
+            ) : (
+              <TestList tests={tests} />
+            )}
           </Col>
         </Row>
         <Footer />
