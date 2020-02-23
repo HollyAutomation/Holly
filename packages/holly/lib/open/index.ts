@@ -20,6 +20,9 @@ export default async (config: Config) => {
         return files;
       },
       runSpec: async (spec: string) => {
+        if (files.indexOf(spec) < 0) {
+          throw new Error("attempt to run a spec not in the list");
+        }
         return ["test 1"];
       }
     });
