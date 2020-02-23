@@ -98,7 +98,7 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
         await page.setViewportSize(viewport);
       }
       if (config.pipeConsole !== false) {
-        page.on("console", msg => console.log(msg.text()));
+        page.on("console", msg => console.log("page:", msg.text()));
       }
       if (config.coverage) {
         await page.coverage?.startJSCoverage();
@@ -188,7 +188,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   {
     name: "textArray",
     run(_, element: ElementHandle) {
-      assertElementType(element, "type");
+      assertElementType(element, "textArray");
       return pipe(
         element,
         /* istanbul ignore next */ el => {

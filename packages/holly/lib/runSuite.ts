@@ -2,9 +2,41 @@ import createHolly from "./holly";
 import { BrowserContext } from "playwright";
 import Mocha = require("mocha");
 import Debug from "debug";
-import { Config } from "./types";
+import { Config, Holly } from "./types";
 
 const debug = Debug("holly:runSuite");
+
+export const makeMocha = (
+  mochaOptions: Mocha.MochaOptions,
+  holly: Holly,
+  suiteFile: string
+): Mocha => {
+  // @ts-ignore
+  const mocha = new Mocha(mochaOptions);
+
+  // @ts-ignore
+  mocha.suite.holly = holly;
+
+  mocha.addFile(suiteFile);
+
+  mocha.suite.on(
+    Mocha.Suite.constants.EVENT_FILE_PRE_REQUIRE,
+    (context: any) => {
+      // @ts-ignore
+      context.getHolly = () => holly;
+    }
+  );
+
+  mocha.suite.on(
+    Mocha.Suite.constants.EVENT_FILE_POST_REQUIRE,
+    (context: any) => {
+      // @ts-ignore
+      context.getHolly = null;
+    }
+  );
+
+  return mocha;
+};
 
 export default (
   mochaOptions: Mocha.MochaOptions,
@@ -16,30 +48,9 @@ export default (
   return new Promise(resolve => {
     const holly = createHolly(config);
 
-    // @ts-ignore
-    const mocha = new Mocha(mochaOptions);
+    const mocha = makeMocha(mochaOptions, holly, suiteFile);
+
     mocha.reporter(Collector);
-
-    // @ts-ignore
-    mocha.suite.holly = holly;
-
-    mocha.addFile(suiteFile);
-
-    mocha.suite.on(
-      Mocha.Suite.constants.EVENT_FILE_PRE_REQUIRE,
-      (context: any) => {
-        // @ts-ignore
-        context.getHolly = () => holly;
-      }
-    );
-
-    mocha.suite.on(
-      Mocha.Suite.constants.EVENT_FILE_POST_REQUIRE,
-      (context: any) => {
-        // @ts-ignore
-        context.getHolly = null;
-      }
-    );
 
     const runner = mocha.run(async () => {
       if (holly.__page) {

@@ -3,7 +3,7 @@ import { ListGroup } from "reactstrap";
 import SpecsListItem from "./SpecListItem";
 
 interface Props {
-  specs: any;
+  specs: ReadonlyArray<string>;
   chooseSpec: (spec: string) => void;
 }
 
