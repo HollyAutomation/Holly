@@ -1,6 +1,5 @@
 import "../addHollyToGlobal";
 import Debug from "debug";
-import defaultMochaOptions = require("mocha/lib/mocharc.json");
 import { chromium } from "playwright";
 import { Config } from "../types";
 import { createMultiReporter } from "../multiReporter";
@@ -14,7 +13,7 @@ const glob = util.promisify(globOriginal);
 const debug = Debug("holly:run:index");
 
 export default async (config: Config) => {
-  let { specs, reporters, consistentResultsOrdering, testTimeout } = config;
+  let { specs, reporters, consistentResultsOrdering } = config;
 
   if (!reporters) {
     reporters = ["spec"];
