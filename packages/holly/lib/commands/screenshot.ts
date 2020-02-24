@@ -1,5 +1,5 @@
 import { Page } from "playwright-core/lib/page";
-import { assertPageExists, assertElementType } from "../utils/assert";
+import { assertPageExists, assertPageOrElementType } from "../utils/assert";
 import { ElementHandle } from "playwright";
 import { CommandDefinition, Holly } from "../types";
 import * as path from "path";
@@ -61,7 +61,8 @@ async function elementScreenshot(
 export const root = {
   name: "screenshot",
   run({ holly, test }, name?: string) {
-    const page = assertPageExists(holly.__page, "screenshot");
+    const page = holly.__page;
+    assertPageExists(page, "screenshot");
     return pageScreenshot(holly, test, page, name);
   },
   canRetry: false
@@ -69,12 +70,12 @@ export const root = {
 
 export const chained = {
   name: "screenshot",
-  run({ holly, test }, value: any, name?: string) {
-    if (value instanceof Page) {
-      return pageScreenshot(holly, test, value, name);
+  run({ holly, test }, pageOrElement: any, name?: string) {
+    assertPageOrElementType(pageOrElement, "screenshot");
+    if (pageOrElement instanceof Page) {
+      return pageScreenshot(holly, test, pageOrElement, name);
     }
-    const element = assertElementType(value, "screenshot", " or a page");
-    return elementScreenshot(holly, test, element, name);
+    return elementScreenshot(holly, test, pageOrElement, name);
   },
   canRetry: false
 } as CommandDefinition;

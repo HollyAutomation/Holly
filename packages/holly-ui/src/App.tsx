@@ -7,8 +7,9 @@ import TestList from "./components/TestList";
 
 // TODO - how to share? cross package since this is compiled before publish?
 const MSG_SPECS = "specs";
-const MSG_RUN_SPEC = "runSpec";
+const MSG_OPEN_SPEC = "openSpec";
 const MSG_TESTS = "tests";
+const MSG_RUN = "run";
 
 let ws: WebSocket;
 
@@ -25,8 +26,18 @@ const App: React.FC = () => {
       setMode(MODE_RUN_SPEC);
       ws.send(
         JSON.stringify({
-          type: MSG_RUN_SPEC,
+          type: MSG_OPEN_SPEC,
           data: spec
+        })
+      );
+    }
+  }, []);
+
+  const run = useCallback(() => {
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          type: MSG_RUN
         })
       );
     }
@@ -83,7 +94,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Navigation />
+      <Navigation isShowingSpec={mode === MODE_RUN_SPEC} run={run} />
       <Container fluid>
         <Row>
           <Col>

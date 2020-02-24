@@ -39,6 +39,11 @@ const options = {
     type: "string" as yargs.PositionalOptionsType,
     desc:
       "Amount of time to keep trying a test. Defaults to '5s'. Can be a number in ms or a string with unit."
+  },
+  pipeConsole: {
+    type: "boolean" as yargs.PositionalOptionsType,
+    default: true,
+    desc: "Whether to pipe page console output to the node console."
   }
 };
 
@@ -68,7 +73,8 @@ const getConfig = (commandLineOptions: CommandLineOptions) => {
     consistentResultsOrdering: configOptions.consistentResultsOrdering,
     retryDelay: commandLineOptions.retryDelay || configOptions.retryDelay,
     testTimeout: commandLineOptions.testTimeout || configOptions.testTimeout,
-    maxRetryTime: commandLineOptions.maxRetryTime || configOptions.maxRetryTime
+    maxRetryTime: commandLineOptions.maxRetryTime || configOptions.maxRetryTime,
+    pipeConsole: commandLineOptions.pipeConsole || configOptions.pipeConsole
   };
 };
 
@@ -80,6 +86,7 @@ interface CommandLineOptions {
   reporter?: Array<number | string>;
   specs?: string;
   headless?: boolean;
+  pipeConsole?: boolean;
 }
 
 module.exports = () => {

@@ -5,35 +5,47 @@ import {
 import { Page } from "playwright-core/lib/page";
 import { ElementHandle } from "playwright-core/lib/dom";
 
-export const assertPageExists = (
+export function assertPageExists(
   page: PageType | void | null,
   commandName: string
-): PageType => {
+): asserts page is PageType {
   if (!page) {
     throw new Error(
       `Go to a page (e.g. holly.newPage) before using ${commandName}`
     );
   }
-  return page;
-};
+}
 
-export const assertPageType = (page: any, commandName: string): PageType => {
-  if (!(page instanceof Page)) {
-    throw new Error(`The ${commandName} command can only be run on a page`);
+export function assertPageOrElementType(
+  pageOrElement: any,
+  commandName: string
+): asserts pageOrElement is PageType | ElementHandleType {
+  if (pageOrElement instanceof Page || pageOrElement instanceof ElementHandle) {
+    return;
   }
-  return page;
-};
+  throw new Error(
+    `The ${commandName} command can only be run on a page or an element`
+  );
+}
 
-export const assertElementType = (
+export function assertElementType(
   element: any,
-  commandName: string,
-  afterMsg?: string
-): ElementHandleType => {
+  commandName: string
+): asserts element is ElementHandleType {
   if (!(element instanceof ElementHandle)) {
     throw new Error(
-      `The ${commandName} command was expecting to be run on a element${afterMsg ||
-        ""}`
+      `The ${commandName} command was expecting to be run on a element`
     );
   }
-  return element;
-};
+}
+
+export function assertPageType(
+  element: any,
+  commandName: string
+): asserts element is PageType {
+  if (!(element instanceof Page)) {
+    throw new Error(
+      `The ${commandName} command was expecting to be run on a page`
+    );
+  }
+}
