@@ -103,13 +103,13 @@
 
   6) Asserts
        mouse fails on an element:
-     The mousedown command can only be run on a page
+     The mousedown command was expecting to be run on a page
   Error: 
       at Context.<anonymous> (integration/fails/asserts.spec.ts:49:8)
 
   7) Asserts
        fails on an element that doesn't exist:
-     The click command was expecting to be run on a element or a page
+     The click command can only be run on a page or an element
   Error: 
       at Context.<anonymous> (integration/fails/asserts.spec.ts:57:27)
 

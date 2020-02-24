@@ -3,7 +3,7 @@ import { Page } from "playwright-core/lib/page";
 import {
   assertPageExists,
   assertPageType,
-  assertElementType
+  assertPageOrElementType
 } from "../utils/assert";
 import { CommandDefinition } from "../types";
 
@@ -20,24 +20,17 @@ const mouseApi = [
   { name: "up", alias: "mouseup", isPage: true, isElement: false }
 ];
 
-const runPageMouseCommand = async (
-  cmdName: string,
-  page: Page,
-  ...args: ReadonlyArray<any>
-) => {
-  // @ts-ignore
-  await page.mouse[cmdName](...args);
-  return page;
-};
-
 export const rootCommands: ReadonlyArray<CommandDefinition> = mouseApi.map(
   ({ name, alias }) => {
     const commandName = alias || name;
     return {
       name: commandName,
-      run({ holly }, ...args: ReadonlyArray<any>) {
-        const page = assertPageExists(holly.__page, commandName);
-        return runPageMouseCommand(name, page, ...args);
+      async run({ holly }, ...args: ReadonlyArray<any>) {
+        const page = holly.__page;
+        assertPageExists(page, commandName);
+        // @ts-ignore
+        await page.mouse[name](...args);
+        return page;
       },
       canRetry: false
     };
@@ -54,14 +47,18 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = mouseApi.map(
         pageOrElement: Page | ElementHandle,
         ...args: ReadonlyArray<any>
       ) {
-        if (!isElement || pageOrElement instanceof Page) {
-          const page = assertPageType(pageOrElement, commandName);
-          return runPageMouseCommand(name, page, ...args);
+        if (!isElement) {
+          assertPageType(pageOrElement, commandName);
+        } else {
+          assertPageOrElementType(pageOrElement, commandName);
         }
-        const el = assertElementType(pageOrElement, commandName, " or a page");
+
+        const mouse =
+          pageOrElement instanceof Page ? pageOrElement.mouse : pageOrElement;
+
         // @ts-ignore
-        await el[name](...args);
-        return el;
+        await mouse[name](...args);
+        return pageOrElement;
       },
       canRetry: false
     };

@@ -85,6 +85,8 @@ type ElementMouseCommands = {
   click: (options?: ClickOptions) => HollyChainElementAwaitable;
   dblclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
   tripleclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
+  $: (selector: string) => HollyChainElementAwaitable;
+  byText: (text: string) => HollyChainElementAwaitable;
 };
 
 type MiscPageCommands = {

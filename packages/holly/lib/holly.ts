@@ -18,10 +18,6 @@ const DEFAULT_MAX_RETRY = milliseconds("5s");
 
 const debug = Debug("holly:holly");
 
-function last<T>(ar: ReadonlyArray<T>): T {
-  return ar[ar.length - 1];
-}
-
 export default function createHolly(config: Config): Holly {
   const retryDelayMs = parseTime(config.retryDelay, DEFAULT_RETRY_DELAY);
   const maxRetryTime = parseTime(config.maxRetryTime, DEFAULT_MAX_RETRY);
@@ -67,13 +63,6 @@ export default function createHolly(config: Config): Holly {
     return newChainInstance;
   }
 
-  function getRootCommand(commandInstance: CommandInstance) {
-    while (commandInstance.parent) {
-      commandInstance = commandInstance.parent;
-    }
-    return commandInstance;
-  }
-
   function createChainedCommand(command: CommandDefinition) {
     return function(...args: ReadonlyArray<any>) {
       // @ts-ignore
@@ -81,9 +70,6 @@ export default function createHolly(config: Config): Holly {
       debug(
         `adding chained command '${command.name}' from '${parent.command.name}'`
       );
-      if (getRootCommand(parent) !== last(holly.__rootCommands)) {
-        throw new Error("do not use holly out of context");
-      }
       const error = new Error();
       // @ts-ignore assume stack is always not undefined
       const stack: string = error.stack;

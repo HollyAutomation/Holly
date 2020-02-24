@@ -5,6 +5,7 @@ import { CommandDefinition } from "../types";
 import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
 import * as keyboardCommands from "./keyboardCommands";
+import * as findElements from "./findElements";
 import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
@@ -13,6 +14,7 @@ import toIstanbul from "./toIstanbul";
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
   ...keyboardCommands.rootCommands,
+  ...findElements.rootCommands,
   screenshotCommand.root,
   {
     name: "wrap",
@@ -21,69 +23,20 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
     }
   },
   {
-    name: "$",
-    run({ holly }, selector: string) {
-      const page = assertPageExists(holly.__page, "$");
-      return page.$(selector);
-    }
-  },
-  {
-    name: "byText",
-    async run({ holly }, text: string) {
-      const page = assertPageExists(holly.__page, "byText");
-      const jsHandle = await page.evaluateHandle(
-        /* istanbul ignore next */ (text: string) => {
-          function count(haystack: string, needle: string): number {
-            let count = 0;
-            let i = 0;
-            while (i < haystack.length) {
-              i = haystack.indexOf(needle, i);
-              if (i < 0) {
-                break;
-              }
-              count++;
-              i += needle.length;
-            }
-            return count;
-          }
-          function searchNodes(node: Element): ReadonlyArray<HTMLElement> {
-            let foundNodes: Array<HTMLElement> = [];
-            if (node instanceof HTMLElement) {
-              const instancesInChildren = count(
-                node.innerText.replace(/\s+/g, " "),
-                text
-              );
-              if (instancesInChildren > 0) {
-                for (let i = 0; i < node.children.length; i++) {
-                  foundNodes = foundNodes.concat(searchNodes(node.children[i]));
-                }
-                if (foundNodes.length < instancesInChildren) {
-                  foundNodes.push(node);
-                }
-              }
-            }
-            return foundNodes;
-          }
-          text = text.replace(/\s+/g, " ");
-          const foundNodes = searchNodes(document.body);
-          return foundNodes.length <= 1 ? foundNodes[0] : foundNodes;
-        },
-        text
-      );
-      return jsHandle?.asElement();
-    }
-  },
-  {
     name: "pipe",
     run({ holly }, fn: () => any) {
-      const page = assertPageExists(holly.__page, "pipe");
+      const page = holly.__page;
+      assertPageExists(page, "pipe");
+
       return page.evaluate(fn);
     }
   },
   {
     name: "evaluate",
     run({ holly }, fn: () => any) {
-      const page = assertPageExists(holly.__page, "evaluate");
+      const page = holly.__page;
+      assertPageExists(page, "evaluate");
+
       return page.evaluate(fn);
     },
     canRetry: false
@@ -120,7 +73,9 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
   {
     name: "setViewportSize",
     async run({ holly }, viewport: Viewport) {
-      const page = assertPageExists(holly.__page, "setViewportSize");
+      const page = holly.__page;
+      assertPageExists(page, "setViewportSize");
+
       await page.setViewportSize(viewport);
       return page;
     },
@@ -139,6 +94,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   ...commandMatchers,
   ...mouseCommands.chainedCommands,
   ...keyboardCommands.chainedCommands,
+  ...findElements.chainedCommands,
   screenshotCommand.chained,
   {
     name: "value",
@@ -222,7 +178,7 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   },
   {
     name: "evaluate",
-    run(_, elementOrPage: ElementHandle | Page | any, fn: () => any) {
+    run(_, elementOrPage: any, fn: () => any) {
       return pipe(elementOrPage, fn);
     },
     canRetry: false

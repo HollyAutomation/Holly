@@ -43,14 +43,16 @@ export default (
   context: BrowserContext,
   config: Config,
   suiteFile: string,
-  Collector: ReporterConstructor
+  Collector: ReporterConstructor | void
 ) => {
   return new Promise(resolve => {
     const holly = createHolly(config);
 
     const mocha = makeMocha(mochaOptions, holly, suiteFile);
 
-    mocha.reporter(Collector);
+    if (Collector) {
+      mocha.reporter(Collector);
+    }
 
     const runner = mocha.run(async () => {
       if (holly.__page) {

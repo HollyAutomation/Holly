@@ -1,4 +1,5 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
+import { HollyChainPageAwaitable } from "../global";
 
 const { newPage, $, setViewportSize, byText } = holly;
 
@@ -9,6 +10,23 @@ describe("Misc commands", () => {
   });
   after(() => {
     testServer.close();
+  });
+
+  describe("$", () => {
+    it("searches inside", async () => {
+      const url = testServer.addResponse(
+        bodyToHtml(
+          `
+          <div class="testdiv2">not_me</div><div class="testdiv1">a<div class="testdiv2">b</div>c</div>
+          `
+        )
+      );
+      await newPage(url, { width: 10, height: 11 })
+        .$(".testdiv1")
+        .$(".testdiv2")
+        .text()
+        .shouldEqual("b");
+    });
   });
 
   describe("set viewport", () => {
@@ -137,6 +155,7 @@ describe("Misc commands", () => {
   });
 
   describe("byText", () => {
+    let page: HollyChainPageAwaitable | void;
     beforeEach(async () => {
       const url = testServer.addResponse(
         bodyToHtml(
@@ -145,14 +164,16 @@ describe("Misc commands", () => {
           `
         )
       );
-      await newPage(url);
+      page = await newPage(url);
     });
 
     it("gets the right element", async () => {
       await byText("a")
         .text()
         .shouldMatchInlineSnapshot(`"a"`);
-      await byText("a\nlittle")
+      await page
+        // @ts-ignore
+        .byText("a\nlittle")
         .text()
         .shouldMatchInlineSnapshot(`"a\\nlittle\\nbrown\\nfox"`);
       await byText("little")
@@ -167,6 +188,10 @@ describe("Misc commands", () => {
       await byText("little brown fox")
         .text()
         .shouldMatchInlineSnapshot(`"a\\nlittle\\nbrown\\nfox"`);
+      await byText("little")
+        .byText("brown")
+        .text()
+        .shouldMatchInlineSnapshot(`"brown"`);
     });
   });
 });

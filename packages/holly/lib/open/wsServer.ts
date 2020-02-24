@@ -13,11 +13,13 @@ let interval: NodeJS.Timeout;
 
 interface HollyUI {
   getSpecs: () => ReadonlyArray<string>;
-  runSpec: (spec: string) => Promise<ReadonlyArray<string>>;
+  openSpec: (spec: string) => Promise<ReadonlyArray<string>>;
+  run: () => void;
 }
 const MSG_SPECS = "specs";
-const MSG_RUN_SPEC = "runSpec";
+const MSG_OPEN_SPEC = "openSpec";
 const MSG_TESTS = "tests";
+const MSG_RUN = "run";
 
 export const start = (hollyUI: HollyUI) => {
   server = new WebSocket.Server({ port: 8080 });
@@ -34,10 +36,13 @@ export const start = (hollyUI: HollyUI) => {
       debug(`received ${message}`);
       const msgObj = JSON.parse(message);
       switch (msgObj.type) {
-        case MSG_RUN_SPEC:
-          hollyUI.runSpec(msgObj.data).then(tests => {
+        case MSG_OPEN_SPEC:
+          hollyUI.openSpec(msgObj.data).then(tests => {
             ws.send(JSON.stringify({ type: MSG_TESTS, data: tests }));
           });
+          break;
+        case MSG_RUN:
+          hollyUI.run();
           break;
       }
     });

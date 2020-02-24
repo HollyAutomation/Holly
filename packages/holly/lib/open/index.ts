@@ -1,10 +1,11 @@
+import globOriginal = require("glob");
+import { chromium } from "playwright";
 import Debug from "debug";
 import * as wsServer from "./wsServer";
 import * as httpServer from "./httpServer";
 import { Config } from "../types";
-import globOriginal = require("glob");
 import * as util from "util";
-import { makeMocha } from "../runSuite";
+import runSuite, { makeMocha } from "../runSuite";
 import makeMochaOptions from "../makeMochaOptions";
 
 const debug = Debug("holly:open:index");
@@ -28,21 +29,31 @@ export default async (config: Config) => {
 
   const files = await glob(specs);
 
+  const browser = await chromium.launch({
+    headless: process.env.HOLLY_FORCE_HEADLESS ? true : false
+  }); // Or 'firefox' or 'webkit'.
+  // TODO: Work out how to deal with contexts
+  const context = await browser.newContext();
+
+  const mochaOptions = makeMochaOptions(config);
+  let currentSpec: string;
+
   await new Promise(() => {
     // TODO - resolve promise when browser closed? when all connections stop? never?
 
     httpServer.start();
     wsServer.start({
-      getSpecs: () => {
+      getSpecs() {
         debug("returning specs");
         return files;
       },
-      runSpec: async (spec: string) => {
+      async openSpec(spec: string) {
         if (files.indexOf(spec) < 0) {
           throw new Error("attempt to run a spec not in the list");
         }
+        currentSpec = spec;
         const mocha = makeMocha(
-          makeMochaOptions(config),
+          mochaOptions,
           // @ts-ignore Fake holly as we just need to iterate the tests
           {},
           spec
@@ -55,6 +66,9 @@ export default async (config: Config) => {
         debug(`found ${tests.length} tests`);
 
         return tests;
+      },
+      run() {
+        runSuite(mochaOptions, context, config, currentSpec);
       }
     });
   });
