@@ -15,6 +15,4 @@ const path = require("path");
   const openConfig = require(path.resolve("integration/open/.hollyrc.js"));
 
   await run(openConfig);
-
-  process.exit(0);
 })();

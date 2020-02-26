@@ -58,5 +58,8 @@
       "text-summary",
       "json"
     ]
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "1.2.5"
   }
 }
