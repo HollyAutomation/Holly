@@ -1,0 +1,101 @@
+import React, { useEffect } from "react";
+import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { Action, StoreEnhancer, Reducer, Store, AnyAction } from "redux";
+import { Provider } from "react-redux";
+import { rootReducer } from "../../holly-shared/build";
+import App from "./App";
+
+let ws: WebSocket;
+
+type DispatchHere<A extends Action = AnyAction> = {
+  dispatchHere: (action: A) => A;
+};
+
+const sendToNodeEnhancer: StoreEnhancer = createStore => <
+  S,
+  A extends Action = AnyAction
+>(
+  reducer: Reducer<S, A>,
+  initialState?: any
+): Store<S, A> & DispatchHere<A> => {
+  const store = createStore(reducer, initialState);
+
+  return {
+    ...store,
+    dispatchHere: store.dispatch,
+    // @ts-ignore - cannot get this to pass typescript
+    dispatch(action: A) {
+      ws.send(JSON.stringify(action));
+    }
+  };
+};
+
+let store:
+  | (EnhancedStore<ReturnType<typeof rootReducer>> & DispatchHere)
+  | null = null;
+
+const Connector: React.FC = () => {
+  useEffect(() => {
+    let timer: NodeJS.Timer | null;
+
+    function open(event: Event) {}
+
+    function message(event: MessageEvent) {
+      if (!store) {
+        // @ts-ignore - doesn't work out the enhancers
+        store = configureStore({
+          reducer: rootReducer,
+          enhancers: [sendToNodeEnhancer],
+          preloadedState: JSON.parse(event.data)
+        });
+      } else {
+        store.dispatchHere(JSON.parse(event.data));
+      }
+    }
+
+    function close() {
+      console.log("ws: closed");
+      if (!timer) {
+        timer = setTimeout(create, 500);
+      }
+    }
+
+    function error() {
+      console.log("ws: error");
+      if (!timer) {
+        timer = setTimeout(create, 500);
+      }
+    }
+
+    function create() {
+      timer = null;
+      if (ws) {
+        ws.onerror = null;
+        ws.onclose = null;
+        ws.close();
+      }
+      if (store) {
+        store = null;
+      }
+      ws = new WebSocket("ws://localhost:8080");
+      ws.onopen = open;
+      ws.onerror = error;
+      ws.onmessage = message;
+      ws.onclose = close;
+    }
+
+    create();
+  }, []);
+
+  if (store) {
+    return (
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+  } else {
+    return <div>Loading...</div>;
+  }
+};
+
+export default Connector;

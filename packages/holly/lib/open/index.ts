@@ -59,10 +59,12 @@ export default async (config: Config) => {
         return;
       }
       if (actions.currentSpec.run.match(action)) {
+        store.dispatch(action);
         const file = store.getState().currentSpec.file;
         if (file) {
           runSuite(mochaOptions, context, config, file);
         }
+        return;
       }
       store.dispatch(action);
     }
