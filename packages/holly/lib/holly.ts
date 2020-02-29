@@ -188,6 +188,7 @@ export default function createHolly(config: Config): Holly {
     }
 
     if (holly.__page) {
+      debug("ending test - closing page");
       await holly.__page.close();
       holly.__page = null;
     }

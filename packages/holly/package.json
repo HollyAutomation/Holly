@@ -6,6 +6,9 @@
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
+  "files": [
+    "build/**"
+  ],
   "repository": {
     "type": "git",
     "url": "y"
@@ -63,14 +66,17 @@
     "prettier": "1.19.1",
     "rimraf": "3.0.2",
     "ts-node": "8.6.2",
-    "typescript": "3.8.2"
+    "typescript": "3.8.2",
+    "why-is-node-running": "2.1.0"
   },
   "dependencies": {
     "@babel/traverse": "7.8.6",
+    "@reduxjs/toolkit": "1.2.5",
     "debug": "4.1.1",
     "expect": "25.1.0",
     "glob": "7.1.6",
     "holly-ui": "0.0.1",
+    "holly-shared": "0.0.1",
     "jest-snapshot": "25.1.0",
     "koa-static": "5.0.0",
     "milliseconds": "1.0.3",
@@ -78,7 +84,7 @@
     "mocha": "7.1.0",
     "playwright": "0.11.1",
     "stack-utils": "2.0.1",
-    "v8-to-istanbul": "https://github.com/lukeapage/v8-to-istanbul.git",
+    "v8-to-istanbul": "https://github.com/lukeapage/v8-to-istanbul.git#c7e4e541f8d2bb6d95a4af62b2ff41b87b53660f",
     "ws": "7.2.1",
     "yargs": "15.1.0"
   }

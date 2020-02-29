@@ -1,12 +1,15 @@
 import globOriginal = require("glob");
 import { chromium } from "playwright";
 import Debug from "debug";
+import { Action } from "redux";
 import * as wsServer from "./wsServer";
 import * as httpServer from "./httpServer";
 import { Config } from "../types";
 import * as util from "util";
 import runSuite, { makeMocha } from "../runSuite";
 import makeMochaOptions from "../makeMochaOptions";
+import createStore from "./store";
+import { actions } from "../../../holly-shared";
 
 const debug = Debug("holly:open:index");
 
@@ -27,36 +30,22 @@ function getTests(suite: Mocha.Suite): ReadonlyArray<string> {
 export default async (config: Config) => {
   let { specs } = config;
 
-  const files = await glob(specs);
-
-  const browser = await chromium.launch({
-    headless: process.env.HOLLY_FORCE_HEADLESS ? true : false
-  }); // Or 'firefox' or 'webkit'.
-  // TODO: Work out how to deal with contexts
-  const context = await browser.newContext();
-
-  const mochaOptions = makeMochaOptions(config);
-  let currentSpec: string;
-
-  await new Promise(() => {
-    // TODO - resolve promise when browser closed? when all connections stop? never?
-
-    httpServer.start();
-    wsServer.start({
-      getSpecs() {
-        debug("returning specs");
-        return files;
-      },
-      async openSpec(spec: string) {
-        if (files.indexOf(spec) < 0) {
+  httpServer.start();
+  const { send, finishedPromise } = wsServer.start({
+    getState() {
+      return store.getState();
+    },
+    dispatch(action: Action) {
+      if (actions.currentSpec.setFile.match(action)) {
+        if (store.getState().specFiles.indexOf(action.payload) < 0) {
           throw new Error("attempt to run a spec not in the list");
         }
-        currentSpec = spec;
+        const currentSpec = action.payload;
         const mocha = makeMocha(
           mochaOptions,
           // @ts-ignore Fake holly as we just need to iterate the tests
           {},
-          spec
+          currentSpec
         );
         const runner = mocha.run();
 
@@ -65,14 +54,48 @@ export default async (config: Config) => {
         const tests = getTests(runner.suite);
         debug(`found ${tests.length} tests`);
 
-        return tests;
-      },
-      run() {
-        runSuite(mochaOptions, context, config, currentSpec);
+        store.dispatch(action);
+        store.dispatch(actions.currentSpec.setTests(tests));
+        return;
       }
-    });
+      if (actions.currentSpec.run.match(action)) {
+        store.dispatch(action);
+        const file = store.getState().currentSpec.file;
+        if (file) {
+          runSuite(mochaOptions, context, config, file);
+        }
+        return;
+      }
+      store.dispatch(action);
+    }
   });
+
+  const store = createStore(action => {
+    send(action);
+  });
+
+  glob(specs).then(files => {
+    store.dispatch(actions.specFiles.setSpecFiles(files));
+  });
+
+  const browser = await chromium.launch({
+    headless: process.env.HOLLY_FORCE_HEADLESS ? true : false
+  }); // Or 'firefox' or 'webkit'.
+  // TODO: Work out how to deal with contexts
+  const context = await browser.newContext();
+
+  const mochaOptions = makeMochaOptions(config);
+
+  await finishedPromise;
+
+  debug("open mode finished, stopping playwright");
+
+  await browser.close();
+
+  debug("stopping servers");
 
   wsServer.stop();
   httpServer.stop();
+
+  debug("servers stopped");
 };

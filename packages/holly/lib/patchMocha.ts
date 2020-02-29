@@ -103,13 +103,16 @@ Mocha.Runner.prototype.fail = function(test, err) {
     const cwd = process.cwd() + slash;
 
     const isInternal = (line: string) => {
-      return (
+      const isMatch =
         line.indexOf("node_modules" + slash + "holly" + slash) >= 0 ||
         line.match(/\(internal(\/|\\)/) ||
         (Number(process.env.HOLLY_INT_TEST) > 0 &&
           (line.indexOf(cwd + "build" + slash) >= 0 ||
-            line.indexOf(cwd + "lib" + slash) >= 0))
-      );
+            line.indexOf(cwd + "lib" + slash) >= 0));
+      if (isMatch) {
+        debug(`removing exception line: ${line}`);
+      }
+      return isMatch;
     };
 
     err.stack = err.stack

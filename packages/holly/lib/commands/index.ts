@@ -1,4 +1,5 @@
 import { ElementHandle, Page } from "playwright";
+import Debug from "debug";
 import matchInlineSnapshot from "./matchInlineSnapshot";
 import * as screenshotCommand from "./screenshot";
 import { CommandDefinition } from "../types";
@@ -10,6 +11,8 @@ import { assertPageExists, assertElementType } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
 import { PointerActionOptions } from "playwright-core/lib/input";
 import toIstanbul from "./toIstanbul";
+
+const debug = Debug("holly:commands:index");
 
 export const rootCommands: ReadonlyArray<CommandDefinition> = [
   ...mouseCommands.rootCommands,
@@ -56,12 +59,17 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
       if (config.coverage) {
         await page.coverage?.startJSCoverage();
         holly.__afterTestHooks.push(async () => {
-          const jsCov = await page.coverage?.stopJSCoverage();
-          if (jsCov) {
-            await toIstanbul(jsCov, {
-              sourceRoot: config.sourceRoot,
-              servedBasePath: config.servedBasePath
-            });
+          try {
+            const jsCov = await page.coverage?.stopJSCoverage();
+            if (jsCov) {
+              await toIstanbul(jsCov, {
+                sourceRoot: config.sourceRoot,
+                servedBasePath: config.servedBasePath
+              });
+            }
+          } catch (e) {
+            debug(`Failed to generate coverage '${e.message}' '${e.stack}'`);
+            throw new Error("Failed to generate coverage");
           }
         });
       }

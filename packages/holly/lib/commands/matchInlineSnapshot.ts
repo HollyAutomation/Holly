@@ -5,7 +5,7 @@ import babelTraverse from "@babel/traverse";
 import prettier = require("prettier");
 import { CommandDefinition } from "../types";
 
-const debug = Debug("holly:matchInlineSnapshot");
+const debug = Debug("holly:commands:matchInlineSnapshot");
 const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(build|node_modules)(\/|\\)/i;
 
 const removeInternalLines = (stackLines: ReadonlyArray<string>) => {
