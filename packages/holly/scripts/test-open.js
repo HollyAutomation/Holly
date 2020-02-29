@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+//const log = require("why-is-node-running");
 const runCli = require("../build/cli");
 const { run } = require("../build");
 const path = require("path");
@@ -16,6 +17,6 @@ const path = require("path");
 
   await run(openConfig);
 
-  // app should exit by itself, but if it doesn't this stops a hang
-  setTimeout(() => process.exit(1), 10000);
+  // app should exit by itself, but if it doesn't this tells us whats stopping it
+  //setTimeout(() => log(), 10000);
 })();

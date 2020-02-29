@@ -68,10 +68,6 @@ export default async (config: Config) => {
       }
       store.dispatch(action);
     }
-    /*
-    run() {
-      runSuite(mochaOptions, context, config, currentSpec);
-    }*/
   });
 
   const store = createStore(action => {
@@ -92,6 +88,14 @@ export default async (config: Config) => {
 
   await finishedPromise;
 
+  debug("open mode finished, stopping playwright");
+
+  await browser.close();
+
+  debug("stopping servers");
+
   wsServer.stop();
   httpServer.stop();
+
+  debug("servers stopped");
 };

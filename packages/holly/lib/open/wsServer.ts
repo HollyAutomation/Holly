@@ -32,12 +32,15 @@ export const start = (hollyUI: HollyUI) => {
   server.on("connection", function connection(ws: WebSocketWithAlive) {
     sessions.push(ws);
     ws.on("close", () => {
+      debug("websocket close");
       const index = sessions.indexOf(ws);
       if (index >= 0) {
         sessions.splice(index, 1);
       }
       if (sessions.length === 0) {
+        debug("no sessions open, so waiting to close");
         timeoutId = setTimeout(() => {
+          debug("triggering close of open mode");
           triggerFinished();
         }, 500);
       }
