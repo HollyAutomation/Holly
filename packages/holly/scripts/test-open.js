@@ -15,4 +15,7 @@ const path = require("path");
   const openConfig = require(path.resolve("integration/open/.hollyrc.js"));
 
   await run(openConfig);
+
+  // app should exit by itself, but if it doesn't this stops a hang
+  setTimeout(() => process.exit(1), 10000);
 })();

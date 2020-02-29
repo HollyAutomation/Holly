@@ -16,7 +16,7 @@ export const start = () => {
   );
   debug(`Startng http server on path ${staticPath}`);
   app.use(KoaStatic(staticPath, {}));
-  app.listen(4000);
+  server = app.listen(4000);
 };
 export const stop = () => {
   server.close();

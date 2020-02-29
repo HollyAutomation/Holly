@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
 import { Action, StoreEnhancer, Reducer, Store, AnyAction } from "redux";
 import { Provider } from "react-redux";
-import { rootReducer } from "../../holly-shared/build";
+import { rootReducer } from "holly-shared";
 import App from "./App";
 
 let ws: WebSocket;
@@ -30,26 +30,32 @@ const sendToNodeEnhancer: StoreEnhancer = createStore => <
   };
 };
 
-let store:
+type StoreType =
   | (EnhancedStore<ReturnType<typeof rootReducer>> & DispatchHere)
-  | null = null;
+  | null;
+
+// can't use useEffect because we only want to load the ws once, but allow the sub dependency of store to update
+let currentStore: StoreType = null;
 
 const Connector: React.FC = () => {
+  const [store, setStore] = useState<StoreType>(null);
+
   useEffect(() => {
     let timer: NodeJS.Timer | null;
 
     function open(event: Event) {}
 
     function message(event: MessageEvent) {
-      if (!store) {
+      if (!currentStore) {
         // @ts-ignore - doesn't work out the enhancers
-        store = configureStore({
+        currentStore = configureStore({
           reducer: rootReducer,
           enhancers: [sendToNodeEnhancer],
           preloadedState: JSON.parse(event.data)
         });
+        setStore(currentStore);
       } else {
-        store.dispatchHere(JSON.parse(event.data));
+        currentStore.dispatchHere(JSON.parse(event.data));
       }
     }
 
@@ -74,8 +80,9 @@ const Connector: React.FC = () => {
         ws.onclose = null;
         ws.close();
       }
-      if (store) {
-        store = null;
+      if (currentStore) {
+        currentStore = null;
+        setStore(null);
       }
       ws = new WebSocket("ws://localhost:8080");
       ws.onopen = open;

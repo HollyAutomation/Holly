@@ -6,6 +6,9 @@
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
+  "files": [
+    "build/**"
+  ],
   "repository": {
     "type": "git",
     "url": "y"
@@ -72,6 +75,7 @@
     "expect": "25.1.0",
     "glob": "7.1.6",
     "holly-ui": "0.0.1",
+    "holly-shared": "0.0.1",
     "jest-snapshot": "25.1.0",
     "koa-static": "5.0.0",
     "milliseconds": "1.0.3",

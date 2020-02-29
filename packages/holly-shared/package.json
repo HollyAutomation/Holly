@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "build/index.js",
+  "files": [
+    "build/**"
+  ],
   "scripts": {
     "lint": "run-p prettier:check lint:eslint",
     "lint:eslint": "eslint . --ext=ts,js",
