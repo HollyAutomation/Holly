@@ -7,7 +7,8 @@ import {
   HollyChainAwaitable,
   HollyChain,
   CommandDefinition,
-  Config
+  Config,
+  HollyListener
 } from "./types";
 import { asymmetricMatchers } from "./commands/commandMatchers";
 import parseTime from "./utils/parseTime";
@@ -18,7 +19,10 @@ const DEFAULT_MAX_RETRY = milliseconds("5s");
 
 const debug = Debug("holly:holly");
 
-export default function createHolly(config: Config): Holly {
+export default function createHolly(
+  config: Config,
+  listener: HollyListener | void
+): Holly {
   const retryDelayMs = parseTime(config.retryDelay, DEFAULT_RETRY_DELAY);
   const maxRetryTime = parseTime(config.maxRetryTime, DEFAULT_MAX_RETRY);
 
@@ -82,6 +86,13 @@ export default function createHolly(config: Config): Holly {
       };
       parent.children.push(commandInstance);
       holly.__commands.push(commandInstance);
+      if (listener) {
+        listener.onCommand({
+          test: holly.__currentTest,
+          commandName: command.name,
+          id: holly.__commands.length - 1
+        });
+      }
       return createNewChainInstance(commandInstance);
     };
   }

@@ -82,3 +82,13 @@ export type Config = {
   servedBasePath?: string;
   pipeConsole?: boolean;
 };
+
+type ListenerCommandArgs = {
+  test: Mocha.Test;
+  commandName: string;
+  id: number;
+};
+
+export type HollyListener = {
+  onCommand: (args: ListenerCommandArgs) => void;
+};

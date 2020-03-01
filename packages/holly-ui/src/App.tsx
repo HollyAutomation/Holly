@@ -27,10 +27,9 @@ const App: React.FC = () => {
   const specs = useSelector<RootStateType, ReadonlyArray<string>>(
     state => state.specFiles
   );
-  const currentSpec = useSelector<
-    RootStateType,
-    { file?: string; tests?: ReadonlyArray<string> }
-  >(state => state.currentSpec);
+  const currentSpec = useSelector<RootStateType, RootStateType["currentSpec"]>(
+    state => state.currentSpec
+  );
 
   return (
     <div className="App">

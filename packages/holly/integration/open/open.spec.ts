@@ -39,5 +39,15 @@ describe("Open mode", () => {
     await byText("Mouse / element api / clicks a element")
       .byText("Focus")
       .click();
+
+    await byText("Start").click();
+
+    await byText("Mouse / element api / clicks a element")
+      .$(".tst-command-list")
+      .textArray().shouldMatchInlineSnapshot(`[
+    "click",
+    "text",
+    "shouldEqual"
+]`);
   });
 });

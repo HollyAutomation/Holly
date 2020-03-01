@@ -15,9 +15,13 @@ const debug = Debug("holly:open:index");
 
 const glob = util.promisify(globOriginal);
 
+function getTestName(test: Mocha.Test) {
+  return test.titlePath().join(" / ");
+}
+
 function getTests(suite: Mocha.Suite): ReadonlyArray<string> {
   let tests = suite.tests.map(test => {
-    return test.titlePath().join(" / ");
+    return getTestName(test);
   });
 
   suite.suites.forEach(suite => {
@@ -62,7 +66,16 @@ export default async (config: Config) => {
         store.dispatch(action);
         const file = store.getState().currentSpec.file;
         if (file) {
-          runSuite(mochaOptions, context, config, file);
+          runSuite(mochaOptions, context, config, file, undefined, {
+            onCommand({ test, commandName }) {
+              store.dispatch(
+                actions.currentSpec.addCommand({
+                  testName: getTestName(test),
+                  commandName
+                })
+              );
+            }
+          });
         }
         return;
       }
