@@ -5,15 +5,25 @@
   "license": "ISC",
   "scripts": {
     "ci": "run-s lint build test test:coverage test:codecov",
-    "lint": "lerna run lint",
-    "build": "lerna run build",
-    "test": "lerna run test",
+    "lint": "yarn workspaces run lint",
+    "build": "yarn workspaces run build",
+    "test": "yarn workspace holly run test",
     "test:coverage": "run-s test test:coverage-merge test:coverage-report",
     "test:coverage-merge": "node scripts/mergeCoverage",
     "test:coverage-report": "nyc report --reporter=lcov --reporter=text --reporter=html",
     "test:codecov": "codecov"
   },
   "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@types/**",
+      "**/playwright",
+      "**/playwright-core"
+    ]
+  },
   "devDependencies": {
     "codecov": "3.6.5",
     "lerna": "3.20.2",
