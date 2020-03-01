@@ -32,13 +32,23 @@ const getTopFrame = (lines: ReadonlyArray<string>) => {
 
 export default {
   name: "shouldMatchInlineSnapshot",
-  run({ commandInstance }, value: any, snapshot: string) {
+  async run({ commandInstance }, value: any, snapshot: string) {
     const snapshotFormatted =
       snapshot && JSON.stringify(JSON.parse(snapshot), null, 4);
     const serializedValue = JSON.stringify(value, null, 4);
 
     if (serializedValue !== snapshotFormatted) {
       if (!snapshot) {
+        // TODO do this properly and test
+        // @ts-ignore
+        if (!commandInstance.isSnapshotWaitDone) {
+          console.log("waiting...");
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          // @ts-ignore
+          commandInstance.isSnapshotWaitDone = true;
+          console.log("erroring to retry");
+          throw new Error("erroring in order to retry");
+        }
         const stackLines = removeInternalLines(
           commandInstance.stack.split("\n")
         );

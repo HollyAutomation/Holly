@@ -2,7 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type CurrentSpecSlice = {
   file?: string;
-  tests?: ReadonlyArray<string>;
+  tests?: ReadonlyArray<{
+    name: string;
+    commands: ReadonlyArray<string>;
+  }>;
 };
 
 export const { actions, reducer } = createSlice({
@@ -14,8 +17,30 @@ export const { actions, reducer } = createSlice({
     }),
     setTests: (state, { payload }: PayloadAction<ReadonlyArray<string>>) => ({
       ...state,
-      tests: payload
+      tests: payload.map(name => ({ name, commands: [] }))
     }),
-    run: state => state
+    run: state => state,
+    addCommand: (
+      state,
+      {
+        payload: { testName, commandName }
+      }: PayloadAction<{
+        testName: string;
+        commandName: string;
+      }>
+    ) => {
+      return {
+        ...state,
+        tests: state.tests?.map(test => {
+          if (test.name === testName) {
+            return {
+              ...test,
+              commands: [...test.commands, commandName]
+            };
+          }
+          return test;
+        })
+      };
+    }
   }
 });

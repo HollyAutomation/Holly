@@ -2,7 +2,7 @@ import createHolly from "./holly";
 import { BrowserContext } from "playwright";
 import Mocha = require("mocha");
 import Debug from "debug";
-import { Config, Holly } from "./types";
+import { Config, Holly, HollyListener } from "./types";
 
 const debug = Debug("holly:runSuite");
 
@@ -43,10 +43,11 @@ export default (
   context: BrowserContext,
   config: Config,
   suiteFile: string,
-  Collector: ReporterConstructor | void
+  Collector: ReporterConstructor | void,
+  listener: HollyListener | void
 ) => {
   return new Promise(resolve => {
-    const holly = createHolly(config);
+    const holly = createHolly(config, listener);
 
     const mocha = makeMocha(mochaOptions, holly, suiteFile);
 
