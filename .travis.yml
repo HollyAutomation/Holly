@@ -24,14 +24,10 @@ addons:
       - xvfb
 notifications:
   email: false
-cache:
-  directories:
-    - node_modules
-    - packages/holly/node_modules
-    - packages/holly-ui/node_modules
+cache: yarn
 script:
-  - "npx lerna bootstrap"
-  - "npm run ci"
+  - "yarn"
+  - "yarn ci"
 jobs:
   include:
     - node_js: "12"

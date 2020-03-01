@@ -41,7 +41,7 @@ const Connector: React.FC = () => {
   const [store, setStore] = useState<StoreType>(null);
 
   useEffect(() => {
-    let timer: NodeJS.Timer | null;
+    let timer: number | null;
 
     function open(event: Event) {}
 
