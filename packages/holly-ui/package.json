@@ -39,7 +39,7 @@
     "react-scripts": "3.4.0",
     "reactstrap": "8.4.1",
     "rimraf": "3.0.2",
-    "typescript": "3.8.2"
+    "typescript": "3.8.3"
   },
   "eslintConfig": {
     "extends": "react-app"
