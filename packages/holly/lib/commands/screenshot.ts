@@ -1,7 +1,17 @@
 import { Page } from "playwright-core/lib/page";
-import { assertPageExists, assertPageOrElementType } from "../utils/assert";
+import {
+  assertRootPageExists,
+  assertPageOrElementType,
+  assertPageSet,
+  assertElementSet
+} from "../utils/assert";
 import { ElementHandle } from "playwright";
-import { CommandDefinition, Holly } from "../types";
+import {
+  RootCommandDefinition,
+  ChainedCommandDefinition,
+  Holly,
+  CommandResult
+} from "../types";
 import * as path from "path";
 import mkdirp = require("mkdirp");
 
@@ -60,22 +70,32 @@ async function elementScreenshot(
 
 export const root = {
   name: "screenshot",
-  run({ holly, test }, name?: string) {
+  async run({ holly, test }, name?: string) {
     const page = holly.__page;
-    assertPageExists(page, "screenshot");
-    return pageScreenshot(holly, test, page, name);
+    assertRootPageExists(page, "screenshot");
+    await pageScreenshot(holly, test, page, name);
+    return {
+      valueType: "page",
+      page
+    };
   },
   canRetry: false
-} as CommandDefinition;
+} as RootCommandDefinition;
 
 export const chained = {
   name: "screenshot",
-  run({ holly, test }, pageOrElement: any, name?: string) {
-    assertPageOrElementType(pageOrElement, "screenshot");
-    if (pageOrElement instanceof Page) {
-      return pageScreenshot(holly, test, pageOrElement, name);
+  async run({ holly, test }, commandResult: CommandResult, name?: string) {
+    assertPageOrElementType(commandResult, "screenshot");
+    if (commandResult.valueType === "page") {
+      const page = commandResult.page;
+      assertPageSet(page, commandResult, "screenshot");
+      await pageScreenshot(holly, test, page, name);
+    } else {
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "screenshot");
+      await elementScreenshot(holly, test, element, name);
     }
-    return elementScreenshot(holly, test, pageOrElement, name);
+    return commandResult;
   },
   canRetry: false
-} as CommandDefinition;
+} as ChainedCommandDefinition;

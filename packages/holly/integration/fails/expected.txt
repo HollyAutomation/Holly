@@ -1,119 +1,210 @@
 
 
   Asserts
-    1) $ fails without newPage
-    2) $ fails without newPage - sync
-    3) pipe fails without newPage
-    4) mouse fails without newPage
-    5) value fails on a non element
-    6) mouse fails on an element
-    7) fails on an element that doesn't exist
+    root commands w/o newPage
+      1) $ fails without newPage
+      2) $ fails without newPage - sync
+      3) pipe fails without newPage
+      4) mouse fails without newPage
+    With server
+      5) value fails on a non element
+      6) mouse fails on an element
+      7) fails on an element that doesn't exist
+      8) fails on an element that doesn't exist - combined description
+    commands with special arguments
+      9) fails on root $ without a selector - null
+      10) fails on root $ without a selector - obj
+      11) fails on chained $ without a selector - fn
+      12) fails on root byText without text
+      13) fails on root byText without text
+      14) fails on root pipe without fn
+      15) fails on chained pipe without fn
+      16) fails on root evaluate without fn
+      17) fails on chained evaluate without fn
 
 
   Matchers
     hooks - beforeEach failure
-      8) "before each" hook for "should fail"
+      18) "before each" hook for "should fail"
     hooks - afterEach failure
       √ should pass
-      9) "after each" hook: failing hook for "should pass"
+      19) "after each" hook: failing hook for "should pass"
 
 
   Inline Snapshot
-    10) works async
-    11) works sync
+    20) works async
+    21) works sync
+    22) fails when called on an element
 
 
   Matchers
     command matchers - positive
-      12) shouldBeDefined
-      13) shouldBeTruthy
-      14) shouldBeCloseTo
-      15) shouldBeGreaterThan
-      16) shouldBeGreaterThanOrEqual
-      17) shouldBeLessThan
-      18) shouldBeLessThanOrEqual
-      19) shouldBeFalsy
-      20) shouldBeUndefined
-      21) shouldBeNull
-      22) shouldContain string
-      23) shouldContainEqual
-      24) shouldHaveLength array
-      25) shouldHaveProperty 1
-      26) shouldHaveProperty 2
-      27) shouldMatchObject
-      28) shouldEqual
-      29) shouldContain array
-      30) shouldMatch
+      23) shouldBeDefined
+      24) shouldBeTruthy
+      25) shouldBeCloseTo
+      26) shouldBeGreaterThan
+      27) shouldBeGreaterThanOrEqual
+      28) shouldBeLessThan
+      29) shouldBeLessThanOrEqual
+      30) shouldBeFalsy
+      31) shouldBeUndefined
+      32) shouldBeNull
+      33) shouldContain string
+      34) shouldContainEqual
+      35) shouldHaveLength array
+      36) shouldHaveProperty 1
+      37) shouldHaveProperty 2
+      38) shouldMatchObject
+      39) shouldEqual
+      40) shouldContain array
+      41) shouldMatch
     command matchers - negative
-      31) shouldNotBeDefined
-      32) shouldNotBeTruthy
-      33) shouldNotBeCloseTo
-      34) shouldNotBeGreaterThan
-      35) shouldNotBeGreaterThanOrEqual
-      36) shouldNotBeLessThan
-      37) shouldNotBeLessThanOrEqual
-      38) shouldNotBeFalsy
-      39) shouldNotBeUndefined
-      40) shouldNotBeNull
-      41) shouldNotContain array
-      42) shouldNotContainEqual
-      43) shouldNotHaveLength
-      44) shouldNotHaveProperty 1
-      45) shouldNotHaveProperty 2
-      46) shouldNotMatchObject
-      47) shouldNotEqual
-      48) shouldNotContain string
-      49) shouldNotMatch
+      42) shouldNotBeDefined
+      43) shouldNotBeTruthy
+      44) shouldNotBeCloseTo
+      45) shouldNotBeGreaterThan
+      46) shouldNotBeGreaterThanOrEqual
+      47) shouldNotBeLessThan
+      48) shouldNotBeLessThanOrEqual
+      49) shouldNotBeFalsy
+      50) shouldNotBeUndefined
+      51) shouldNotBeNull
+      52) shouldNotContain array
+      53) shouldNotContainEqual
+      54) shouldNotHaveLength
+      55) shouldNotHaveProperty 1
+      56) shouldNotHaveProperty 2
+      57) shouldNotMatchObject
+      58) shouldNotEqual
+      59) shouldNotContain string
+      60) shouldNotMatch
     asymmetric matchers
-      50) any string
+      61) any string
 
 
   1 passing
-  50 failing
+  61 failing
 
   1) Asserts
-       $ fails without newPage:
+       root commands w/o newPage
+         $ fails without newPage:
      Go to a page (e.g. holly.newPage) before using $
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:15:11)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:8:13)
 
   2) Asserts
-       $ fails without newPage - sync:
+       root commands w/o newPage
+         $ fails without newPage - sync:
      Go to a page (e.g. holly.newPage) before using $
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:19:5)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:12:7)
 
   3) Asserts
-       pipe fails without newPage:
+       root commands w/o newPage
+         pipe fails without newPage:
      Go to a page (e.g. holly.newPage) before using pipe
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:23:5)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:16:7)
 
   4) Asserts
-       mouse fails without newPage:
+       root commands w/o newPage
+         mouse fails without newPage:
      Go to a page (e.g. holly.newPage) before using mousemove
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:27:11)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:20:13)
 
   5) Asserts
-       value fails on a non element:
-     The value command was expecting to be run on a element
+       With server
+         value fails on a non element:
+     The value command can only be run on a element
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:39:8)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:42:10)
 
   6) Asserts
-       mouse fails on an element:
+       With server
+         mouse fails on an element:
      The mousedown command was expecting to be run on a page
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:49:8)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:52:10)
 
   7) Asserts
-       fails on an element that doesn't exist:
-     The click command can only be run on a page or an element
+       With server
+         fails on an element that doesn't exist:
+     The click command could not find element '.test-nope'
   Error: 
-      at Context.<anonymous> (integration/fails/asserts.spec.ts:57:27)
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:60:29)
 
-  8) Matchers
+  8) Asserts
+       With server
+         fails on an element that doesn't exist - combined description:
+     The click command could not find element ':byText('Test') .test-nope'
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:70:10)
+
+  9) Asserts
+       commands with special arguments
+         fails on root $ without a selector - null:
+     expected a selector of type string to be passed to $
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:77:7)
+
+  10) Asserts
+       commands with special arguments
+         fails on root $ without a selector - obj:
+     expected a selector of type string to be passed to $
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:82:7)
+
+  11) Asserts
+       commands with special arguments
+         fails on chained $ without a selector - fn:
+     expected a selector of type string to be passed to $
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:87:18)
+
+  12) Asserts
+       commands with special arguments
+         fails on root byText without text:
+     expected text of type string to be passed to byText
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:92:7)
+
+  13) Asserts
+       commands with special arguments
+         fails on root byText without text:
+     expected text of type string to be passed to byText
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:97:18)
+
+  14) Asserts
+       commands with special arguments
+         fails on root pipe without fn:
+     pipe expects a function as its argument
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:102:7)
+
+  15) Asserts
+       commands with special arguments
+         fails on chained pipe without fn:
+     Expected a function passed into the first argument of pipe
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:107:18)
+
+  16) Asserts
+       commands with special arguments
+         fails on root evaluate without fn:
+     pipe expects a function as its argument
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:112:7)
+
+  17) Asserts
+       commands with special arguments
+         fails on chained evaluate without fn:
+     Expected a function passed into the first argument of pipe
+  Error: 
+      at Context.<anonymous> (integration/fails/asserts.spec.ts:117:18)
+
+  18) Matchers
        hooks - beforeEach failure
          "before each" hook for "should fail":
      (received).shouldEqual(expected) // deep equality
@@ -123,7 +214,7 @@ Received: "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/hooks.spec.ts:27:10)
 
-  9) Matchers
+  19) Matchers
        hooks - afterEach failure
          "after each" hook: failing hook for "should pass":
      (received).shouldEqual(expected) // deep equality
@@ -133,19 +224,25 @@ Received: "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/hooks.spec.ts:37:10)
 
-  10) Inline Snapshot
+  20) Inline Snapshot
        works async:
      expected '"fail"' but got '"hello"'
   Error: 
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:25:8)
 
-  11) Inline Snapshot
+  21) Inline Snapshot
        works sync:
      expected '"fail"' but got '"hello"'
   Error: 
       at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:32:8)
 
-  12) Matchers
+  22) Inline Snapshot
+       fails when called on an element:
+     The shouldMatchInlineSnapshot command can only be run on a value, not a page or element - try converting it to html or text first
+  Error: 
+      at Context.<anonymous> (integration/fails/inlineSnapshot.spec.ts:37:33)
+
+  23) Matchers
        command matchers - positive
          shouldBeDefined:
      (received).shouldBeDefined()
@@ -154,7 +251,7 @@ Received: undefined
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:34:9)
 
-  13) Matchers
+  24) Matchers
        command matchers - positive
          shouldBeTruthy:
      (received).shouldBeTruthy()
@@ -163,7 +260,7 @@ Received: undefined
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:41:9)
 
-  14) Matchers
+  25) Matchers
        command matchers - positive
          shouldBeCloseTo:
      (received).shouldBeCloseTo(expected)
@@ -177,7 +274,7 @@ Received difference:   0.0040000000000000036
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:48:9)
 
-  15) Matchers
+  26) Matchers
        command matchers - positive
          shouldBeGreaterThan:
      (received).shouldBeGreaterThan(expected)
@@ -187,7 +284,7 @@ Received:   1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:55:9)
 
-  16) Matchers
+  27) Matchers
        command matchers - positive
          shouldBeGreaterThanOrEqual:
      (received).shouldBeGreaterThanOrEqual(expected)
@@ -197,7 +294,7 @@ Received:    1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:62:9)
 
-  17) Matchers
+  28) Matchers
        command matchers - positive
          shouldBeLessThan:
      (received).shouldBeLessThan(expected)
@@ -207,7 +304,7 @@ Received:   1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:69:9)
 
-  18) Matchers
+  29) Matchers
        command matchers - positive
          shouldBeLessThanOrEqual:
      (received).shouldBeLessThanOrEqual(expected)
@@ -217,7 +314,7 @@ Received:    1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:76:9)
 
-  19) Matchers
+  30) Matchers
        command matchers - positive
          shouldBeFalsy:
      (received).shouldBeFalsy()
@@ -226,7 +323,7 @@ Received: 1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:83:9)
 
-  20) Matchers
+  31) Matchers
        command matchers - positive
          shouldBeUndefined:
      (received).shouldBeUndefined()
@@ -235,7 +332,7 @@ Received: "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:89:10)
 
-  21) Matchers
+  32) Matchers
        command matchers - positive
          shouldBeNull:
      (received).shouldBeNull()
@@ -244,7 +341,7 @@ Received: undefined
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:96:9)
 
-  22) Matchers
+  33) Matchers
        command matchers - positive
          shouldContain string:
      (received).shouldContain(expected) // indexOf
@@ -254,7 +351,7 @@ Received string:    "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:102:10)
 
-  23) Matchers
+  34) Matchers
        command matchers - positive
          shouldContainEqual:
      (received).shouldContainEqual(expected) // deep equality
@@ -264,7 +361,7 @@ Received array: ["Hello", "World", {"test": true}]
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:109:9)
 
-  24) Matchers
+  35) Matchers
        command matchers - positive
          shouldHaveLength array:
      (received).shouldHaveLength(expected)
@@ -275,7 +372,7 @@ Received array:  ["Hello", "World", {"test": true}]
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:116:9)
 
-  25) Matchers
+  36) Matchers
        command matchers - positive
          shouldHaveProperty 1:
      (received).shouldHaveProperty(path)
@@ -287,7 +384,7 @@ Received value: {"c": "Hello World"}
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:123:9)
 
-  26) Matchers
+  37) Matchers
        command matchers - positive
          shouldHaveProperty 2:
      (received).shouldHaveProperty(path)
@@ -299,7 +396,7 @@ Received value: {"c": "Hello World"}
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:130:9)
 
-  27) Matchers
+  38) Matchers
        command matchers - positive
          shouldMatchObject:
      (received).shouldMatchObject(expected)
@@ -318,7 +415,7 @@ Received value: {"c": "Hello World"}
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:137:9)
 
-  28) Matchers
+  39) Matchers
        command matchers - positive
          shouldEqual:
      (received).shouldEqual(expected) // deep equality
@@ -328,7 +425,7 @@ Received: "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:143:10)
 
-  29) Matchers
+  40) Matchers
        command matchers - positive
          shouldContain array:
      (received).shouldContain(expected) // indexOf
@@ -338,7 +435,7 @@ Received array: ["Hello", "World", {"test": true}]
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:150:9)
 
-  30) Matchers
+  41) Matchers
        command matchers - positive
          shouldMatch:
      (received).shouldMatch(expected)
@@ -348,7 +445,7 @@ Received string:  "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:156:10)
 
-  31) Matchers
+  42) Matchers
        command matchers - negative
          shouldNotBeDefined:
      (received).shouldNotBeDefined()
@@ -357,7 +454,7 @@ Received: 1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:165:9)
 
-  32) Matchers
+  43) Matchers
        command matchers - negative
          shouldNotBeTruthy:
      (received).shouldNotBeTruthy()
@@ -366,7 +463,7 @@ Received: 1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:172:9)
 
-  33) Matchers
+  44) Matchers
        command matchers - negative
          shouldNotBeCloseTo:
      (received).shouldNotBeCloseTo(expected, precision)
@@ -380,7 +477,7 @@ Received difference:       0.0040000000000000036
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:179:9)
 
-  34) Matchers
+  45) Matchers
        command matchers - negative
          shouldNotBeGreaterThan:
      (received).shouldNotBeGreaterThan(expected)
@@ -390,7 +487,7 @@ Received:       1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:186:9)
 
-  35) Matchers
+  46) Matchers
        command matchers - negative
          shouldNotBeGreaterThanOrEqual:
      (received).shouldNotBeGreaterThanOrEqual(expected)
@@ -400,7 +497,7 @@ Received:        1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:193:9)
 
-  36) Matchers
+  47) Matchers
        command matchers - negative
          shouldNotBeLessThan:
      (received).shouldNotBeLessThan(expected)
@@ -410,7 +507,7 @@ Received:       1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:200:9)
 
-  37) Matchers
+  48) Matchers
        command matchers - negative
          shouldNotBeLessThanOrEqual:
      (received).shouldNotBeLessThanOrEqual(expected)
@@ -420,7 +517,7 @@ Received:        1.234
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:207:9)
 
-  38) Matchers
+  49) Matchers
        command matchers - negative
          shouldNotBeFalsy:
      (received).shouldNotBeFalsy()
@@ -429,7 +526,7 @@ Received: undefined
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:214:9)
 
-  39) Matchers
+  50) Matchers
        command matchers - negative
          shouldNotBeUndefined:
      (received).shouldNotBeUndefined()
@@ -438,7 +535,7 @@ Received: undefined
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:221:9)
 
-  40) Matchers
+  51) Matchers
        command matchers - negative
          shouldNotBeNull:
      (received).shouldNotBeNull()
@@ -447,7 +544,7 @@ Received: null
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:228:9)
 
-  41) Matchers
+  52) Matchers
        command matchers - negative
          shouldNotContain array:
      (received).shouldNotContain(expected) // indexOf
@@ -457,7 +554,7 @@ Received array:     ["Hello", "World", {"test": true}]
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:235:9)
 
-  42) Matchers
+  53) Matchers
        command matchers - negative
          shouldNotContainEqual:
      (received).shouldNotContainEqual(expected) // deep equality
@@ -467,7 +564,7 @@ Received array:     ["Hello", "World", {"test": true}]
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:241:9)
 
-  43) Matchers
+  54) Matchers
        command matchers - negative
          shouldNotHaveLength:
      (received).shouldNotHaveLength(expected)
@@ -477,7 +574,7 @@ Received array:      ["Hello", "World", {"test": true}]
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:248:9)
 
-  44) Matchers
+  55) Matchers
        command matchers - negative
          shouldNotHaveProperty 1:
      (received).shouldNotHaveProperty(path)
@@ -488,7 +585,7 @@ Received value: "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:255:9)
 
-  45) Matchers
+  56) Matchers
        command matchers - negative
          shouldNotHaveProperty 2:
      (received).shouldNotHaveProperty(path)
@@ -499,7 +596,7 @@ Received value: "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:262:9)
 
-  46) Matchers
+  57) Matchers
        command matchers - negative
          shouldNotMatchObject:
      (received).shouldNotMatchObject(expected)
@@ -509,7 +606,7 @@ Received:     {"a": {"b": {"c": "Hello World"}, "d": "test"}}
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:269:9)
 
-  47) Matchers
+  58) Matchers
        command matchers - negative
          shouldNotEqual:
      (received).shouldNotEqual(expected) // deep equality
@@ -519,7 +616,7 @@ Expected: not "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:275:10)
 
-  48) Matchers
+  59) Matchers
        command matchers - negative
          shouldNotContain string:
      (received).shouldNotContain(expected) // indexOf
@@ -529,7 +626,7 @@ Received string:        "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:281:10)
 
-  49) Matchers
+  60) Matchers
        command matchers - negative
          shouldNotMatch:
      (received).shouldNotMatch(expected)
@@ -539,7 +636,7 @@ Received string:      "Hello World"
   Error: 
       at Context.<anonymous> (integration/fails/matchers.spec.ts:287:10)
 
-  50) Matchers
+  61) Matchers
        asymmetric matchers
          any string:
      (received).shouldEqual(expected) // deep equality

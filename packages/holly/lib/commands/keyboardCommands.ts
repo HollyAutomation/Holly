@@ -1,65 +1,91 @@
-import { ElementHandle } from "playwright";
-import { Page } from "playwright-core/lib/page";
 import {
+  assertRootPageExists,
   assertPageOrElementType,
-  assertPageExists,
-  assertElementType
+  assertPageType,
+  assertPageSet,
+  assertElementSet
 } from "../utils/assert";
-import { CommandDefinition } from "../types";
+import {
+  RootCommandDefinition,
+  ChainedCommandDefinition,
+  CommandResult
+} from "../types";
 
 const keyboardApi = [
   {
     name: "type",
-    isPage: true,
-    isElement: true
+    availableOnPage: true,
+    availableOnElement: true
   },
-  { name: "up", alias: "keyup", isPage: true, isElement: false },
-  { name: "down", alias: "keydown", isPage: true, isElement: false },
-  { name: "press", alias: "keypress", isPage: true, isElement: true },
-  { name: "sendCharacters", isPage: true, isElement: false }
+  {
+    name: "up",
+    alias: "keyup",
+    availableOnPage: true,
+    availableOnElement: false
+  },
+  {
+    name: "down",
+    alias: "keydown",
+    availableOnPage: true,
+    availableOnElement: false
+  },
+  {
+    name: "press",
+    alias: "keypress",
+    availableOnPage: true,
+    availableOnElement: true
+  },
+  { name: "sendCharacters", availableOnPage: true, availableOnElement: false }
 ];
 
-export const rootCommands: ReadonlyArray<CommandDefinition> = keyboardApi.map(
+export const rootCommands: ReadonlyArray<RootCommandDefinition> = keyboardApi.map(
   ({ name, alias }) => {
     const commandName = alias || name;
     return {
       name: commandName,
-      async run({ holly }, ...args: ReadonlyArray<any>) {
+      async run(
+        { holly },
+        ...args: ReadonlyArray<any>
+      ): Promise<CommandResult> {
         const page = holly.__page;
-        assertPageExists(page, commandName);
+        assertRootPageExists(page, commandName);
         // @ts-ignore
         await page.keyboard[name](...args);
-        return page;
+        return {
+          valueType: "page",
+          page
+        };
       },
       canRetry: false
     };
   }
 );
 
-export const chainedCommands: ReadonlyArray<CommandDefinition> = keyboardApi.map(
-  ({ name, isElement, alias }) => {
+export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = keyboardApi.map(
+  ({ name, availableOnElement, alias }) => {
     const commandName = alias || name;
     return {
       name: commandName,
-      async run(
-        _,
-        pageOrElement: Page | ElementHandle,
-        ...args: ReadonlyArray<any>
-      ) {
-        if (!isElement) {
-          assertElementType(pageOrElement, commandName);
+      async run(_, commandResult: CommandResult, ...args: ReadonlyArray<any>) {
+        let keyboard;
+        if (!availableOnElement) {
+          assertPageType(commandResult, commandName);
         } else {
-          assertPageOrElementType(pageOrElement, commandName);
+          assertPageOrElementType(commandResult, commandName);
         }
-
-        const keyboard =
-          pageOrElement instanceof Page
-            ? pageOrElement.keyboard
-            : pageOrElement;
+        if (commandResult.valueType === "page") {
+          const page = commandResult.page;
+          assertPageSet(page, commandResult, commandName);
+          keyboard = page.keyboard;
+        } else {
+          const element = commandResult.element;
+          assertElementSet(element, commandResult, commandName);
+          keyboard = element;
+        }
 
         // @ts-ignore
         await keyboard[name](...args);
-        return pageOrElement;
+        return commandResult;
       },
       canRetry: false
     };

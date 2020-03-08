@@ -31,4 +31,11 @@ describe("Inline Snapshot", () => {
       .value()
       .shouldMatchInlineSnapshot(`"fail"`);
   });
+
+  it("fails when called on an element", async () => {
+    // @ts-ignore - testing when someone uses untyped
+    await $("input[type=text]").shouldMatchInlineSnapshot(
+      `<input type="text" value="" />`
+    );
+  });
 });

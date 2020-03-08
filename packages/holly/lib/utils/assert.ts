@@ -2,10 +2,9 @@ import {
   Page as PageType,
   ElementHandle as ElementHandleType
 } from "playwright";
-import { Page } from "playwright-core/lib/page";
-import { ElementHandle } from "playwright-core/lib/dom";
+import { CommandResult } from "../types";
 
-export function assertPageExists(
+export function assertRootPageExists(
   page: PageType | void | null,
   commandName: string
 ): asserts page is PageType {
@@ -17,10 +16,13 @@ export function assertPageExists(
 }
 
 export function assertPageOrElementType(
-  pageOrElement: any,
+  commandResult: CommandResult,
   commandName: string
-): asserts pageOrElement is PageType | ElementHandleType {
-  if (pageOrElement instanceof Page || pageOrElement instanceof ElementHandle) {
+) {
+  if (
+    commandResult.valueType === "page" ||
+    commandResult.valueType === "element"
+  ) {
     return;
   }
   throw new Error(
@@ -28,22 +30,58 @@ export function assertPageOrElementType(
   );
 }
 
+export function assertValueType(
+  commandResult: CommandResult,
+  commandName: string
+) {
+  if (commandResult.valueType === "value") {
+    return;
+  }
+  throw new Error(
+    `The ${commandName} command can only be run on a value, not a page or element - try converting it to html or text first`
+  );
+}
+
 export function assertElementType(
-  element: any,
+  commandResult: CommandResult,
+  commandName: string
+) {
+  if (commandResult.valueType === "element") {
+    return;
+  }
+  throw new Error(`The ${commandName} command can only be run on a element`);
+}
+
+export function assertElementSet(
+  element: ElementHandleType | null | void,
+  commandResult: CommandResult,
   commandName: string
 ): asserts element is ElementHandleType {
-  if (!(element instanceof ElementHandle)) {
+  if (!element) {
     throw new Error(
-      `The ${commandName} command was expecting to be run on a element`
+      `The ${commandName} command could not find element '${commandResult.description ||
+        ""}'`
+    );
+  }
+}
+
+export function assertPageSet(
+  page: PageType | null | void,
+  commandResult: CommandResult,
+  commandName: string
+): asserts page is PageType {
+  if (!page) {
+    throw new Error(
+      `The ${commandName} command did not get a page from its parent`
     );
   }
 }
 
 export function assertPageType(
-  element: any,
+  commandResult: CommandResult,
   commandName: string
-): asserts element is PageType {
-  if (!(element instanceof Page)) {
+) {
+  if (commandResult.valueType !== "page") {
     throw new Error(
       `The ${commandName} command was expecting to be run on a page`
     );
