@@ -1,6 +1,6 @@
 {
   "name": "holly",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A reliable and simple automated testing framework built around playwright and mocha with Jest matchers and snapshots thrown in, running in parallel with a time-travel capable UI",
   "author": "Luke Page",
   "homepage": "",
