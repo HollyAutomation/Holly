@@ -14,7 +14,7 @@ import {
 const mouseApi = [
   {
     name: "click",
-    isPage: true,
+    availableOnPage: true,
     availableOnElement: true
   },
   { name: "dblclick", availableOnPage: true, availableOnElement: true },

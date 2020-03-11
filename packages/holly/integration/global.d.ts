@@ -104,14 +104,21 @@ type MiscElementCommands = {
 };
 
 type EscapeHatchCommands = {
-  pipe: (fn: () => any) => HollyChainValueAwaitable;
-  evaluate: (fn: () => any) => HollyChainValueAwaitable;
+  pipe: (fn: (arg?: any) => any) => HollyChainValueAwaitable;
+  evaluate: (fn: (arg?: any) => any) => HollyChainValueAwaitable;
 };
 
 type Holly = {
   newPage: (url: string, viewport?: Viewport) => HollyChainPageAwaitable;
 
-  wrap: (value: any) => HollyChainValueAwaitable;
+  wrap: <
+    T extends
+      | HollyChainValueAwaitable
+      | HollyChainElementAwaitable
+      | HollyChainPageAwaitable
+  >(
+    value: any
+  ) => T;
 
   // TODO add the rest of the matchers
   any: (anyType: any) => AssymmetricMatcher;

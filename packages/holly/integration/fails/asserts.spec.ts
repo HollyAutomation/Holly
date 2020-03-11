@@ -21,6 +21,13 @@ describe("Asserts", () => {
     });
   });
 
+  describe("page or element", () => {
+    it("fails calling $ on a value", () => {
+      // @ts-ignore types protect this too :)
+      wrap({}).$(".test");
+    });
+  });
+
   describe("With server", () => {
     let testServer: TestServer;
     before(() => {

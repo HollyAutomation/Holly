@@ -17,7 +17,6 @@ import {
   assertPageSet
 } from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
-import { PointerActionOptions } from "playwright-core/lib/input";
 import toIstanbul from "./toIstanbul";
 import { Page } from "playwright-core/lib/page";
 import { ElementHandle } from "playwright-core/lib/dom";
@@ -43,6 +42,29 @@ function anyToCommandResult(value: any): CommandResult {
   };
 }
 
+async function pipe(
+  base: any,
+  anyFn: Function,
+  commandResult?: CommandResult,
+  commandName: string = "pipe"
+): Promise<CommandResult> {
+  let value;
+  if (typeof base.evaluate === "function") {
+    value = await base.evaluate(anyFn);
+  } else {
+    value = await anyFn(base);
+  }
+  return {
+    valueType: "value",
+    value,
+    page: commandResult?.page,
+    element: commandResult?.element,
+    description: `${commandName}(${(commandResult &&
+      commandResult.description) ||
+      ""})`
+  };
+}
+
 export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
   ...mouseCommands.rootCommands,
   ...keyboardCommands.rootCommands,
@@ -63,12 +85,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       const page = holly.__page;
       assertRootPageExists(page, "pipe");
 
-      return anyToCommandResult(
-        await page.evaluate(
-          //@ts-ignore
-          fn
-        )
-      );
+      return pipe(page, fn);
     }
   },
   {
@@ -81,12 +98,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       const page = holly.__page;
       assertRootPageExists(page, "evaluate");
 
-      return anyToCommandResult(
-        await page.evaluate(
-          // @ts-ignore
-          fn
-        )
-      );
+      return pipe(page, fn);
     },
     canRetry: false
   },
@@ -174,13 +186,6 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
   }
 ];
 
-function pipe(base: any, anyFn: Function) {
-  if (typeof base.evaluate === "function") {
-    return base.evaluate(anyFn);
-  }
-  return anyFn(base);
-}
-
 export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
   ...commandMatchers,
   ...mouseCommands.chainedCommands,
@@ -219,12 +224,20 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
   },
   {
     name: "hover",
-    async run(_, commandResult: CommandResult, options: PointerActionOptions) {
+    async run(_, commandResult: CommandResult, options: unknown) {
       assertElementType(commandResult, "focus");
       const element = commandResult.element;
       assertElementSet(element, commandResult, "focus");
+      if (options !== undefined && typeof options !== "object") {
+        throw new Error(
+          "expected first argument to hover to be an object - PointerActionOptions"
+        );
+      }
 
-      await element.hover(options);
+      await element.hover(
+        // @ts-ignore
+        options
+      );
       return commandResult;
     }
   },
@@ -242,7 +255,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
   matchInlineSnapshot,
   {
     name: "pipe",
-    run(_, commandResult: CommandResult, fn: unknown) {
+    run(_, commandResult: CommandResult, fn: unknown): Promise<CommandResult> {
       if (typeof fn !== "function") {
         throw new Error(
           "Expected a function passed into the first argument of pipe"
@@ -258,12 +271,12 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       } else {
         pipeBase = commandResult.value;
       }
-      return pipe(pipeBase, fn);
+      return pipe(pipeBase, fn, commandResult);
     }
   },
   {
     name: "evaluate",
-    run(_, commandResult: CommandResult, fn: unknown) {
+    run(_, commandResult: CommandResult, fn: unknown): Promise<CommandResult> {
       if (typeof fn !== "function") {
         throw new Error(
           "Expected a function passed into the first argument of pipe"
@@ -279,7 +292,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       } else {
         pipeBase = commandResult.value;
       }
-      return pipe(pipeBase, fn);
+      return pipe(pipeBase, fn, commandResult);
     },
     canRetry: false
   },
@@ -290,18 +303,13 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       const element = commandResult.element;
       assertElementSet(element, commandResult, "text");
 
-      const value = await pipe(
+      return await pipe(
         element,
         // @ts-ignore
-        /* istanbul ignore next */ el => el.innerText
+        /* istanbul ignore next */ el => el.innerText,
+        commandResult,
+        "text"
       );
-      return {
-        valueType: "value",
-        value,
-        page: commandResult.page,
-        element: commandResult.element,
-        description: `text(${commandResult.description})`
-      };
     }
   },
   {
@@ -311,7 +319,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       const element = commandResult.element;
       assertElementSet(element, commandResult, "text");
 
-      const value = await pipe(
+      return await pipe(
         element,
         // @ts-ignore
         /* istanbul ignore next */ el => {
@@ -339,15 +347,10 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
             return textNodes;
           }
           return getTextArray(el);
-        }
+        },
+        commandResult,
+        "textArray"
       );
-      return {
-        valueType: "value",
-        value,
-        page: commandResult.page,
-        element: commandResult.element,
-        description: `textArray(${commandResult.description})`
-      };
     }
   }
 ];
