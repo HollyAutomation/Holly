@@ -200,6 +200,8 @@ type HollyChainValue = {
   shouldMatchObject: (expected: Object) => HollyChainValueAwaitable;
   shouldNotMatchObject: (expected: Object) => HollyChainValueAwaitable;
   and: HollyChainValueAwaitable;
+  pipe: (pipeFn: (value: any) => any) => HollyChainValueAwaitable;
+  evaluate: (evaluateFn: (value: any) => any) => HollyChainValueAwaitable;
 } & EscapeHatchCommands;
 
 type HollyChainValueAwaitable = HollyChainValue & Promise<void>;

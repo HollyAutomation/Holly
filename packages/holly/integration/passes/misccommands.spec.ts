@@ -1,7 +1,7 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
-import { HollyChainPageAwaitable } from "../global";
+import { HollyChainPageAwaitable, HollyChainValueAwaitable } from "../global";
 
-const { newPage, $, setViewportSize, byText } = holly;
+const { newPage, $, setViewportSize, byText, wrap } = holly;
 
 describe("Misc commands", () => {
   let testServer: TestServer;
@@ -87,6 +87,43 @@ describe("Misc commands", () => {
       await $(".testdiv")
         .text()
         .shouldEqual("focussed");
+    });
+  });
+
+  describe("pipe", () => {
+    let page: HollyChainPageAwaitable;
+    beforeEach(async () => {
+      const url = testServer.addResponse(
+        bodyToHtml(
+          `
+          <div class="testdiv">a</div>
+          `
+        )
+      );
+      // @ts-ignore
+      page = await newPage(url);
+    });
+
+    it("pipe page", async () => {
+      page
+        .pipe(() => {
+          return document.getElementsByClassName("testdiv")[0].outerHTML;
+        })
+        .shouldMatchInlineSnapshot(`"<div class=\\"testdiv\\">a</div>"`);
+    });
+
+    it("pipe element", async () => {
+      $(".testdiv")
+        .pipe(el => {
+          return el.outerHTML;
+        })
+        .shouldMatchInlineSnapshot(`"<div class=\\"testdiv\\">a</div>"`);
+    });
+
+    it("pipe value", async () => {
+      wrap<HollyChainValueAwaitable>("a")
+        .pipe((s: string) => s + "bc")
+        .shouldEqual("abc");
     });
   });
 

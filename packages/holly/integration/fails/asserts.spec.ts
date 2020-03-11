@@ -1,6 +1,15 @@
 import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
-const { newPage, $, pipe, mousemove, byText, wrap, evaluate } = holly;
+const {
+  newPage,
+  $,
+  pipe,
+  mousemove,
+  byText,
+  wrap,
+  evaluate,
+  setViewportSize
+} = holly;
 
 describe("Asserts", () => {
   describe("root commands w/o newPage", () => {
@@ -122,6 +131,21 @@ describe("Asserts", () => {
     it("fails on chained evaluate without fn", () => {
       // @ts-ignore types protect this too :)
       wrap(null).evaluate({});
+    });
+
+    it("newPage without url", () => {
+      // @ts-ignore types protect this too :)
+      newPage({});
+    });
+
+    it("newPage without viewport", () => {
+      // @ts-ignore types protect this too :)
+      newPage("test", true);
+    });
+
+    it("setViewportSize without viewport", () => {
+      // @ts-ignore types protect this too :)
+      setViewportSize(null);
     });
   });
 });
