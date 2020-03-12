@@ -9,7 +9,7 @@ import * as util from "util";
 import runSuite, { makeMocha } from "../runSuite";
 import makeMochaOptions from "../makeMochaOptions";
 import createStore from "./store";
-import { actions } from "../../../holly-shared";
+import { actions, testState, TEST_STATE_NORMAL } from "holly-shared";
 
 const debug = Debug("holly:open:index");
 
@@ -19,9 +19,16 @@ function getTestName(test: Mocha.Test) {
   return test.titlePath().join(" / ");
 }
 
-function getTests(suite: Mocha.Suite): ReadonlyArray<string> {
-  let tests = suite.tests.map(test => {
-    return getTestName(test);
+type Tests = ReadonlyArray<{ name: string; id: string; state: testState }>;
+
+function getTests(
+  suite: Mocha.Suite,
+  dupeCount: { [name: string]: number } = {}
+): Tests {
+  let tests: Tests = suite.tests.map(test => {
+    const name = getTestName(test);
+    dupeCount[name] = dupeCount[name] ? dupeCount[name] + 1 : 1;
+    return { name, state: TEST_STATE_NORMAL, id: `${dupeCount[name]}:${name}` };
   });
 
   suite.suites.forEach(suite => {

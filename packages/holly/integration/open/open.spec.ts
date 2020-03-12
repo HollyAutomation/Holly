@@ -25,33 +25,47 @@ describe("Open mode", () => {
     [
         "Mouse / element api / clicks a element",
         [
-            "Focus",
-            "Disable"
+            "F",
+            "D"
         ]
     ],
     [
         "Mouse / page api / clicks a page",
         [
-            "Focus",
-            "Disable"
+            "F",
+            "D"
         ]
     ],
     [
         "Mouse / page api / clicks a particular page",
         [
-            "Focus",
-            "Disable"
+            "F",
+            "D"
         ]
     ]
 ]`);
 
     await byText("Mouse / element api / clicks a element")
-      .byText("Focus")
+      .parent()
+      .byText("F")
       .click();
+
+    $("[data-test-id=test]:nth-child(1)")
+      .getAttribute("data-test-state")
+      .shouldEqual("focussed");
+
+    $("[data-test-id=test]:nth-child(2)")
+      .getAttribute("data-test-state")
+      .shouldEqual("normal");
+
+    $("[data-test-id=test]:nth-child(3)")
+      .getAttribute("data-test-state")
+      .shouldEqual("normal");
 
     await byText("Start").click();
 
     await byText("Mouse / element api / clicks a element")
+      .parent()
       .$(".tst-command-list")
       .textArray().shouldMatchInlineSnapshot(`[
     "click",
@@ -61,6 +75,7 @@ describe("Open mode", () => {
 
     // For now - we need to wait for the test to complete to stop these tests failing
     await byText("Mouse / page api / clicks a particular page")
+      .parent()
       .$(".tst-command-list")
       .textArray().shouldMatchInlineSnapshot(`[
     "click",
