@@ -37,6 +37,16 @@ describe("Integration", () => {
 });
 ```
 
+## Philosophy & Goals
+
+ * Expressive tests that can be read by someone not so technical
+ * Limit the need to think about what application states need to be waited for by automatically waiting for a test to pass
+ * Be quick and not wait for arbitrary time periods
+ * Have an API with familiar naming to the JavaScript DOM and playwright or puppeteer
+ * Allow most test problems to be debugged without a code debugger (but allow usage of a code debugger)
+ * Good error messages that pinpoint problems
+ * Baked in essentials like code coverage
+
 ## Async vs Sync
 
 Holly can be used in a synchronous way (no `async` or `await`'s needed) if that is what you prefer.
@@ -59,14 +69,10 @@ describe("Integration", () => {
 });
 ```
 
-However it has two downsides:
+However sync mode has two downsides:
 
 - Debugging a test is more difficult as you cannot step through the commands in your own source code (because commands are recorded and then played back, separate from your source)
 - If you need to access the playwright API (which we recommend anyplace where holly hasn't made it easier or provided an alternative), you will need to use `async` and `await` as its a promise based API so you may find yourself having inconsistent tests.
-
-## Design Decisions
-
-- the "Magic" nature of the api regarding how a sync call can be executed async - this is because of the retry mechanism - its important that assertions can retry, but if the assertion moves inside the promise (so for instance using Playwrights waitFor) then it makes it difficult to use more advanced expectations or things like inline snapshots.
 
 ## Reason for the name
 
