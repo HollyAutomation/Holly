@@ -86,6 +86,6 @@
     "stack-utils": "2.0.1",
     "v8-to-istanbul": "https://github.com/lukeapage/v8-to-istanbul.git#c7e4e541f8d2bb6d95a4af62b2ff41b87b53660f",
     "ws": "7.2.3",
-    "yargs": "15.1.0"
+    "yargs": "15.3.0"
   }
 }
