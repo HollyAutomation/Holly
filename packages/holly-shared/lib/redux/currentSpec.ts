@@ -33,7 +33,7 @@ export const { actions, reducer } = createSlice({
       {
         payload
       }: PayloadAction<
-        ReadonlyArray<{ name: string; id: string; state: testState }>
+        ReadonlyArray<{ name: string; id: string; state?: testState }>
       >
     ) => ({
       ...state,
@@ -41,7 +41,7 @@ export const { actions, reducer } = createSlice({
         name,
         commands: [],
         id,
-        state
+        state: state || TEST_STATE_NORMAL
       }))
     }),
     setTestState: (

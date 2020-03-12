@@ -116,4 +116,5 @@ type ListenerCommandArgs = {
 
 export type HollyListener = {
   onCommand: (args: ListenerCommandArgs) => void;
+  onBeforeRun: (suite: Mocha.Suite) => void;
 };
