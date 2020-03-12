@@ -98,9 +98,6 @@ export default async (config: Config) => {
                       // @ts-ignore
                       mochaTest.id
                   );
-                  if (!test) {
-                    console.log(mochaTest.id, "not found");
-                  }
                   mochaTest.pending = Boolean(
                     (hasFocussed &&
                       (!test || test.state !== TEST_STATE_FOCUSSED)) ||
