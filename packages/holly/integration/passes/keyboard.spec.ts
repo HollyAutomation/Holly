@@ -2,7 +2,7 @@ import { createTestServer, bodyToHtml, TestServer } from "../testServer";
 
 const { newPage, $, keypress } = holly;
 
-describe("Mouse", () => {
+describe("Keyboard", () => {
   let testServer: TestServer;
   before(() => {
     testServer = createTestServer();

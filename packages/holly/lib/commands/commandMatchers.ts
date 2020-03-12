@@ -1,7 +1,8 @@
 import Debug from "debug";
-import { CommandDefinition } from "../types";
+import { ChainedCommandDefinition, CommandResult } from "../types";
 import rawMatchers from "./matchers";
 import * as jestAsymmetricMatchers from "expect/build/asymmetricMatchers";
+import { assertValueType } from "../utils/assert";
 
 const debug = Debug("holly:commandMatchers");
 
@@ -23,15 +24,19 @@ function createMatcherCommand(
   name: string,
   alias: string,
   isNegative?: boolean
-): CommandDefinition {
+): ChainedCommandDefinition {
   return {
     name: alias,
     run(
       _,
-      receivedValue: any,
+      commandResult: CommandResult,
       expectedValue: any,
       ...otherArgs: ReadonlyArray<any>
-    ) {
+    ): CommandResult {
+      assertValueType(commandResult, alias);
+
+      const receivedValue = commandResult.value;
+
       const matcherState = {
         isNot: Boolean(isNegative),
         expand: false
@@ -54,13 +59,13 @@ function createMatcherCommand(
         throw result;
       }
       debug(`matcher passed '${receivedValue}' '${expectedValue}'`);
-      return receivedValue;
+      return commandResult;
     }
   };
 }
 
 export const commandMatchers = Object.keys(rawMatchers).reduce(
-  (allMatchers: Array<CommandDefinition>, rawName) => {
+  (allMatchers: Array<ChainedCommandDefinition>, rawName) => {
     const positiveAlias = rawName.replace("to", "should");
     allMatchers.push(createMatcherCommand(rawName, positiveAlias, false));
     const negativeAlias = rawName.replace("to", "shouldNot");

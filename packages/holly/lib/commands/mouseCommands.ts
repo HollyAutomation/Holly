@@ -1,64 +1,96 @@
-import { ElementHandle } from "playwright";
-import { Page } from "playwright-core/lib/page";
 import {
-  assertPageExists,
+  assertRootPageExists,
+  assertPageOrElementType,
   assertPageType,
-  assertPageOrElementType
+  assertPageSet,
+  assertElementSet
 } from "../utils/assert";
-import { CommandDefinition } from "../types";
+import {
+  RootCommandDefinition,
+  ChainedCommandDefinition,
+  CommandResult
+} from "../types";
 
 const mouseApi = [
   {
     name: "click",
-    isPage: true,
-    isElement: true
+    availableOnPage: true,
+    availableOnElement: true
   },
-  { name: "dblclick", isPage: true, isElement: true },
-  { name: "down", alias: "mousedown", isPage: true, isElement: false },
-  { name: "move", alias: "mousemove", isPage: true, isElement: false },
-  { name: "tripleclick", isPage: true, isElement: true },
-  { name: "up", alias: "mouseup", isPage: true, isElement: false }
+  { name: "dblclick", availableOnPage: true, availableOnElement: true },
+  {
+    name: "down",
+    alias: "mousedown",
+    availableOnPage: true,
+    availableOnElement: false
+  },
+  {
+    name: "move",
+    alias: "mousemove",
+    availableOnPage: true,
+    availableOnElement: false
+  },
+  { name: "tripleclick", iavailableOnPage: true, availableOnElement: true },
+  {
+    name: "up",
+    alias: "mouseup",
+    availableOnPage: true,
+    availableOnElement: false
+  }
 ];
 
-export const rootCommands: ReadonlyArray<CommandDefinition> = mouseApi.map(
+export const rootCommands: ReadonlyArray<RootCommandDefinition> = mouseApi.map(
   ({ name, alias }) => {
     const commandName = alias || name;
     return {
       name: commandName,
-      async run({ holly }, ...args: ReadonlyArray<any>) {
+      async run(
+        { holly },
+        ...args: ReadonlyArray<unknown>
+      ): Promise<CommandResult> {
         const page = holly.__page;
-        assertPageExists(page, commandName);
+        assertRootPageExists(page, commandName);
         // @ts-ignore
         await page.mouse[name](...args);
-        return page;
+        return {
+          valueType: "page",
+          page
+        };
       },
       canRetry: false
     };
   }
 );
 
-export const chainedCommands: ReadonlyArray<CommandDefinition> = mouseApi.map(
-  ({ name, isElement, alias }) => {
+export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = mouseApi.map(
+  ({ name, availableOnElement, alias }) => {
     const commandName = alias || name;
     return {
       name: commandName,
       async run(
         _,
-        pageOrElement: Page | ElementHandle,
+        commandResult: CommandResult,
         ...args: ReadonlyArray<any>
-      ) {
-        if (!isElement) {
-          assertPageType(pageOrElement, commandName);
+      ): Promise<CommandResult> {
+        let mouse;
+        if (!availableOnElement) {
+          assertPageType(commandResult, commandName);
         } else {
-          assertPageOrElementType(pageOrElement, commandName);
+          assertPageOrElementType(commandResult, commandName);
         }
-
-        const mouse =
-          pageOrElement instanceof Page ? pageOrElement.mouse : pageOrElement;
+        if (commandResult.valueType === "page") {
+          const page = commandResult.page;
+          assertPageSet(page, commandResult, commandName);
+          mouse = page.mouse;
+        } else {
+          const element = commandResult.element;
+          assertElementSet(element, commandResult, commandName);
+          mouse = element;
+        }
 
         // @ts-ignore
         await mouse[name](...args);
-        return pageOrElement;
+        return commandResult;
       },
       canRetry: false
     };

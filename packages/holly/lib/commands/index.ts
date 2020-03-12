@@ -1,56 +1,135 @@
-import { ElementHandle, Page } from "playwright";
 import Debug from "debug";
 import matchInlineSnapshot from "./matchInlineSnapshot";
 import * as screenshotCommand from "./screenshot";
-import { CommandDefinition } from "../types";
+import {
+  RootCommandDefinition,
+  ChainedCommandDefinition,
+  CommandResult
+} from "../types";
 import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
 import * as keyboardCommands from "./keyboardCommands";
 import * as findElements from "./findElements";
-import { assertPageExists, assertElementType } from "../utils/assert";
+import {
+  assertRootPageExists,
+  assertElementType,
+  assertElementSet,
+  assertPageSet
+} from "../utils/assert";
 import { Viewport } from "playwright-core/lib/types";
-import { PointerActionOptions } from "playwright-core/lib/input";
 import toIstanbul from "./toIstanbul";
+import { Page } from "playwright-core/lib/page";
+import { ElementHandle } from "playwright-core/lib/dom";
 
 const debug = Debug("holly:commands:index");
 
-export const rootCommands: ReadonlyArray<CommandDefinition> = [
+function anyToCommandResult(value: any): CommandResult {
+  if (value instanceof Page) {
+    return {
+      valueType: "page",
+      page: value
+    };
+  }
+  if (value instanceof ElementHandle) {
+    return {
+      valueType: "element",
+      element: value
+    };
+  }
+  return {
+    valueType: "value",
+    value
+  };
+}
+
+async function pipe(
+  base: any,
+  anyFn: Function,
+  commandResult?: CommandResult,
+  commandName: string = "pipe"
+): Promise<CommandResult> {
+  let value;
+  if (typeof base.evaluate === "function") {
+    value = await base.evaluate(anyFn);
+  } else {
+    value = await anyFn(base);
+  }
+  return {
+    valueType: "value",
+    value,
+    page: commandResult?.page,
+    element: commandResult?.element,
+    description: `${commandName}(${(commandResult &&
+      commandResult.description) ||
+      ""})`
+  };
+}
+
+export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
   ...mouseCommands.rootCommands,
   ...keyboardCommands.rootCommands,
   ...findElements.rootCommands,
   screenshotCommand.root,
   {
     name: "wrap",
-    run(_, value: any) {
-      return value;
+    run(_, value: any): CommandResult {
+      return anyToCommandResult(value);
     }
   },
   {
     name: "pipe",
-    run({ holly }, fn: () => any) {
+    async run({ holly }, fn: unknown): Promise<CommandResult> {
+      if (typeof fn !== "function") {
+        throw new Error(`pipe expects a function as its argument`);
+      }
       const page = holly.__page;
-      assertPageExists(page, "pipe");
+      assertRootPageExists(page, "pipe");
 
-      return page.evaluate(fn);
+      return pipe(page, fn);
     }
   },
   {
     name: "evaluate",
-    run({ holly }, fn: () => any) {
-      const page = holly.__page;
-      assertPageExists(page, "evaluate");
+    async run({ holly }, fn: unknown): Promise<CommandResult> {
+      if (typeof fn !== "function") {
+        throw new Error(`pipe expects a function as its argument`);
+      }
 
-      return page.evaluate(fn);
+      const page = holly.__page;
+      assertRootPageExists(page, "evaluate");
+
+      return pipe(page, fn);
     },
     canRetry: false
   },
   {
     name: "newPage",
-    async run({ config, holly }, url: string, viewport?: Viewport) {
+    async run(
+      { config, holly },
+      url: unknown,
+      viewport?: unknown
+    ): Promise<CommandResult> {
+      if (typeof url !== "string") {
+        throw new Error(
+          "expected a string to be passed as url in the first parameter to newPage"
+        );
+      }
+      if (
+        viewport &&
+        // @ts-ignore
+        (typeof viewport.width !== "number" ||
+          // @ts-ignore
+          typeof viewport.height !== "number")
+      ) {
+        throw new Error(
+          "expected viewport to be passed in the second parameter to newPage"
+        );
+      }
       const page = await holly.__context.newPage();
       holly.__page = page;
       // here would go coverage etc.
       if (viewport) {
+        // @ts-ignore
         await page.setViewportSize(viewport);
       }
       if (config.pipeConsole !== false) {
@@ -74,31 +153,40 @@ export const rootCommands: ReadonlyArray<CommandDefinition> = [
         });
       }
       await page.goto(url);
-      return page;
+      return {
+        valueType: "page",
+        page
+      };
     },
     canRetry: false
   },
   {
     name: "setViewportSize",
-    async run({ holly }, viewport: Viewport) {
+    async run({ holly }, viewport: Viewport): Promise<CommandResult> {
+      if (
+        !viewport ||
+        typeof viewport.width !== "number" ||
+        typeof viewport.height !== "number"
+      ) {
+        throw new Error(
+          "expected viewport to be passed in the first parameter to setViewportSize"
+        );
+      }
+
       const page = holly.__page;
-      assertPageExists(page, "setViewportSize");
+      assertRootPageExists(page, "setViewportSize");
 
       await page.setViewportSize(viewport);
-      return page;
+      return {
+        valueType: "page",
+        page
+      };
     },
     canRetry: false
   }
 ];
 
-function pipe(base: any, anything: (anything?: any) => any) {
-  if (typeof base.evaluate === "function") {
-    return base.evaluate(anything);
-  }
-  return anything(base);
-}
-
-export const chainedCommands: ReadonlyArray<CommandDefinition> = [
+export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
   ...commandMatchers,
   ...mouseCommands.chainedCommands,
   ...keyboardCommands.chainedCommands,
@@ -106,55 +194,134 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
   screenshotCommand.chained,
   {
     name: "value",
-    run(_, element: ElementHandle) {
-      assertElementType(element, "value");
-      return element.evaluate(
+    async run(_, commandResult: CommandResult): Promise<CommandResult> {
+      assertElementType(commandResult, "value");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "value");
+      const value = await element.evaluate(
         // @ts-ignore
         /* istanbul ignore next */ (elem: HTMLElement) => elem.value
       );
+      return {
+        valueType: "value",
+        value,
+        page: commandResult.page,
+        element: commandResult.element,
+        description: `value(${commandResult.description})`
+      };
     }
   },
   {
     name: "focus",
-    run(_, element: ElementHandle) {
-      assertElementType(element, "value");
-      return element.focus();
+    async run(_, commandResult: CommandResult): Promise<CommandResult> {
+      assertElementType(commandResult, "focus");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "focus");
+
+      await element.focus();
+      return commandResult;
     }
   },
   {
     name: "hover",
-    run(_, element: ElementHandle, options: PointerActionOptions) {
-      assertElementType(element, "value");
-      return element.hover(options);
+    async run(_, commandResult: CommandResult, options: unknown) {
+      assertElementType(commandResult, "focus");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "focus");
+      if (options !== undefined && typeof options !== "object") {
+        throw new Error(
+          "expected first argument to hover to be an object - PointerActionOptions"
+        );
+      }
+
+      await element.hover(
+        // @ts-ignore
+        options
+      );
+      return commandResult;
     }
   },
   {
     name: "scrollIntoViewIfNeeded",
-    run(_, element: ElementHandle) {
-      assertElementType(element, "value");
-      return element.scrollIntoViewIfNeeded();
+    async run(_, commandResult: CommandResult) {
+      assertElementType(commandResult, "scrollIntoViewIfNeeded");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "scrollIntoViewIfNeeded");
+
+      await element.scrollIntoViewIfNeeded();
+      return commandResult;
     }
   },
   matchInlineSnapshot,
   {
     name: "pipe",
-    run(_, elementOrPage: ElementHandle | Page | any, fn: () => any) {
-      return pipe(elementOrPage, fn);
+    run(_, commandResult: CommandResult, fn: unknown): Promise<CommandResult> {
+      if (typeof fn !== "function") {
+        throw new Error(
+          "Expected a function passed into the first argument of pipe"
+        );
+      }
+      let pipeBase;
+      if (commandResult.valueType === "page") {
+        pipeBase = commandResult.page;
+        assertPageSet(pipeBase, commandResult, "pipe");
+      } else if (commandResult.valueType === "element") {
+        pipeBase = commandResult.element;
+        assertElementSet(pipeBase, commandResult, "pipe");
+      } else {
+        pipeBase = commandResult.value;
+      }
+      return pipe(pipeBase, fn, commandResult);
     }
   },
   {
+    name: "evaluate",
+    run(_, commandResult: CommandResult, fn: unknown): Promise<CommandResult> {
+      if (typeof fn !== "function") {
+        throw new Error(
+          "Expected a function passed into the first argument of pipe"
+        );
+      }
+      let pipeBase;
+      if (commandResult.valueType === "page") {
+        pipeBase = commandResult.page;
+        assertPageSet(pipeBase, commandResult, "pipe");
+      } else if (commandResult.valueType === "element") {
+        pipeBase = commandResult.element;
+        assertElementSet(pipeBase, commandResult, "pipe");
+      } else {
+        pipeBase = commandResult.value;
+      }
+      return pipe(pipeBase, fn, commandResult);
+    },
+    canRetry: false
+  },
+  {
     name: "text",
-    run(_, element: ElementHandle) {
-      assertElementType(element, "text");
-      return pipe(element, /* istanbul ignore next */ el => el.innerText);
+    async run(_, commandResult: CommandResult): Promise<CommandResult> {
+      assertElementType(commandResult, "text");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "text");
+
+      return await pipe(
+        element,
+        // @ts-ignore
+        /* istanbul ignore next */ el => el.innerText,
+        commandResult,
+        "text"
+      );
     }
   },
   {
     name: "textArray",
-    run(_, element: ElementHandle) {
-      assertElementType(element, "textArray");
-      return pipe(
+    async run(_, commandResult: CommandResult): Promise<CommandResult> {
+      assertElementType(commandResult, "text");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "text");
+
+      return await pipe(
         element,
+        // @ts-ignore
         /* istanbul ignore next */ el => {
           type TextArray = string | Array<TextArray>;
           function getTextArray(node: ChildNode | null) {
@@ -180,15 +347,10 @@ export const chainedCommands: ReadonlyArray<CommandDefinition> = [
             return textNodes;
           }
           return getTextArray(el);
-        }
+        },
+        commandResult,
+        "textArray"
       );
     }
-  },
-  {
-    name: "evaluate",
-    run(_, elementOrPage: any, fn: () => any) {
-      return pipe(elementOrPage, fn);
-    },
-    canRetry: false
   }
 ];

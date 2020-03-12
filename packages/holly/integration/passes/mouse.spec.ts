@@ -40,8 +40,9 @@ describe("Mouse", () => {
   });
 
   describe("page api", () => {
+    let url: string;
     beforeEach(async () => {
-      const url = testServer.addResponse(
+      url = testServer.addResponse(
         bodyToHtml(
           `
           <div class="testdiv"></div>
@@ -53,11 +54,20 @@ describe("Mouse", () => {
           `
         )
       );
-      await newPage(url);
     });
 
     it("clicks a page", async () => {
+      await newPage(url);
+
       await click(10, 10);
+
+      await $(".testdiv")
+        .text()
+        .shouldEqual("clicked");
+    });
+
+    it("clicks a particular page", async () => {
+      await newPage(url).click(10, 10);
 
       await $(".testdiv")
         .text()

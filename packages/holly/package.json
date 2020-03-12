@@ -1,6 +1,6 @@
 {
   "name": "holly",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A reliable and simple automated testing framework built around playwright and mocha with Jest matchers and snapshots thrown in, running in parallel with a time-travel capable UI",
   "author": "Luke Page",
   "homepage": "",
@@ -24,8 +24,8 @@
   },
   "scripts": {
     "test": "run-s test:clean test:passes test:unit test:failures test:snapshots test:open",
-    "test:passes": "cross-env HOLLY_INT_TEST=1 nyc --silent bin/holly -c integration/passes/.hollyrc",
-    "test:passes:open": "cross-env HOLLY_INT_TEST=1 bin/holly open -c integration/passes/.hollyrc",
+    "test:passes": "nyc --silent bin/holly -c integration/passes/.hollyrc",
+    "test:passes:open": "bin/holly open -c integration/passes/.hollyrc",
     "test:open": "cross-env HOLLY_FORCE_HEADLESS=1 nyc --silent --no-clean scripts/test-open.js open -c integration/passes/.hollyrc",
     "test:failures": "cross-env FORCE_COLOR=0 HOLLY_INT_TEST=1 nyc --silent --no-clean scripts/test-failures.js -c integration/fails/.hollyrc",
     "test:snapshots": "nyc --silent --no-clean scripts/test-snapshots.js -c integration/snapshots/.hollyrc",

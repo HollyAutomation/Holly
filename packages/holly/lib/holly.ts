@@ -127,15 +127,19 @@ export default function createHolly(
 
   async function runCommand(commandInstance: CommandInstance): Promise<any> {
     debug(`Running command '${commandInstance.command.name}'`);
-    let args = commandInstance.args;
-    if (commandInstance.parent) {
-      args = [commandInstance.parent.result, ...args];
-    }
     try {
-      const result = await commandInstance.command.run(
-        { holly, commandInstance, test: holly.__currentTest, config },
-        ...args
-      );
+      const result = await (commandInstance.parent
+        ? commandInstance.command.run(
+            { holly, commandInstance, test: holly.__currentTest, config },
+            // @ts-ignore - hard to type check
+            commandInstance.parent.result,
+            ...commandInstance.args
+          )
+        : commandInstance.command.run(
+            { holly, commandInstance, test: holly.__currentTest, config },
+            // @ts-ignore - hard to type check
+            ...commandInstance.args
+          ));
       commandInstance.result = result;
       if (commandInstance.command.canRetry !== false) {
         commandInstance.retry = async () => {

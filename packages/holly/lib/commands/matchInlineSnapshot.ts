@@ -3,7 +3,8 @@ import StackUtils = require("stack-utils");
 import { saveInlineSnapshots } from "jest-snapshot/build/inline_snapshots";
 import babelTraverse from "@babel/traverse";
 import prettier = require("prettier");
-import { CommandDefinition } from "../types";
+import { ChainedCommandDefinition, CommandResult } from "../types";
+import { assertValueType } from "../utils/assert";
 
 const debug = Debug("holly:commands:matchInlineSnapshot");
 const holly_INTERNALS_IGNORE = /^\s+at.*?holly(\/|\\)(build|node_modules)(\/|\\)/i;
@@ -32,21 +33,25 @@ const getTopFrame = (lines: ReadonlyArray<string>) => {
 
 export default {
   name: "shouldMatchInlineSnapshot",
-  async run({ commandInstance }, value: any, snapshot: string) {
+  async run(
+    { commandInstance },
+    commandResult: CommandResult,
+    snapshot: string
+  ) {
+    assertValueType(commandResult, "shouldMatchInlineSnapshot");
+
     const snapshotFormatted =
       snapshot && JSON.stringify(JSON.parse(snapshot), null, 4);
-    const serializedValue = JSON.stringify(value, null, 4);
+    const serializedValue = JSON.stringify(commandResult.value, null, 4);
 
     if (serializedValue !== snapshotFormatted) {
       if (!snapshot) {
         // TODO do this properly and test
         // @ts-ignore
         if (!commandInstance.isSnapshotWaitDone) {
-          console.log("waiting...");
           await new Promise(resolve => setTimeout(resolve, 2000));
           // @ts-ignore
           commandInstance.isSnapshotWaitDone = true;
-          console.log("erroring to retry");
           throw new Error("erroring in order to retry");
         }
         const stackLines = removeInternalLines(
@@ -72,6 +77,7 @@ export default {
         throw new Error(`expected '${snapshot}' but got '${serializedValue}'`);
       }
     }
+    return commandResult;
   },
   captureStack: true
-} as CommandDefinition;
+} as ChainedCommandDefinition;

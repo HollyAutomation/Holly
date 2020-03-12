@@ -25,7 +25,7 @@ export type HollyChainAwaitable = Promise<HollyChain> & HollyChain;
 export type CommandInstance = {
   parent?: CommandInstance;
   children: Array<CommandInstance>;
-  result?: any;
+  result?: CommandResult;
   command: CommandDefinition;
   stack: string;
   args: ReadonlyArray<any>;
@@ -36,17 +36,42 @@ export type CommandInstance = {
 export type CommandData = {
   holly: Holly;
   commandInstance: CommandInstance;
-  element?: ElementHandle;
   test: Mocha.Test;
   config: Config;
 };
 
-export type CommandDefinition = {
+export type CommandResult = {
+  valueType: "page" | "value" | "element";
+  page?: Page;
+  element?: ElementHandle | null;
+  description?: string;
+  value?: any;
+};
+
+type BaseCommandDefinition = {
   name: string;
-  run: (commandData: CommandData, ...args: Array<any>) => any;
   canRetry?: boolean;
   captureStack?: boolean;
 };
+
+export type RootCommandDefinition = {
+  run: (
+    commandData: CommandData,
+    ...args: Array<unknown>
+  ) => CommandResult | Promise<CommandResult>;
+} & BaseCommandDefinition;
+
+export type ChainedCommandDefinition = {
+  run: (
+    commandData: CommandData,
+    context: CommandResult,
+    ...args: Array<unknown>
+  ) => CommandResult | Promise<CommandResult>;
+} & BaseCommandDefinition;
+
+export type CommandDefinition =
+  | RootCommandDefinition
+  | ChainedCommandDefinition;
 
 export type MatcherState = {
   isNot: boolean;
