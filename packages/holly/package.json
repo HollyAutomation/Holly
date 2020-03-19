@@ -81,7 +81,7 @@
     "koa-static": "5.0.0",
     "milliseconds": "1.0.3",
     "mkdirp": "1.0.3",
-    "mocha": "7.1.0",
+    "mocha": "7.1.1",
     "playwright": "0.11.1",
     "stack-utils": "2.0.1",
     "v8-to-istanbul": "https://github.com/lukeapage/v8-to-istanbul.git#c7e4e541f8d2bb6d95a4af62b2ff41b87b53660f",
