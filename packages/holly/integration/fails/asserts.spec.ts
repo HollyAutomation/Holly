@@ -147,5 +147,10 @@ describe("Asserts", () => {
       // @ts-ignore types protect this too :)
       setViewportSize(null);
     });
+
+    it("getAttribute without attribute", () => {
+      // @ts-ignore types protect this too :)
+      wrap(null).getAttribute();
+    });
   });
 });

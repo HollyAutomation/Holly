@@ -85,8 +85,6 @@ type ElementMouseCommands = {
   click: (options?: ClickOptions) => HollyChainElementAwaitable;
   dblclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
   tripleclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
-  $: (selector: string) => HollyChainElementAwaitable;
-  byText: (text: string) => HollyChainElementAwaitable;
 };
 
 type MiscPageCommands = {
@@ -101,6 +99,9 @@ type MiscElementCommands = {
   hover: (options?: PointerActionOptions) => HollyChainElementAwaitable;
   scrollIntoViewIfNeeded: () => HollyChainElementAwaitable;
   screenshot: (name?: string) => HollyChainElementAwaitable;
+  $: (selector: string) => HollyChainElementAwaitable;
+  byText: (text: string) => HollyChainElementAwaitable;
+  parent: () => HollyChainElementAwaitable;
 };
 
 type EscapeHatchCommands = {
@@ -140,6 +141,7 @@ type HollyChainElement = {
   value: () => HollyChainValueAwaitable;
   text: () => HollyChainValueAwaitable;
   textArray: () => HollyChainValueAwaitable;
+  getAttribute: (attrName: string) => HollyChainValueAwaitable;
 
   type: (value: string) => HollyChainElementAwaitable;
 

@@ -1,7 +1,13 @@
 import React from "react";
 import { ListGroup } from "reactstrap";
-import { ButtonGroup, Button } from "reactstrap";
-import { rootReducer } from "holly-shared";
+import {
+  rootReducer,
+  TestSlice,
+  TEST_STATE_DISABLED,
+  TEST_STATE_FOCUSSED
+} from "holly-shared";
+
+import TestItem from "./TestItem";
 
 type TestsType = NonNullable<
   ReturnType<typeof rootReducer>["currentSpec"]["tests"]
@@ -12,28 +18,22 @@ interface Props {
 }
 
 const TestList: React.FC<Props> = ({ tests }) => {
+  const hasFocussedTests = tests.some(
+    test => test.state === TEST_STATE_FOCUSSED
+  );
   return (
     <>
       <ListGroup className="tst-test-list">
-        {tests.map(
-          (
-            test: { name: string; commands: ReadonlyArray<string> },
-            index: number
-          ) => (
-            <div>
-              {test.name}
-              <ButtonGroup>
-                <Button>Focus</Button>
-                <Button>Disable</Button>
-              </ButtonGroup>
-              <div className="tst-command-list">
-                {test.commands.map(commandName => (
-                  <div>{commandName}</div>
-                ))}
-              </div>
-            </div>
-          )
-        )}
+        {tests.map((test: TestSlice) => (
+          <TestItem
+            test={test}
+            key={test.id}
+            isDisabled={
+              test.state === TEST_STATE_DISABLED ||
+              (hasFocussedTests && test.state !== TEST_STATE_FOCUSSED)
+            }
+          />
+        ))}
       </ListGroup>
     </>
   );

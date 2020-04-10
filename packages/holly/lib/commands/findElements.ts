@@ -2,7 +2,8 @@ import {
   assertRootPageExists,
   assertPageOrElementType,
   assertPageSet,
-  assertElementSet
+  assertElementSet,
+  assertElementType
 } from "../utils/assert";
 import {
   RootCommandDefinition,
@@ -139,11 +140,11 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       let jsHandle;
       if (commandResult.valueType === "page") {
         const page = commandResult.page;
-        assertPageSet(page, commandResult, "$");
+        assertPageSet(page, commandResult, "byText");
         jsHandle = await page.evaluateHandle(byText, null, text);
       } else {
         const parentElement = commandResult.element;
-        assertElementSet(parentElement, commandResult, "$");
+        assertElementSet(parentElement, commandResult, "byText");
         jsHandle = await parentElement.evaluateHandle(byText, text);
       }
 
@@ -153,6 +154,27 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         description:
           (commandResult.description ? commandResult.description + " " : "") +
           `:byText('${text}')`
+      };
+    }
+  },
+  {
+    name: "parent",
+    async run(_, commandResult: CommandResult): Promise<CommandResult> {
+      assertElementType(commandResult, "parent");
+
+      let jsHandle;
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "parent");
+      jsHandle = await element.evaluateHandle(
+        /* istanbul ignore next */ (el: Node) => el.parentElement
+      );
+
+      return {
+        valueType: "element",
+        element: jsHandle?.asElement(),
+        description:
+          (commandResult.description ? commandResult.description + " " : "") +
+          `:parent()`
       };
     }
   }

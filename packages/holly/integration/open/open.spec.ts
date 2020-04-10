@@ -25,47 +25,59 @@ describe("Open mode", () => {
     [
         "Mouse / element api / clicks a element",
         [
-            "Focus",
-            "Disable"
+            "F",
+            "D"
         ]
     ],
     [
         "Mouse / page api / clicks a page",
         [
-            "Focus",
-            "Disable"
+            "F",
+            "D"
         ]
     ],
     [
         "Mouse / page api / clicks a particular page",
         [
-            "Focus",
-            "Disable"
+            "F",
+            "D"
         ]
     ]
 ]`);
 
-    await byText("Mouse / element api / clicks a element")
-      .byText("Focus")
+    await byText("Mouse / page api / clicks a page")
+      .parent()
+      .byText("F")
       .click();
+
+    // wait for the focussed one first so we don't pass normal before the state updates
+    $("[data-test-id=test]:nth-child(2)")
+      .getAttribute("data-test-state")
+      .shouldEqual("focussed");
+
+    $("[data-test-id=test]:nth-child(1)")
+      .getAttribute("data-test-state")
+      .shouldEqual("normal");
+
+    $("[data-test-id=test]:nth-child(3)")
+      .getAttribute("data-test-state")
+      .shouldEqual("normal");
 
     await byText("Start").click();
 
-    await byText("Mouse / element api / clicks a element")
+    await byText("Mouse / page api / clicks a page")
+      .parent()
       .$(".tst-command-list")
       .textArray().shouldMatchInlineSnapshot(`[
-    "click",
     "text",
     "shouldEqual"
 ]`);
 
-    // For now - we need to wait for the test to complete to stop these tests failing
-    await byText("Mouse / page api / clicks a particular page")
+    // and check we didn't run the first one
+    await byText("Mouse / element api / clicks a element")
+      .parent()
       .$(".tst-command-list")
-      .textArray().shouldMatchInlineSnapshot(`[
-    "click",
-    "text",
-    "shouldEqual"
-]`);
+      .textArray()
+      .shouldMatchInlineSnapshot(`[]`);
   });
 });
