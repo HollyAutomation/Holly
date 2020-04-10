@@ -9,7 +9,13 @@ import * as util from "util";
 import runSuite, { makeMocha } from "../runSuite";
 import makeMochaOptions from "../makeMochaOptions";
 import createStore from "./store";
-import { actions } from "../../../holly-shared";
+import {
+  actions,
+  testState,
+  TEST_STATE_NORMAL,
+  TEST_STATE_FOCUSSED,
+  TEST_STATE_DISABLED
+} from "holly-shared";
 
 const debug = Debug("holly:open:index");
 
@@ -19,9 +25,19 @@ function getTestName(test: Mocha.Test) {
   return test.titlePath().join(" / ");
 }
 
-function getTests(suite: Mocha.Suite): ReadonlyArray<string> {
-  let tests = suite.tests.map(test => {
-    return getTestName(test);
+type Tests = ReadonlyArray<{ name: string; id: string; state: testState }>;
+
+function getTests(
+  suite: Mocha.Suite,
+  dupeCount: { [name: string]: number } = {}
+): Tests {
+  let tests: Tests = suite.tests.map(test => {
+    const name = getTestName(test);
+    dupeCount[name] = dupeCount[name] ? dupeCount[name] + 1 : 1;
+    const id = `${dupeCount[name]}:${name}`;
+    // @ts-ignore
+    test.id = id;
+    return { name, state: TEST_STATE_NORMAL, id };
   });
 
   suite.suites.forEach(suite => {
@@ -67,6 +83,38 @@ export default async (config: Config) => {
         const file = store.getState().currentSpec.file;
         if (file) {
           runSuite(mochaOptions, context, config, file, undefined, {
+            onBeforeRun(suite: Mocha.Suite) {
+              const hasFocussed = store
+                .getState()
+                .currentSpec.tests?.some(
+                  test => test.state === TEST_STATE_FOCUSSED
+                );
+
+              function makeTestsPending(suite: Mocha.Suite) {
+                suite.tests.forEach(mochaTest => {
+                  const test = store.getState().currentSpec.tests?.find(
+                    test =>
+                      test.id ===
+                      // @ts-ignore
+                      mochaTest.id
+                  );
+                  mochaTest.pending = Boolean(
+                    (hasFocussed &&
+                      (!test || test.state !== TEST_STATE_FOCUSSED)) ||
+                      (test && test.state === TEST_STATE_DISABLED)
+                  );
+                });
+
+                suite.suites.forEach(suite => {
+                  makeTestsPending(suite);
+                });
+              }
+
+              // sets the id onto each test in the same way as previously
+              getTests(suite);
+              // set pending by matching with the state
+              makeTestsPending(suite);
+            },
             onCommand({ test, commandName }) {
               store.dispatch(
                 actions.currentSpec.addCommand({

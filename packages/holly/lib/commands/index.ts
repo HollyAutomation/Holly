@@ -46,11 +46,12 @@ async function pipe(
   base: any,
   anyFn: Function,
   commandResult?: CommandResult,
-  commandName: string = "pipe"
+  commandName: string = "pipe",
+  ...args: ReadonlyArray<any>
 ): Promise<CommandResult> {
   let value;
   if (typeof base.evaluate === "function") {
-    value = await base.evaluate(anyFn);
+    value = await base.evaluate(anyFn, ...args);
   } else {
     value = await anyFn(base);
   }
@@ -295,6 +296,33 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       return pipe(pipeBase, fn, commandResult);
     },
     canRetry: false
+  },
+  {
+    name: "getAttribute",
+    async run(
+      _,
+      commandResult: CommandResult,
+      attrName: string
+    ): Promise<CommandResult> {
+      if (!attrName && typeof attrName !== "string") {
+        throw new Error(
+          "Expected the first argument of getAttribute to be a string - the attribute name."
+        );
+      }
+
+      assertElementType(commandResult, "getAttribute");
+      const element = commandResult.element;
+      assertElementSet(element, commandResult, "getAttribute");
+
+      return await pipe(
+        element,
+        // @ts-ignore
+        /* istanbul ignore next */ (el, attrName) => el.getAttribute(attrName),
+        commandResult,
+        "text",
+        attrName
+      );
+    }
   },
   {
     name: "text",

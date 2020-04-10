@@ -75,6 +75,10 @@ export default (
       await holly.__end();
     });
 
+    if (listener) {
+      listener.onBeforeRun(mocha.suite);
+    }
+
     mocha.suite.emit(Mocha.Suite.constants.EVENT_ROOT_SUITE_RUN);
   });
 };
