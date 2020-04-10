@@ -4,7 +4,7 @@ import * as screenshotCommand from "./screenshot";
 import {
   RootCommandDefinition,
   ChainedCommandDefinition,
-  CommandResult
+  CommandResult,
 } from "../types";
 import { commandMatchers } from "./commandMatchers";
 import * as mouseCommands from "./mouseCommands";
@@ -14,11 +14,12 @@ import {
   assertRootPageExists,
   assertElementType,
   assertElementSet,
-  assertPageSet
+  assertPageSet,
 } from "../utils/assert";
-import { Viewport } from "playwright-core/lib/types";
 import toIstanbul from "./toIstanbul";
+// @ts-ignore
 import { Page } from "playwright-core/lib/page";
+// @ts-ignore
 import { ElementHandle } from "playwright-core/lib/dom";
 
 const debug = Debug("holly:commands:index");
@@ -27,18 +28,18 @@ function anyToCommandResult(value: any): CommandResult {
   if (value instanceof Page) {
     return {
       valueType: "page",
-      page: value
+      page: value,
     };
   }
   if (value instanceof ElementHandle) {
     return {
       valueType: "element",
-      element: value
+      element: value,
     };
   }
   return {
     valueType: "value",
-    value
+    value,
   };
 }
 
@@ -62,7 +63,7 @@ async function pipe(
     element: commandResult?.element,
     description: `${commandName}(${(commandResult &&
       commandResult.description) ||
-      ""})`
+      ""})`,
   };
 }
 
@@ -75,7 +76,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
     name: "wrap",
     run(_, value: any): CommandResult {
       return anyToCommandResult(value);
-    }
+    },
   },
   {
     name: "pipe",
@@ -87,7 +88,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       assertRootPageExists(page, "pipe");
 
       return pipe(page, fn);
-    }
+    },
   },
   {
     name: "evaluate",
@@ -101,7 +102,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
 
       return pipe(page, fn);
     },
-    canRetry: false
+    canRetry: false,
   },
   {
     name: "newPage",
@@ -134,7 +135,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
         await page.setViewportSize(viewport);
       }
       if (config.pipeConsole !== false) {
-        page.on("console", msg => console.log("page:", msg.text()));
+        page.on("console", (msg) => console.log("page:", msg.text()));
       }
       if (config.coverage) {
         await page.coverage?.startJSCoverage();
@@ -144,7 +145,7 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
             if (jsCov) {
               await toIstanbul(jsCov, {
                 sourceRoot: config.sourceRoot,
-                servedBasePath: config.servedBasePath
+                servedBasePath: config.servedBasePath,
               });
             }
           } catch (e) {
@@ -156,14 +157,14 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       await page.goto(url);
       return {
         valueType: "page",
-        page
+        page,
       };
     },
-    canRetry: false
+    canRetry: false,
   },
   {
     name: "setViewportSize",
-    async run({ holly }, viewport: Viewport): Promise<CommandResult> {
+    async run({ holly }, viewport: any): Promise<CommandResult> {
       if (
         !viewport ||
         typeof viewport.width !== "number" ||
@@ -180,11 +181,11 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       await page.setViewportSize(viewport);
       return {
         valueType: "page",
-        page
+        page,
       };
     },
-    canRetry: false
-  }
+    canRetry: false,
+  },
 ];
 
 export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
@@ -208,9 +209,9 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         value,
         page: commandResult.page,
         element: commandResult.element,
-        description: `value(${commandResult.description})`
+        description: `value(${commandResult.description})`,
       };
-    }
+    },
   },
   {
     name: "focus",
@@ -221,7 +222,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
 
       await element.focus();
       return commandResult;
-    }
+    },
   },
   {
     name: "hover",
@@ -240,7 +241,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         options
       );
       return commandResult;
-    }
+    },
   },
   {
     name: "scrollIntoViewIfNeeded",
@@ -251,7 +252,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
 
       await element.scrollIntoViewIfNeeded();
       return commandResult;
-    }
+    },
   },
   matchInlineSnapshot,
   {
@@ -273,7 +274,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         pipeBase = commandResult.value;
       }
       return pipe(pipeBase, fn, commandResult);
-    }
+    },
   },
   {
     name: "evaluate",
@@ -295,7 +296,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       }
       return pipe(pipeBase, fn, commandResult);
     },
-    canRetry: false
+    canRetry: false,
   },
   {
     name: "getAttribute",
@@ -322,7 +323,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         "text",
         attrName
       );
-    }
+    },
   },
   {
     name: "text",
@@ -334,11 +335,11 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       return await pipe(
         element,
         // @ts-ignore
-        /* istanbul ignore next */ el => el.innerText,
+        /* istanbul ignore next */ (el) => el.innerText,
         commandResult,
         "text"
       );
-    }
+    },
   },
   {
     name: "textArray",
@@ -350,7 +351,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       return await pipe(
         element,
         // @ts-ignore
-        /* istanbul ignore next */ el => {
+        /* istanbul ignore next */ (el) => {
           type TextArray = string | Array<TextArray>;
           function getTextArray(node: ChildNode | null) {
             const textNodes: TextArray = [];
@@ -379,6 +380,6 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         commandResult,
         "textArray"
       );
-    }
-  }
+    },
+  },
 ];

@@ -1,16 +1,17 @@
+// @ts-ignore
 import { Page } from "playwright-core/lib/page";
 import {
   assertRootPageExists,
   assertPageOrElementType,
   assertPageSet,
-  assertElementSet
+  assertElementSet,
 } from "../utils/assert";
 import { ElementHandle } from "playwright";
 import {
   RootCommandDefinition,
   ChainedCommandDefinition,
   Holly,
-  CommandResult
+  CommandResult,
 } from "../types";
 import * as path from "path";
 import mkdirp = require("mkdirp");
@@ -32,7 +33,7 @@ async function makePath(holly: Holly, test: Mocha.Test, name?: string) {
 
   return {
     dir,
-    filename
+    filename,
   };
 }
 
@@ -49,7 +50,7 @@ async function pageScreenshot(
     type: "png",
     fullPage: true,
     clip: undefined, // allow passing
-    omitBackground: false // allow passing
+    omitBackground: false, // allow passing
   });
 }
 
@@ -64,7 +65,7 @@ async function elementScreenshot(
   await element.screenshot({
     path: path.join(dir, filename),
     type: "png",
-    omitBackground: false // allow passing
+    omitBackground: false, // allow passing
   });
 }
 
@@ -76,10 +77,10 @@ export const root = {
     await pageScreenshot(holly, test, page, name);
     return {
       valueType: "page",
-      page
+      page,
     };
   },
-  canRetry: false
+  canRetry: false,
 } as RootCommandDefinition;
 
 export const chained = {
@@ -97,5 +98,5 @@ export const chained = {
     }
     return commandResult;
   },
-  canRetry: false
+  canRetry: false,
 } as ChainedCommandDefinition;

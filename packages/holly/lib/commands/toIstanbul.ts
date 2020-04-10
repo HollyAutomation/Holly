@@ -18,7 +18,7 @@ type JSCoverageEntry = {
   source?: string;
   functions: {
     functionName: string;
-    isBlockCoverage: boolean;
+    //isBlockCoverage: boolean;
     ranges: JSRange[];
   }[];
 };
@@ -34,8 +34,8 @@ class ToIstanbul {
     return [
       {
         ranges: coverageItem.ranges.map(this.convertRange),
-        isBlockCoverage: true
-      }
+        isBlockCoverage: true,
+      },
     ];
   }
 
@@ -45,13 +45,13 @@ class ToIstanbul {
     return {
       startOffset: range.start,
       endOffset: range.end,
-      count: 1
+      count: 1,
     };
   }
 
   async writeIstanbulFormat({
     sourceRoot,
-    servedBasePath
+    servedBasePath,
   }: {
     sourceRoot?: string;
     servedBasePath?: string;
@@ -98,14 +98,15 @@ class ToIstanbul {
         0,
         {
           source: coverageInfo.source,
-          sourceMap
+          sourceMap,
         }
       );
       await script.load();
+      // @ts-ignore missing isBlockCoverage in playwright types
       script.applyCoverage(coverageInfo.functions);
 
       const istanbulCoverage = script.toIstanbul();
-      Object.keys(istanbulCoverage).forEach(file => {
+      Object.keys(istanbulCoverage).forEach((file) => {
         if (
           file.indexOf("original_downloaded_file_") >= 0 ||
           file.indexOf("node_modules") >= 0
