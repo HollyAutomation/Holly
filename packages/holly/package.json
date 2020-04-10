@@ -77,7 +77,7 @@
     "glob": "7.1.6",
     "holly-ui": "0.0.1",
     "holly-shared": "0.0.1",
-    "jest-snapshot": "25.1.0",
+    "jest-snapshot": "25.3.0",
     "koa-static": "5.0.0",
     "milliseconds": "1.0.3",
     "mkdirp": "1.0.3",
