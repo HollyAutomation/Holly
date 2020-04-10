@@ -1,10 +1,13 @@
 import {
-  ClickOptions,
-  Button,
-  MultiClickOptions,
-  PointerActionOptions
-} from "playwright-core/lib/input";
-import { Viewport } from "playwright-core/lib/types";
+  PageClickOptions,
+  MouseDownOptions,
+  PageDblclickOptions,
+  MouseUpOptions,
+  ElementHandleClickOptions,
+  ElementHandleDblclickOptions,
+  PageSetViewportSizeViewportSize,
+  ElementHandleHoverOptions,
+} from "./playwright";
 
 type AssymmetricMatcher = {};
 
@@ -52,17 +55,14 @@ type PageMouseCommands = {
   click: (
     x: number,
     y: number,
-    options?: ClickOptions
+    options?: PageClickOptions
   ) => HollyChainPageAwaitable;
   dblclick: (
     x: number,
     y: number,
-    options?: MultiClickOptions
+    options?: PageDblclickOptions
   ) => HollyChainPageAwaitable;
-  mousedown: (options?: {
-    button?: Button;
-    clickCount?: number;
-  }) => HollyChainPageAwaitable;
+  mousedown: (options?: MouseDownOptions) => HollyChainPageAwaitable;
   mousemove: (
     x: number,
     y: number,
@@ -70,25 +70,20 @@ type PageMouseCommands = {
       steps?: number;
     }
   ) => HollyChainPageAwaitable;
-  tripleclick: (
-    x: number,
-    y: number,
-    options?: MultiClickOptions
-  ) => HollyChainPageAwaitable;
-  mouseup: (options?: {
-    button?: Button;
-    clickCount?: number;
-  }) => HollyChainPageAwaitable;
+  mouseup: (options?: MouseUpOptions) => HollyChainPageAwaitable;
 };
 
 type ElementMouseCommands = {
-  click: (options?: ClickOptions) => HollyChainElementAwaitable;
-  dblclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
-  tripleclick: (options?: MultiClickOptions) => HollyChainElementAwaitable;
+  click: (options?: ElementHandleClickOptions) => HollyChainElementAwaitable;
+  dblclick: (
+    options?: ElementHandleDblclickOptions
+  ) => HollyChainElementAwaitable;
 };
 
 type MiscPageCommands = {
-  setViewportSize: (viewport: Viewport) => HollyChainPageAwaitable;
+  setViewportSize: (
+    viewport: PageSetViewportSizeViewportSize
+  ) => HollyChainPageAwaitable;
   screenshot: (name?: string) => HollyChainPageAwaitable;
   $: (selector: string) => HollyChainElementAwaitable;
   byText: (text: string) => HollyChainElementAwaitable;
@@ -96,7 +91,7 @@ type MiscPageCommands = {
 
 type MiscElementCommands = {
   focus: () => HollyChainElementAwaitable;
-  hover: (options?: PointerActionOptions) => HollyChainElementAwaitable;
+  hover: (options?: ElementHandleHoverOptions) => HollyChainElementAwaitable;
   scrollIntoViewIfNeeded: () => HollyChainElementAwaitable;
   screenshot: (name?: string) => HollyChainElementAwaitable;
   $: (selector: string) => HollyChainElementAwaitable;
@@ -110,7 +105,10 @@ type EscapeHatchCommands = {
 };
 
 type Holly = {
-  newPage: (url: string, viewport?: Viewport) => HollyChainPageAwaitable;
+  newPage: (
+    url: string,
+    viewport?: PageSetViewportSizeViewportSize
+  ) => HollyChainPageAwaitable;
 
   wrap: <
     T extends

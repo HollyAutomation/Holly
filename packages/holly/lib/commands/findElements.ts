@@ -3,18 +3,22 @@ import {
   assertPageOrElementType,
   assertPageSet,
   assertElementSet,
-  assertElementType
+  assertElementType,
 } from "../utils/assert";
 import {
   RootCommandDefinition,
   ChainedCommandDefinition,
-  CommandResult
+  CommandResult,
 } from "../types";
 
 const byText = /* istanbul ignore next */ (
-  element: Node | null,
-  text: string
+  elementOrText: Node | string | null,
+  maybeText?: string
 ) => {
+  // @ts-ignore
+  let text: string = (maybeText || elementOrText).replace(/\s+/g, " ");
+  // @ts-ignore
+  const element: Node = elementOrText === text ? null : elementOrText;
   function count(haystack: string, needle: string): number {
     let count = 0;
     let i = 0;
@@ -46,7 +50,6 @@ const byText = /* istanbul ignore next */ (
     }
     return foundNodes;
   }
-  text = text.replace(/\s+/g, " ");
   const foundNodes = searchNodes(element || document.body);
   return foundNodes.length <= 1 ? foundNodes[0] : foundNodes;
 };
@@ -65,9 +68,9 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       return {
         valueType: "element",
         element,
-        description: selector
+        description: selector,
       };
-    }
+    },
   },
   {
     name: "byText",
@@ -79,15 +82,15 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = [
       const page = holly.__page;
       assertRootPageExists(page, "byText");
 
-      const jsHandle = await page.evaluateHandle(byText, null, text);
+      const jsHandle = await page.evaluateHandle(byText, text);
       const element = await jsHandle?.asElement();
       return {
         valueType: "element",
         element,
-        description: `:byText('${text}')`
+        description: `:byText('${text}')`,
       };
-    }
-  }
+    },
+  },
 ];
 
 export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
@@ -120,9 +123,9 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         element,
         description:
           (commandResult.description ? commandResult.description + " " : "") +
-          selector
+          selector,
       };
-    }
+    },
   },
   {
     name: "byText",
@@ -141,7 +144,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
       if (commandResult.valueType === "page") {
         const page = commandResult.page;
         assertPageSet(page, commandResult, "byText");
-        jsHandle = await page.evaluateHandle(byText, null, text);
+        jsHandle = await page.evaluateHandle(byText, text);
       } else {
         const parentElement = commandResult.element;
         assertElementSet(parentElement, commandResult, "byText");
@@ -153,9 +156,9 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         element: jsHandle?.asElement(),
         description:
           (commandResult.description ? commandResult.description + " " : "") +
-          `:byText('${text}')`
+          `:byText('${text}')`,
       };
-    }
+    },
   },
   {
     name: "parent",
@@ -174,8 +177,8 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = [
         element: jsHandle?.asElement(),
         description:
           (commandResult.description ? commandResult.description + " " : "") +
-          `:parent()`
+          `:parent()`,
       };
-    }
-  }
+    },
+  },
 ];

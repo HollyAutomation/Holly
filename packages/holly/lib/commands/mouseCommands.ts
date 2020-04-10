@@ -3,40 +3,39 @@ import {
   assertPageOrElementType,
   assertPageType,
   assertPageSet,
-  assertElementSet
+  assertElementSet,
 } from "../utils/assert";
 import {
   RootCommandDefinition,
   ChainedCommandDefinition,
-  CommandResult
+  CommandResult,
 } from "../types";
 
 const mouseApi = [
   {
     name: "click",
     availableOnPage: true,
-    availableOnElement: true
+    availableOnElement: true,
   },
   { name: "dblclick", availableOnPage: true, availableOnElement: true },
   {
     name: "down",
     alias: "mousedown",
     availableOnPage: true,
-    availableOnElement: false
+    availableOnElement: false,
   },
   {
     name: "move",
     alias: "mousemove",
     availableOnPage: true,
-    availableOnElement: false
+    availableOnElement: false,
   },
-  { name: "tripleclick", iavailableOnPage: true, availableOnElement: true },
   {
     name: "up",
     alias: "mouseup",
     availableOnPage: true,
-    availableOnElement: false
-  }
+    availableOnElement: false,
+  },
 ];
 
 export const rootCommands: ReadonlyArray<RootCommandDefinition> = mouseApi.map(
@@ -54,10 +53,10 @@ export const rootCommands: ReadonlyArray<RootCommandDefinition> = mouseApi.map(
         await page.mouse[name](...args);
         return {
           valueType: "page",
-          page
+          page,
         };
       },
-      canRetry: false
+      canRetry: false,
     };
   }
 );
@@ -92,7 +91,7 @@ export const chainedCommands: ReadonlyArray<ChainedCommandDefinition> = mouseApi
         await mouse[name](...args);
         return commandResult;
       },
-      canRetry: false
+      canRetry: false,
     };
   }
 );
