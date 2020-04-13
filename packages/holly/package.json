@@ -80,7 +80,7 @@
     "jest-snapshot": "25.3.0",
     "koa-static": "5.0.0",
     "milliseconds": "1.0.3",
-    "mkdirp": "1.0.3",
+    "mkdirp": "1.0.4",
     "mocha": "7.1.1",
     "playwright": "0.11.1",
     "stack-utils": "2.0.1",
